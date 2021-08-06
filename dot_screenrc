@@ -1,0 +1,4 @@
+scrollback 10000
+escape ^Pp
+hardstatus alwayslastline "%{.kg}%-w%{.ky}%n*%t%{-}%+w %= %{.kg}%C %a"
+

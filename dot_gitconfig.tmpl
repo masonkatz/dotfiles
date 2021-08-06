@@ -1,0 +1,50 @@
+[commit]
+	template = {{ .chezmoi.homeDir }}/.git-template
+
+[core]
+	pager = less -FX
+
+[color]
+	ui = true
+
+[column]
+	ui = auto
+
+[alias]
+	graph = log --graph --pretty=format:'%Cred%h%Creset - %C(cyan)<%an>%Creset%C(yellow)%d%Creset %s %Cgreen(%cr)' --abbrev-commit --date=relative
+	who = blame -c
+
+[rerere]
+	enabled = true
+
+[fetch]
+	prune = true
+
+[push]
+	default = current
+	followTags = true
+
+[pull]
+	rebase = false
+
+[gitflow "branch"]
+	master  = master
+	develop = develop
+
+[gitflow "prefix"]
+	feature = feature/
+	bugfix  = bugfix/
+	release = release/
+	hotfix  = hotfix/
+	support = support/
+	versiontag =
+
+{{ if eq .org "softiron" }}
+[url "ssh://git@git.softiron.com:30022"]
+	insteadOf = https://git.softiron.com
+{{ end }}
+
+[user]
+	name  = {{ .fullname }}
+	email = {{ .email }}
+

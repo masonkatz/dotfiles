@@ -1,0 +1,28 @@
+:
+
+# TYPE: summary line
+#
+# Details of commit (markdown is fine).
+#
+# TYPE is one of:
+# - docs
+# - ci
+# - chore
+# - feat
+# - fix
+# - perf
+# - refactor
+# - style
+# - test
+#
+# Optional lines:
+#
+# BREAKING CHANGE:
+#
+# Details of the change and how to get you development environment
+# working again.
+#
+# Signed-off-by: First Last <first.last@mail.com>
+#
+# Co-authored-by: First Last <first.last@mail.com>
+

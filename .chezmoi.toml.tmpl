@@ -1,0 +1,15 @@
+[data]
+{{ $softiron := promptBool "SoftIron machine" }}
+{{ if $softiron }}
+    org      = "softiron"
+    fullname = "Mason Katz"
+    email    = "Mason.Katz@SoftIron.com"
+{{ else }}
+    {{ $personal := promptBool "Personal machine" }}
+    {{ if $personal }}
+    org      = "personal"
+    fullname = "Mason J. Katz"
+    email    = "MasonKatz@me.com"
+    {{ end }}
+{{ end }}
+

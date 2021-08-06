@@ -1,0 +1,47 @@
+#!/bin/zsh
+
+[[ -d ~/go/bin ]] || mkdir -p ~/go/bin
+export GOPATH=~/go
+PATH=$PATH:$GOPATH/bin
+
+if [ -d /opt/softiron/build/rules ]; then
+	export SI_BUILD=/opt/softiron/build/rules
+fi
+
+{{ if eq .chezmoi.os "darwin" }}
+# Default to brew installed environment to be more gnu, less apple
+
+if [ -d /usr/local/sbin ]; then
+	PATH=/usr/local/sbin:$PATH
+fi
+if [ -d /usr/local/bin ]; then
+	PATH=/usr/local/bin:$PATH
+fi
+
+if [ -d /usr/local/opt/make/libexec/gnubin ]; then
+	PATH=/usr/local/opt/make/libexec/gnubin:$PATH
+fi
+
+if [ -d /usr/local/opt/coreutils/libexec/gnubin ]; then
+	PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
+fi
+
+# pyenv at the front
+
+if [ -d ~/.pyenv ]; then
+	PATH=~/.pyenv/shims:$PATH
+fi
+{{ end }}
+
+
+{{ if eq .chezmoi.os "linux" }}
+if [ -d /opt/stack/bin ]; then
+	PATH=/opt/stack/bin:$PATH
+fi
+{{ end }}
+
+
+
+
+
+
