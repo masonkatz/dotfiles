@@ -22,7 +22,11 @@ export BADGO=1
 {{ end }}
 
 
+ls=ls
+
 {{ if eq .chezmoi.os "darwin" }} # MacOS
+ls=gls
+
 if [[ -z "$INSIDE_EMACS" ]]; then
 	test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 fi
@@ -50,17 +54,17 @@ eterm-color)
 	chpwd() { print -P "\033AnSiTc %d" }
 	print -P "\033AnSiTu %n"
 	print -P "\033AnSiTc %d"
-	alias ls='ls -F --color'
+	alias ls='$ls -F --color'
 	DISABLE_AUTO_TITLE="true"
 	;;
 xterm*|screen*color)
-	alias ls='ls -F --color'
+	alias ls='$ls -F --color'
         ;;
 esac
 
-alias l='ls'
-alias la='ls -a'
-alias ll='ls -l'
+alias l='$ls'
+alias la='$ls -a'
+alias ll='$ls -l'
 unalias lsa
 
 alias m='make'
