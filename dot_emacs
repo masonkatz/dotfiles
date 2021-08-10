@@ -7,6 +7,9 @@
 
 ;;;; Bootstrap straight.el and use-package
 
+(when (< emacs-major-version 27)
+  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
+
 ;; bootstrap for straight package manager
 ;; https://github.com/raxod502/straight.el#getting-started
 (defvar bootstrap-version)
