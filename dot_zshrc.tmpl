@@ -52,7 +52,7 @@ autoload -Uz compinit; compinit
 # Do this after zsh setup to fix the ls aliases
 
 case $TERM in
-eterm-color)
+eterm-*color)
 	chpwd() { print -P "\033AnSiTc %d" }
 	print -P "\033AnSiTu %n"
 	print -P "\033AnSiTc %d"
