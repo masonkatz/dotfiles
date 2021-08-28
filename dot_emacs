@@ -544,7 +544,7 @@
   (require 'smartparens-config))
 
 (add-hook 'prog-mode-hook
-	  '(lambda ()
+	  (lambda ()
 	     (when (display-graphic-p)
 	       (setq linum-format "%5d "
 		     display-fill-column-indicator-column 100)
@@ -565,7 +565,7 @@
 
 
 (add-hook 'emacs-lisp-mode-hook
-	  '(lambda ()
+	  (lambda ()
 	     (prettify-symbols-mode)
 	     (rainbow-delimiters-mode)))
 
@@ -684,7 +684,7 @@
 ;;;;;; Shell
 
 (add-hook 'sh-mode-hook
-	  '(lambda ()
+	  (lambda ()
 	     (setq sh-basic-offset 8
 		   sh-indentation  8
 		   sh-indent-for-case-label 0
