@@ -272,7 +272,8 @@
   :straight t
   :after selectrum
   :init
-  (marginalia-mode))
+  (when (> emacs-major-version 26)
+    (marginalia-mode)))
 
 (use-package consult
   :straight t
@@ -532,30 +533,30 @@
   (require 'smartparens-config))
 
 (add-hook 'prog-mode-hook
-	  '(lambda ()
-	     (when (display-graphic-p)
-	       (setq linum-format "%5d "
-		     display-fill-column-indicator-column 100)
-	       (linum-mode 1)
-	       (display-fill-column-indicator-mode)
-	       (hl-line-mode)
-	       (git-gutter-mode)
-	       (highlight-indent-guides-mode)
-	       (set (make-variable-buffer-local 'x-stretch-cursor) t))
-	     (smartparens-mode)
-	     (show-smartparens-mode)
-	     (company-quickhelp-mode)
-	     (font-lock-mode)
-	     (flyspell-prog-mode)
-	     (yas-minor-mode)))
+	  (lambda ()
+	    (when (display-graphic-p)
+	      (setq linum-format "%5d "
+		    display-fill-column-indicator-column 100)
+	      (linum-mode 1)
+	      (display-fill-column-indicator-mode)
+	      (hl-line-mode)
+	      ;; (highlight-indent-guides-mode)
+	      ;; (set (make-variable-buffer-local 'x-stretch-cursor) t)
+	      (git-gutter-mode))
+	    (smartparens-mode)
+	    (show-smartparens-mode)
+	    (company-quickhelp-mode)
+	    (font-lock-mode)
+	    (flyspell-prog-mode)
+	    (yas-minor-mode)))
 
 ;;;;;; ELisp
 
 
 (add-hook 'emacs-lisp-mode-hook
-	  '(lambda ()
-	     (prettify-symbols-mode)
-	     (rainbow-delimiters-mode)))
+	  (lambda ()
+	    (prettify-symbols-mode)
+	    (rainbow-delimiters-mode)))
 
 ;;;;;; C/C++
 
@@ -667,11 +668,11 @@
 ;;;;;; Shell
 
 (add-hook 'sh-mode-hook
-	  '(lambda ()
-	     (setq sh-basic-offset 8
-		   sh-indentation  8
-		   sh-indent-for-case-label 0
-		   sh-indent-for-case-alt '+)))
+	  (lambda ()
+	    (setq sh-basic-offset 8
+		  sh-indentation  8
+		  sh-indent-for-case-label 0
+		  sh-indent-for-case-alt '+)))
 
 
 ;;;;;; Yaml
