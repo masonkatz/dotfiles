@@ -13,7 +13,7 @@ fi
 
 CASE_SENSITIVE="true"
 
-plugins=(git git-flow golang docker docker-compose)
+plugins=(git git-flow-avh golang httpie)
 
 
 {{ if eq .org "softiron" }}	# SoftIron
@@ -25,12 +25,14 @@ export BADGO=1
 ls=ls
 
 {{ if eq .chezmoi.os "darwin" }} # MacOS
+plugins+=(brew colorize docker docker-compose thefuck)
+
 ls=gls
 
 if [[ -z "$INSIDE_EMACS" ]]; then
 	test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 fi
-eval $(thefuck --alias)
+
 {{ end }}
 
 
@@ -50,21 +52,21 @@ autoload -Uz compinit; compinit
 # Do this after zsh setup to fix the ls aliases
 
 case $TERM in
-eterm-color)
+eterm-*color)
 	chpwd() { print -P "\033AnSiTc %d" }
 	print -P "\033AnSiTu %n"
 	print -P "\033AnSiTc %d"
-	alias ls='$ls -F --color'
+	ls="$ls -F --color"
 	DISABLE_AUTO_TITLE="true"
 	;;
 xterm*|screen*color)
-	alias ls='$ls -F --color'
+	ls="$ls -F --color"
         ;;
 esac
 
-alias l='$ls'
-alias la='$ls -a'
-alias ll='$ls -l'
+alias l=$ls
+alias la="$ls -a"
+alias ll="$ls -l"
 unalias lsa
 
 alias m='make'
@@ -73,4 +75,7 @@ export VISUAL=emacsclient
 export EDITOR=emacsclient
 export ALTERNATE_EDITOR='emacs -nw'
 alias e='emacsclient'
+
+setopt inc_append_history
+unsetopt sharehistory
 

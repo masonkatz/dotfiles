@@ -139,7 +139,7 @@
 (defvar mjk/dark-mode-p nil
   "Are we dark or light.")
 
-(defvar mjk/dark-theme 'vscode-dark-plus
+(defvar mjk/dark-theme 'dracula
   "Dark mode theme.")
 
 (defvar mjk/light-theme 'solarized-light
@@ -158,6 +158,13 @@
     (when (custom-theme-p mjk/light-theme)
       (disable-theme mjk/light-theme))
     (load-theme mjk/dark-theme t)
+    (mapc				; lower intensity of all fonts
+     (lambda (face)
+       (if (eq (face-attribute face :weight) 'normal)
+	   (set-face-attribute face nil :weight 'ultralight)
+	 (when (eq (face-attribute face :weight) 'bold)
+	   (set-face-attribute face nil :weight 'normal))))
+     (face-list))
     (setq mjk/dark-mode-p t)))
 
 (defun mjk/force-light-mode ()
@@ -172,6 +179,11 @@
 
 (use-package solarized-theme
   :straight t)
+
+(use-package dracula-theme
+  :straight t
+  :custom
+  (dracula-alternate-mode-line-and-minibuffer t))
 
 (use-package vscode-dark-plus-theme
   :straight t
@@ -540,8 +552,8 @@
 	      (linum-mode 1)
 	      (display-fill-column-indicator-mode)
 	      (hl-line-mode)
-	      ;; (highlight-indent-guides-mode)
-	      ;; (set (make-variable-buffer-local 'x-stretch-cursor) t)
+	      (highlight-indent-guides-mode)
+	      (set (make-variable-buffer-local 'x-stretch-cursor) t)
 	      (git-gutter-mode))
 	    (smartparens-mode)
 	    (show-smartparens-mode)
@@ -605,6 +617,11 @@
 			  (when (not (string= mjk/gosht-p 't))
 			    (gofmt-before-save))))))
 
+
+;;;;;; HCL
+
+(use-package hcl-mode
+  :straight t)
 
 ;;;;;; Javascript
 
@@ -674,6 +691,12 @@
 		  sh-indent-for-case-label 0
 		  sh-indent-for-case-alt '+)))
 
+
+;;;;;; Toml
+
+(add-hook 'conf-toml-mode-hook
+	  (lambda ()
+	    (setq tab-width 4)))
 
 ;;;;;; Yaml
 
