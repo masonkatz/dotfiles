@@ -7,7 +7,7 @@ Host *
   TCPKeepAlive no
   ForwardAgent yes
 
-{{ if eq .chezmoi.hostname "softpro" }}
+{{ if eq .chezmoi.hostname "softpro" "mdesk" }}
 Host buster-dev
   Hostname localhost
   Port 22000
