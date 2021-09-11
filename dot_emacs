@@ -4,7 +4,6 @@
 ;; Portable across MacOS and Linux, but assumes a fairly recent version of EMACS.
 ;;
 ;;; Code:
-
 ;;;; Bootstrap straight.el and use-package
 
 (when (< emacs-major-version 27)
@@ -73,12 +72,6 @@
 (use-package all-the-icons
   :straight t)
 
-;; (use-package all-the-icons-dired
-;;   :straight t
-;;   :after all-the-icons
-;;   :hook
-;;   (dired-mode . all-the-icons-dired-mode))
-
 (defvar mjk/resolution-font-size-alist '(((1280 800)  . 14)
 					 ((1440 900)  . 14)
 					 ((1680 1050) . 14)
@@ -92,9 +85,9 @@
 
 (defun mjk/font-size ()
   "Return font size to use based on resolution."
-    (let* ((geometry (cdr (assoc 'geometry (car (display-monitor-attributes-list)))))
-	   (resolution (cddr geometry)))
-      (* 10 (cdr (assoc (cddr geometry) mjk/resolution-font-size-alist)))))
+  (let* ((geometry (cdr (assoc 'geometry (car (display-monitor-attributes-list)))))
+	 (resolution (cddr geometry)))
+    (* 10 (cdr (assoc (cddr geometry) mjk/resolution-font-size-alist)))))
 
 (use-package ligature
   :straight
@@ -111,7 +104,7 @@
                                        ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
                                        "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
                                        "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
-                                       "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
+                                       "?=" "?." "??" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
                                        "\\\\" "://")))
 
 
@@ -139,12 +132,6 @@
 (defvar mjk/dark-mode-p nil
   "Are we dark or light.")
 
-(defvar mjk/dark-theme 'dracula
-  "Dark mode theme.")
-
-(defvar mjk/light-theme 'solarized-light
-  "Light mode theme - used for printing.")
-
 (defun mjk/dark-mode ()
   "Toggle dark/light mode."
   (interactive)
@@ -155,40 +142,93 @@
 (defun mjk/force-dark-mode ()
   "Force dark mode."
   (when (not (string= mjk/dark-mode-p t))
-    (when (custom-theme-p mjk/light-theme)
-      (disable-theme mjk/light-theme))
-    (load-theme mjk/dark-theme t)
-    (mapc				; lower intensity of all fonts
-     (lambda (face)
-       (if (eq (face-attribute face :weight) 'normal)
-	   (set-face-attribute face nil :weight 'ultralight)
-	 (when (eq (face-attribute face :weight) 'bold)
-	   (set-face-attribute face nil :weight 'normal))))
-     (face-list))
+    (disable-theme 'zenburn)
+    (setq zenburn-override-colors-alist nil)
+    (load-theme 'zenburn t)
+    (zenburn-with-color-variables
+      (custom-theme-set-faces
+       'zenburn
+       `(aw-leading-char-face ((t (:foreground ,zenburn-blue+1 :height 4.0))))
+       `(fill-column-indicator ((t :foreground ,zenburn-bg+2)))
+       `(font-lock-keyword-face ((t (:foreground ,zenburn-yellow :slant italic))))
+       `(region ((,class (:background ,zenburn-bg+3 :extend t))
+		 (t :inverse-video t)))))
     (setq mjk/dark-mode-p t)))
 
 (defun mjk/force-light-mode ()
   "Force light mode."
   (when (string= mjk/dark-mode-p t)
-    (when (custom-theme-p mjk/dark-theme)
-      (disable-theme mjk/dark-theme))
-    (load-theme mjk/light-theme t)
+    (disable-theme 'zenburn)
+    (setq zenburn-override-colors-alist '(("zenburn-fg-1"     . "#303030")
+					  ("zenburn-fg-05"    . "#383838")
+					  ("zenburn-fg"       . "#404040")
+					  ("zenburn-fg+1"     . "#505050")
+					  ("zenburn-fg+2"     . "#60606f")
+					  ("zenburn-bg-2"     . "#e0e0e0")
+					  ("zenburn-bg-1"     . "#e4e4e4")
+					  ("zenburn-bg-08"    . "#e8e8e8")
+					  ("zenburn-bg-05"    . "#ececec")
+					  ("zenburn-bg"       . "#f0f0f0")
+					  ("zenburn-bg+05"    . "#f4f4f4")
+					  ("zenburn-bg+1"     . "#f8f8f8")
+					  ("zenburn-bg+2"     . "#fcfcfc")
+					  ("zenburn-bg+3"     . "#ffffff")
+					  ("zenburn-red-6"    . "#311b30")
+					  ("zenburn-red-5"    . "#422440")
+					  ("zenburn-red-4"    . "#522d50")
+					  ("zenburn-red-3"    . "#633660")
+					  ("zenburn-red-2"    . "#733f70")
+					  ("zenburn-red-1"    . "#844880")
+					  ("zenburn-red"      . "#8f4e8b")
+					  ("zenburn-red+1"    . "#945190")
+					  ("zenburn-red+2"    . "#a45ba0")
+					  ("zenburn-orange"   . "#f08000")
+					  ("zenburn-yellow-2" . "#9f8000")
+					  ("zenburn-yellow-1" . "#af9000")
+					  ("zenburn-yellow"   . "#bfa000")
+					  ("zenburn-green-5"  . "#5fb497")
+					  ("zenburn-green-4"  . "#54ab8e")
+					  ("zenburn-green-3"  . "#4c9a80")
+					  ("zenburn-green-2"  . "#438972")
+					  ("zenburn-green-1"  . "#3b7863")
+					  ("zenburn-green"    . "#397460")
+					  ("zenburn-green+1"  . "#326755")
+					  ("zenburn-green+2"  . "#2a5547")
+					  ("zenburn-green+3"  . "#224439")
+					  ("zenburn-green+4"  . "#19332b")
+					  ("zenburn-cyan"     . "#20a6ab")
+					  ("zenburn-blue+3"   . "#4e8cca")
+					  ("zenburn-blue+2"   . "#3b80c4")
+					  ("zenburn-blue+1"   . "#3573b1")
+					  ("zenburn-blue"     . "#2e659c")
+					  ("zenburn-blue-1"   . "#295989")
+					  ("zenburn-blue-2"   . "#234d76")
+					  ("zenburn-blue-3"   . "#1d4062")
+					  ("zenburn-blue-4"   . "#17334f")
+					  ("zenburn-blue-5"   . "#12263b")
+					  ("zenburn-magenta"  . "#DC8CC3")))
+    (load-theme 'zenburn t)
+    (zenburn-with-color-variables
+      (custom-theme-set-faces
+       'zenburn
+       `(aw-leading-char-face ((t (:foreground ,zenburn-blue+1 :height 4.0))))
+       `(fill-column-indicator ((t :foreground ,zenburn-bg+2)))
+       `(font-lock-keyword-face ((t (:foreground ,zenburn-yellow :slant italic))))
+       `(lsp-ui-doc-background ((t (:background ,zenburn-bg+2))))
+       `(region ((,class (:background ,zenburn-bg+3 :extend t))
+		 (t :inverse-video t)))))
     (setq mjk/dark-mode-p nil)))
 
 (global-set-key (kbd "C-c d")  'mjk/dark-mode)
+(setq custom--inhibit-theme-enable nil)
 
-(use-package solarized-theme
-  :straight t)
-
-(use-package dracula-theme
+(use-package zenburn-theme
   :straight t
-  :custom
-  (dracula-alternate-mode-line-and-minibuffer t))
+  :config
+  (setq zenburn-use-variable-pitch t
+	zenburn-scale-org-headlines t
+	zenburn-scale-outline-headlines t))
 
-(use-package vscode-dark-plus-theme
-  :straight t
-  :custom
-  (vscode-dark-plus-box-org-todo nil))
 
 (mjk/dark-mode)
 
@@ -375,7 +415,7 @@
 (use-package treemacs-magit
   :straight t
   :after (treemacs magit))
-  
+
 ;;;; Fix Tab
 
 (setq tab-always-indent 't)
@@ -421,9 +461,9 @@
   :after (esh-mode)
   :config
   (with-eval-after-load "esh-opt"
-  (autoload 'epe-theme-lambda "eshell-prompt-extras")
-  (setq eshell-highlight-prompt nil
-        eshell-prompt-function 'epe-theme-lambda)))
+    (autoload 'epe-theme-lambda "eshell-prompt-extras")
+    (setq eshell-highlight-prompt nil
+          eshell-prompt-function 'epe-theme-lambda)))
 
 (defun mjk/ansi-term ()
   "Create or visit a terminal buffer."
@@ -452,31 +492,6 @@
   (markdown-header-scaling t))
 
 ;;;; Programming
-
-(use-package hl-todo
-  :straight t
-  :hook (prog-mode . hl-todo-mode)
-  :config
-  (setq hl-todo-highlight-punctuation ":"
-        hl-todo-keyword-faces
-        `(("TODO"       warning bold)
-          ("FIXME"      error bold)
-          ("HACK"       font-lock-constant-face bold)
-          ("REVIEW"     font-lock-keyword-face bold)
-          ("NOTE"       success bold)
-          ("DEPRECATED" font-lock-doc-face bold))))
-
-(use-package mwim
-  :straight t
-  :config
-  (global-set-key (kbd "C-a") 'mwim-beginning)
-  (global-set-key (kbd "C-e") 'mwim-end))
-
-
-(global-set-key (kbd "C-c l")  'sort-lines)
-(global-set-key (kbd "C-c n")  'next-error)
-(global-set-key (kbd "C-c p")  'previous-error)
-
 ;;;;; Git
 
 (use-package git-gutter-fringe
@@ -532,8 +547,8 @@
 (use-package yasnippet-snippets
   :straight t)
 
-
-;;;;;; all
+;;;;; Modes
+;;;;;; Common
 
 (use-package rainbow-mode
   :straight t)
@@ -545,29 +560,27 @@
 
 (add-hook 'prog-mode-hook
 	  (lambda ()
-	     (when (display-graphic-p)
-	       (setq linum-format "%5d "
-		     display-fill-column-indicator-column 100)
-	       (linum-mode 1)
-	       (display-fill-column-indicator-mode)
-	       (hl-line-mode)
-	       (git-gutter-mode)
-	       (highlight-indent-guides-mode)
-	       (set (make-variable-buffer-local 'x-stretch-cursor) t))
-	     (smartparens-mode)
-	     (show-smartparens-mode)
-	     (company-quickhelp-mode)
-	     (font-lock-mode)
-	     (flyspell-prog-mode)
-	     (yas-minor-mode)))
+	    (when (display-graphic-p)
+	      (setq linum-format "%5d "
+		    display-fill-column-indicator-column 100)
+	      (linum-mode 1)
+	      (display-fill-column-indicator-mode)
+	      (hl-line-mode)
+	      (git-gutter-mode))
+	    (smartparens-mode)
+	    (show-smartparens-mode)
+	    (company-quickhelp-mode)
+	    (font-lock-mode)
+	    (flyspell-prog-mode)
+	    (yas-minor-mode)))
 
 ;;;;;; ELisp
 
-
 (add-hook 'emacs-lisp-mode-hook
 	  (lambda ()
-	     (prettify-symbols-mode)
-	     (rainbow-delimiters-mode)))
+	    (prettify-symbols-mode)
+	    (rainbow-mode)
+	    (rainbow-delimiters-mode)))
 
 ;;;;;; C/C++
 
@@ -685,10 +698,10 @@
 
 (add-hook 'sh-mode-hook
 	  (lambda ()
-	     (setq sh-basic-offset 8
-		   sh-indentation  8
-		   sh-indent-for-case-label 0
-		   sh-indent-for-case-alt '+)))
+	    (setq sh-basic-offset 8
+		  sh-indentation  8
+		  sh-indent-for-case-label 0
+		  sh-indent-for-case-alt '+)))
 
 ;;;;;; Toml
 
@@ -705,12 +718,28 @@
 
 ;;;; Misc
 
-
-(use-package highlight-indent-guides
+(use-package hl-todo
   :straight t
-  :custom
-  (highlight-indent-guides-method 'bitmap)
-  (highlight-indent-guides-responsive "top"))
+  :hook (prog-mode . hl-todo-mode)
+  :config
+  (setq hl-todo-highlight-punctuation ":"
+        hl-todo-keyword-faces
+        `(("TODO"       warning bold)
+          ("FIXME"      error bold)
+          ("HACK"       font-lock-constant-face bold)
+          ("REVIEW"     font-lock-keyword-face bold)
+          ("NOTE"       success bold)
+          ("DEPRECATED" font-lock-doc-face bold))))
+
+(use-package mwim
+  :straight t
+  :config
+  (global-set-key (kbd "C-a") 'mwim-beginning)
+  (global-set-key (kbd "C-e") 'mwim-end))
+
+(global-set-key (kbd "C-c l")  'sort-lines)
+(global-set-key (kbd "C-c n")  'next-error)
+(global-set-key (kbd "C-c p")  'previous-error)
 
 (use-package dimmer
   :straight t
@@ -770,7 +799,12 @@
  '(make-backup-files nil)
  '(menu-bar-mode nil)
  '(safe-local-variable-values
-   '((eval font-lock-add-keywords nil
+   '((hl-sexp-mode)
+     (rainbow-mode . t)
+     (eval when
+	   (require 'rainbow-mode nil t)
+	   (rainbow-mode 1))
+     (eval font-lock-add-keywords nil
 	   `((,(concat "("
 		       (regexp-opt
 			'("sp-do-move-op" "sp-do-move-cl" "sp-do-put-op" "sp-do-put-cl" "sp-do-del-op" "sp-do-del-cl")
@@ -803,7 +837,5 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(aw-leading-char-face ((t (:foreground "red" :height 4.0))))
- '(font-lock-keyword-face ((t (:slant italic :weight normal))))
  '(linum ((t (:height 0.75))))
  '(treemacs-root-face ((t (:inherit font-lock-constant-face :underline t :weight bold)))))
