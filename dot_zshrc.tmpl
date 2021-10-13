@@ -18,7 +18,6 @@ plugins=(git git-flow-avh golang httpie)
 
 {{ if eq .org "softiron" }}	# SoftIron
 export SOFTIRON=1
-export BADGO=1
 {{ end }}
 
 
@@ -64,10 +63,12 @@ xterm*|screen*color)
         ;;
 esac
 
-alias l=$ls
+unalias ls
+unalias lsa
+
+alias ls=$ls
 alias la="$ls -a"
 alias ll="$ls -l"
-unalias lsa
 
 alias m='make'
 
