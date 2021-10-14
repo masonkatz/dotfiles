@@ -438,10 +438,6 @@
 
 ;;;;; Terminal
 
-(use-package eterm-256color
-  :straight t)
-(add-hook 'term-mode-hook #'eterm-256color-mode)
-
 (use-package tramp-term
   :straight t)
 
