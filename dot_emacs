@@ -518,7 +518,9 @@
   (global-flycheck-mode))
 
 (use-package lsp-mode
-  :straight t)
+  :straight t
+  :custom
+  (lsp-enable-links nil))
 
 
 (use-package lsp-ui
