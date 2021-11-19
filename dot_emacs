@@ -89,6 +89,16 @@
 	 (resolution (cddr geometry)))
     (* 10 (cdr (assoc (cddr geometry) mjk/resolution-font-size-alist)))))
 
+(defun mjk/window-config ()
+  "Set the frame defaults, font, font size, ..."
+  (when (display-graphic-p)
+    (window-divider-mode)
+    (when (string= system-type 'darwin)
+      (when (find-font (font-spec :name "JetBrains Mono"))
+	(set-face-attribute 'default nil :family "JetBrains Mono")
+	(global-ligature-mode t))
+      (set-face-attribute 'default nil :height (mjk/font-size)))))
+
 (use-package ligature
   :straight
   (ligatures :type git :host github :repo "mickeynp/ligature.el")  
@@ -108,13 +118,10 @@
                                        "\\\\" "://")))
 
 
-(when (display-graphic-p)
-  (window-divider-mode)
-  (when (string= system-type 'darwin)
-    (when (find-font (font-spec :name "JetBrains Mono"))
-      (set-face-attribute 'default nil :family "JetBrains Mono")
-      (global-ligature-mode t))
-    (set-face-attribute 'default nil :height (mjk/font-size))))
+(add-hook 'window-setup-hook
+	  (lambda ()
+	    (mjk/window-config)))
+
 
 ;;;; Modeline
 
@@ -249,7 +256,7 @@
     (when dark (mjk/force-dark-mode))
     (when pretty (prettify-symbols-mode))))
 
-;;;; Outlining
+;;;; Org
 
 (defun mjk/org-capture-cond (s)
   "Used by org-capture-templates to only include a line for S if non nil."
@@ -263,10 +270,22 @@
   :hook
   (prog-mode . outshine-mode))
 
+(use-package ob-go
+  :straight t)
+
 (use-package org
   :bind
-  (:map global-map ("C-c k" . org-capture))
+  (:map global-map
+	("C-c a" . org-agenda)
+	("C-c c" . org-capture))
+  :custom
+  (org-return-follows-link t)
   :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((go . t)
+     (python . t)
+     (shell . t)))
   (when (string= system-type 'darwin)	; has icloud
     (setq org-directory "~/Documents/Org"))
   (setq org-capture-templates
@@ -294,6 +313,28 @@
   (setq org-projectile-capture-template "* TODO %?\n%(mjk/org-capture-cond \"%i\")  %u\n  %a"
 	org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
   (push (org-projectile-project-todo-entry) org-capture-templates))
+
+(use-package org-roam
+  :straight t
+  :after (org)
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory "~/Documents/Roam")
+  (org-roam-dailies-directory "Journal")
+  :bind
+  (("C-c r l" . org-roam-buffer-toggle)
+   ("C-c r f" . org-roam-node-find)
+   ("C-c r i" . org-roam-node-insert)
+   ("C-c r c" . org-roam-capture))
+  :bind-keymap
+  ("C-c d" . org-roam-dailies-map)  
+  :config
+  (add-to-list 'load-path "~/.emacs.d/straight/repos/org-roam/extensions")
+  (require 'org-roam-dailies) 
+  (org-roam-db-autosync-mode))
+
+
 
 ;;;; Which Key
 
@@ -362,8 +403,8 @@
 
 (winner-mode)
 (global-set-key (kbd "C-c u")  'winner-undo)
-(global-set-key (kbd "C-c c")  'mjk/compile)
-(global-set-key (kbd "C-c g")  'mjk/grep)
+;; (global-set-key (kbd "C-c c")  'mjk/compile)
+;; (global-set-key (kbd "C-c g")  'mjk/grep)
 
 
 
@@ -448,26 +489,6 @@
 	      ("M-x" . nil)
 	      ("C-x C-y" . term-paste)))
 
-(use-package esh-mode
-  :hook
-  (eshell-mode . (lambda ()
-		   (define-key eshell-mode-map "\C-p" 'eshell-previous-input)
-		   (define-key eshell-mode-map "\C-n" 'eshell-next-input)
-		   (setenv "PAGER" "cat")
-		   (setenv "EDITOR" "emacsclient")
-		   (eshell/alias "ls" "ls -F")
-		   (when (file-directory-p "/opt/softiron/share/build")
-		     (setenv "SI_BUILD" "/opt/softiron/share/build")))))
-
-(use-package eshell-prompt-extras
-  :straight t
-  :after (esh-mode)
-  :config
-  (with-eval-after-load "esh-opt"
-    (autoload 'epe-theme-lambda "eshell-prompt-extras")
-    (setq eshell-highlight-prompt nil
-          eshell-prompt-function 'epe-theme-lambda)))
-
 (defun mjk/ansi-term ()
   "Create or visit a terminal buffer."
   (interactive)
@@ -475,15 +496,7 @@
       (ansi-term (getenv "SHELL"))
     (switch-to-buffer "*ansi-term*")))
 
-(defun mjk/eshell ()
-  "Create or visit eshell buffer."
-  (interactive)
-  (if (not (get-buffer "*eshell*"))
-      (eshell)
-    (switch-to-buffer "*eshell*")))
-
 (global-set-key (kbd "C-c s")  'mjk/ansi-term)
-(global-set-key (kbd "C-c e")  'mjk/eshell)
 
 ;;;; Writing
 
@@ -765,9 +778,7 @@
 
 
 (use-package rainbow-delimiters
-  :straight t
-  :config
-  (global-set-key (kbd "C-c r") 'rainbow-delimiters-mode))
+  :straight t)
 
 (use-package pomidor
   :straight t
@@ -804,7 +815,18 @@
  '(make-backup-files nil)
  '(menu-bar-mode nil)
  '(safe-local-variable-values
-   '((hl-sexp-mode)
+   '((elisp-lint-indent-specs
+      (describe . 1)
+      (it . 1)
+      (org-element-map . defun)
+      (org-roam-with-temp-buffer . 1)
+      (org-with-point-at . 1)
+      (magit-insert-section . defun)
+      (magit-section-case . 0)
+      (->> . 1)
+      (org-roam-with-file . 2))
+     (elisp-lint-ignored-validators "byte-compile" "package-lint")
+     (hl-sexp-mode)
      (rainbow-mode . t)
      (eval when
 	   (require 'rainbow-mode nil t)
