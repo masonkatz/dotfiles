@@ -7,7 +7,7 @@ Host *
   TCPKeepAlive no
   ForwardAgent yes
 
-{{ if eq .chezmoi.hostname "softpro" "mdesk" }}
+{{ if eq .chezmoi.os "darwin" }}
 Host buster-dev
   Hostname localhost
   Port 22000
@@ -19,4 +19,8 @@ Host centos-dev
 Host alpine-dev
   Hostname localhost
   Port 22002
+
+Host bullseye-dev
+  Hostname localhost
+  Port 22003
 {{ end }}  

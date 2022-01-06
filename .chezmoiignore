@@ -1,4 +1,4 @@
 {{- if ne .chezmoi.os "darwin" }}
-.Brewfile
+Brewfile
 iterm2.json
 {{- end }}
