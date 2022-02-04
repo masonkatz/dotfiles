@@ -9,7 +9,7 @@ fi
 export ZSH=~/.oh-my-zsh
 
 if [[ "$TERM" != "dumb" ]]; then
-	ZSH_THEME="powerlevel10k"
+	ZSH_THEME="powerlevel10k/powerlevel10k"
 	[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 fi
 
@@ -17,31 +17,22 @@ CASE_SENSITIVE="true"
 
 plugins=(git git-flow-avh golang httpie)
 
+{{ if eq .chezmoi.os "darwin" }}
+plugins+=(brew docker docker-compose gnu-utils thefuck)
+{{ end }}
 
-{{ if eq .org "softiron" }}	# SoftIron
+plugins+=(zsh-syntax-highlighting) # says it needs to be last
+
+
+{{ if eq .org "softiron" }}
 export SOFTIRON=1
 {{ end }}
 
 
-ls=ls
-
-{{ if eq .chezmoi.os "darwin" }} # MacOS
-plugins+=(brew colorize docker docker-compose thefuck)
-
-ls=gls
-
+{{ if eq .chezmoi.os "darwin" }}
 if [[ -z "$INSIDE_EMACS" ]]; then
 	test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 fi
-
-alias ack="ag"
-alias fack="ag -Q"
-
-if [[ -f /usr/local/bin/src-hilite-lesspipe.sh ]]; then
-	export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
-	export LESS=" -R "
-fi
-
 {{ end }}
 
 
@@ -57,7 +48,6 @@ fpath=($COMPLETIONS $fpath)
 
 autoload -Uz compinit; compinit
 
-
 # Do this after zsh setup to fix the ls aliases
 
 case $TERM in
@@ -65,28 +55,37 @@ eterm-*color)
 	chpwd() { print -P "\033AnSiTc %d" }
 	print -P "\033AnSiTu %n"
 	print -P "\033AnSiTc %d"
-	ls="$ls -F --color"
+	alias ls="ls -F --color"
 	DISABLE_AUTO_TITLE="true"
 	;;
 xterm*|screen*color)
-	ls="$ls -F --color"
+	alias ls="ls -F --color"
         ;;
 esac
 
-unalias ls
-unalias lsa
+unalias lsa			# unwanted (from zsh)
 
-alias ls=$ls
-alias la="$ls -a"
-alias ll="$ls -l"
-
-alias m='make'
+{{ if eq .chezmoi.os "darwin" }}
+alias ack="ag"
+alias fack="ag -Q"
+{{ end }}
+alias cz=chezmoi
+alias cza="chezmoi apply"
+alias czd="chezmoi diff"
+alias czs="chezmoi status"
+alias e=emacsclient
+alias la="ls -a"
+alias ll="ls -la"
+alias m=make
 
 export VISUAL=emacsclient
 export EDITOR=emacsclient
-export ALTERNATE_EDITOR='emacs -nw'
-alias e='emacsclient'
+export ALTERNATE_EDITOR="emacs -nw"
 
 setopt inc_append_history
 unsetopt sharehistory
 
+if which bat > /dev/null; then
+	alias cat="bat -P"
+	alias less=bat
+fi
