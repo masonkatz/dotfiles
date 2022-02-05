@@ -44,6 +44,9 @@ if [ -d /opt/softiron/bin ]; then
 	PATH=$PATH:/opt/softiron/bin
 fi
 
+if which minikube > /dev/null; then
+	eval $(minikube docker-env)
+fi
 
 
 

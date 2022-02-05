@@ -18,7 +18,7 @@ CASE_SENSITIVE="true"
 plugins=(git git-flow-avh golang httpie)
 
 {{ if eq .chezmoi.os "darwin" }}
-plugins+=(brew docker docker-compose gnu-utils thefuck)
+plugins+=(brew docker docker-compose gnu-utils kubectl kubectx thefuck)
 {{ end }}
 
 plugins+=(zsh-syntax-highlighting) # says it needs to be last

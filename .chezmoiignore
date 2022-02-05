@@ -2,6 +2,8 @@
 Brewfile
 iterm2.json
 {{- end }}
-.oh-my-zsh/cache/
+.oh-my-zsh/cache/completions
+.oh-my-zsh/cache/grep-alias
+.oh-my-zsh/cache/thefuck
 .oh-my-zsh/custom/themes/powerlevel10k/*.zwc
 .oh-my-zsh/custom/themes/powerlevel10k/*/*.zwc
