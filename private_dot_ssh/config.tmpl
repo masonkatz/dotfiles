@@ -9,18 +9,29 @@ Host *
 
 {{ if eq .chezmoi.os "darwin" }}
 Host buster-dev
-  Hostname localhost
-  Port 22000
+  ProxyCommand ssh localhost -W `minikube ip`:`kubectl get svc buster-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
 
-Host centos-dev
-  Hostname localhost
-  Port 22001
+Host alma-dev
+  ProxyCommand ssh localhost -W `minikube ip`:`kubectl get svc alma-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
 
 Host alpine-dev
-  Hostname localhost
-  Port 22002
+  ProxyCommand ssh localhost -W `minikube ip`:`kubectl get svc alpine-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
 
 Host bullseye-dev
-  Hostname localhost
-  Port 22003
+  ProxyCommand ssh localhost -W `minikube ip`:`kubectl get svc bullseye-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
+
+Host bluefin-hr-01
+  Hostname bluefin-hr-01
+  User root
+  ProxyCommand ssh root@bluefin -W %h:%p
+  
+Host bluefin
+  Hostname bluefin-mgr-00
+  User root
+  ProxyCommand ssh root@192.168.11.8 -W %h:%p
+
+Host wahoo
+  Hostname wahoo-mon-00
+  User root
+  ProxyCommand ssh root@192.168.11.8 -W %h:%p
 {{ end }}  

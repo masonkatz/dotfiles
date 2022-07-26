@@ -85,7 +85,8 @@ export ALTERNATE_EDITOR="emacs -nw"
 setopt inc_append_history
 unsetopt sharehistory
 
+{{ if eq .chezmoi.os "darwin" }}
 if which bat > /dev/null; then
-	alias cat="bat -P"
 	alias less=bat
 fi
+{{ end }}

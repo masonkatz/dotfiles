@@ -1,3 +1,8 @@
+{{ if eq .org "personal" }}
+[init]
+    defaultBranch = main
+{{ end }}
+
 [commit]
 	template = {{ .chezmoi.homeDir }}/.git-template
 
@@ -6,9 +11,6 @@
 
 [color]
 	ui = true
-
-[column]
-	ui = auto
 
 [alias]
 	graph = log --graph --pretty=format:'%Cred%h%Creset - %C(cyan)<%an>%Creset%C(yellow)%d%Creset %s %Cgreen(%cr)' --abbrev-commit --date=relative
@@ -27,10 +29,6 @@
 [pull]
 	rebase = false
 
-[gitflow "branch"]
-	master  = master
-	develop = develop
-
 [gitflow "prefix"]
 	feature = feature/
 	bugfix  = bugfix/
@@ -38,6 +36,14 @@
 	hotfix  = hotfix/
 	support = support/
 	versiontag =
+
+[gitflow "branch"]
+{{ if eq .org "softiron" }}
+	master  = master
+{{ else }}
+	master  = main
+{{ end }}
+	develop = develop
 
 {{ if eq .org "softiron" }}
 [url "ssh://git@git.softiron.com:30022"]

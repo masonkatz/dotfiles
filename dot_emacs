@@ -56,13 +56,13 @@
   :config
   (dashboard-setup-startup-hook)
   (setq dashboard-set-init-info nil
-	dashboard-set-footer nil
-	dashboard-banner-logo-title nil
-	dashboard-set-heading-icons t
-	dashboard-set-file-icons t
-	dashboard-set-navigator t
-	dashboard-items '((projects . 5)
-			  (recents  . 5)
+	    dashboard-set-footer nil
+	    dashboard-banner-logo-title nil
+	    dashboard-set-heading-icons t
+	    dashboard-set-file-icons t
+	    dashboard-set-navigator t
+	    dashboard-items '((projects . 5)
+			              (recents  . 5)
                           (bookmarks . 5)
                           (registers . 5))))
 
@@ -73,20 +73,20 @@
   :straight t)
 
 (defvar mjk/resolution-font-size-alist '(((1280 800)  . 14)
-					 ((1440 900)  . 14)
-					 ((1680 1050) . 14)
-					 ((1920 1080) . 14)
-					 ((2560 1440) . 16)
-					 ((3008 1692) . 16)
-					 ((3360 1890) . 16)
-					 ((3440 1440) . 16)
-					 ((3840 2160) . 20))
+					                     ((1440 900)  . 14)
+					                     ((1680 1050) . 14)
+					                     ((1920 1080) . 14)
+					                     ((2560 1440) . 16)
+					                     ((3008 1692) . 16)
+					                     ((3360 1890) . 16)
+					                     ((3440 1440) . 16)
+					                     ((3840 2160) . 20))
   "Font sizes for different monitors.")
 
 (defun mjk/font-size ()
   "Return font size to use based on resolution."
   (let* ((geometry (cdr (assoc 'geometry (car (display-monitor-attributes-list)))))
-	 (resolution (cddr geometry)))
+	     (resolution (cddr geometry)))
     (* 10 (cdr (assoc (cddr geometry) mjk/resolution-font-size-alist)))))
 
 (defun mjk/window-config ()
@@ -95,8 +95,8 @@
     (window-divider-mode)
     (when (string= system-type 'darwin)
       (when (find-font (font-spec :name "JetBrains Mono"))
-	(set-face-attribute 'default nil :family "JetBrains Mono")
-	(global-ligature-mode t))
+	    (set-face-attribute 'default nil :family "JetBrains Mono")
+	    (global-ligature-mode t))
       (set-face-attribute 'default nil :height (mjk/font-size)))))
 
 (use-package ligature
@@ -119,8 +119,8 @@
 
 
 (add-hook 'window-setup-hook
-	  (lambda ()
-	    (mjk/window-config)))
+	      (lambda ()
+	        (mjk/window-config)))
 
 
 ;;;; Modeline
@@ -130,9 +130,11 @@
   :init (doom-modeline-mode 1)
   :config
   (setq doom-modeline-project-detection 'projectile
-	doom-modeline-indent-info t)
+	    doom-modeline-indent-info t
+        doom-modeline-buffer-encoding t
+        doom-modeline-vcs-max-length 20
+        doom-modeline-hud t)
   (size-indication-mode))
-
 
 ;;;; Dark/Light Modes
 
@@ -149,8 +151,7 @@
 (defun mjk/force-dark-mode ()
   "Force dark mode."
   (when (not (string= mjk/dark-mode-p t))
-    (disable-theme 'zenburn)
-    (setq zenburn-override-colors-alist nil)
+    (disable-theme 'whiteboard)
     (load-theme 'zenburn t)
     (zenburn-with-color-variables
       (custom-theme-set-faces
@@ -159,71 +160,14 @@
        `(fill-column-indicator ((t :foreground ,zenburn-bg+2)))
        `(font-lock-keyword-face ((t (:foreground ,zenburn-yellow :slant italic))))
        `(region ((,class (:background ,zenburn-bg+3 :extend t))
-		 (t :inverse-video t)))))
+		         (t :inverse-video t)))))
     (setq mjk/dark-mode-p t)))
 
 (defun mjk/force-light-mode ()
   "Force light mode."
   (when (string= mjk/dark-mode-p t)
     (disable-theme 'zenburn)
-    (setq zenburn-override-colors-alist '(("zenburn-fg-1"     . "#303030")
-					  ("zenburn-fg-05"    . "#383838")
-					  ("zenburn-fg"       . "#404040")
-					  ("zenburn-fg+1"     . "#505050")
-					  ("zenburn-fg+2"     . "#60606f")
-					  ("zenburn-bg-2"     . "#e0e0e0")
-					  ("zenburn-bg-1"     . "#e4e4e4")
-					  ("zenburn-bg-08"    . "#e8e8e8")
-					  ("zenburn-bg-05"    . "#ececec")
-					  ("zenburn-bg"       . "#f0f0f0")
-					  ("zenburn-bg+05"    . "#f4f4f4")
-					  ("zenburn-bg+1"     . "#f8f8f8")
-					  ("zenburn-bg+2"     . "#fcfcfc")
-					  ("zenburn-bg+3"     . "#ffffff")
-					  ("zenburn-red-6"    . "#311b30")
-					  ("zenburn-red-5"    . "#422440")
-					  ("zenburn-red-4"    . "#522d50")
-					  ("zenburn-red-3"    . "#633660")
-					  ("zenburn-red-2"    . "#733f70")
-					  ("zenburn-red-1"    . "#844880")
-					  ("zenburn-red"      . "#8f4e8b")
-					  ("zenburn-red+1"    . "#945190")
-					  ("zenburn-red+2"    . "#a45ba0")
-					  ("zenburn-orange"   . "#f08000")
-					  ("zenburn-yellow-2" . "#9f8000")
-					  ("zenburn-yellow-1" . "#af9000")
-					  ("zenburn-yellow"   . "#bfa000")
-					  ("zenburn-green-5"  . "#5fb497")
-					  ("zenburn-green-4"  . "#54ab8e")
-					  ("zenburn-green-3"  . "#4c9a80")
-					  ("zenburn-green-2"  . "#438972")
-					  ("zenburn-green-1"  . "#3b7863")
-					  ("zenburn-green"    . "#397460")
-					  ("zenburn-green+1"  . "#326755")
-					  ("zenburn-green+2"  . "#2a5547")
-					  ("zenburn-green+3"  . "#224439")
-					  ("zenburn-green+4"  . "#19332b")
-					  ("zenburn-cyan"     . "#20a6ab")
-					  ("zenburn-blue+3"   . "#4e8cca")
-					  ("zenburn-blue+2"   . "#3b80c4")
-					  ("zenburn-blue+1"   . "#3573b1")
-					  ("zenburn-blue"     . "#2e659c")
-					  ("zenburn-blue-1"   . "#295989")
-					  ("zenburn-blue-2"   . "#234d76")
-					  ("zenburn-blue-3"   . "#1d4062")
-					  ("zenburn-blue-4"   . "#17334f")
-					  ("zenburn-blue-5"   . "#12263b")
-					  ("zenburn-magenta"  . "#DC8CC3")))
-    (load-theme 'zenburn t)
-    (zenburn-with-color-variables
-      (custom-theme-set-faces
-       'zenburn
-       `(aw-leading-char-face ((t (:foreground ,zenburn-blue+1 :height 4.0))))
-       `(fill-column-indicator ((t :foreground ,zenburn-bg+2)))
-       `(font-lock-keyword-face ((t (:foreground ,zenburn-yellow :slant italic))))
-       `(lsp-ui-doc-background ((t (:background ,zenburn-bg+2))))
-       `(region ((,class (:background ,zenburn-bg+3 :extend t))
-		 (t :inverse-video t)))))
+    (load-theme 'whiteboard t)
     (setq mjk/dark-mode-p nil)))
 
 (global-set-key (kbd "C-c d")  'mjk/dark-mode)
@@ -233,8 +177,8 @@
   :straight t
   :config
   (setq zenburn-use-variable-pitch t
-	zenburn-scale-org-headlines t
-	zenburn-scale-outline-headlines t))
+	    zenburn-scale-org-headlines t
+	    zenburn-scale-outline-headlines t))
 
 
 (mjk/dark-mode)
@@ -245,11 +189,11 @@
   "Landscape print current buffer."
   (interactive)
   (let ((ps-font-size '(8 . 10))
-	(ps-line-number t)
-	(ps-landscape-mode t)
-	(ps-number-of-columns 1)
-	(pretty prettify-symbols-mode)
-	(dark mjk/dark-mode-p))
+	    (ps-line-number t)
+	    (ps-landscape-mode t)
+	    (ps-number-of-columns 1)
+	    (pretty prettify-symbols-mode)
+	    (dark mjk/dark-mode-p))
     (when pretty (prettify-symbols-mode))
     (mjk/force-light-mode)
     (ps-print-buffer-with-faces)
@@ -276,8 +220,8 @@
 (use-package org
   :bind
   (:map global-map
-	("C-c a" . org-agenda)
-	("C-c c" . org-capture))
+	    ("C-c a" . org-agenda)
+	    ("C-c c" . org-capture))
   :custom
   (org-return-follows-link t)
   :config
@@ -289,7 +233,7 @@
   (when (string= system-type 'darwin)	; has icloud
     (setq org-directory "~/Documents/Org"))
   (setq org-capture-templates
-	'(("t" "Todo" entry (file+headline "Tasks.org" "Backlog")
+	    '(("t" "Todo" entry (file+headline "Tasks.org" "Backlog")
            "* TODO %?\n%(mjk/org-capture-cond \"%i\")  %u"))))
 
 (use-package org-superstar
@@ -297,11 +241,11 @@
   :after (org)
   :hook
   (org-mode . (lambda ()
-		(org-superstar-mode 1)
-		(push '("[ ]" . "☐") prettify-symbols-alist)
-		(push '("[X]" . "☑") prettify-symbols-alist)
-		(push '("[-]" . "❍") prettify-symbols-alist)
-		(prettify-symbols-mode))))
+		        (org-superstar-mode 1)
+		        (push '("[ ]" . "☐") prettify-symbols-alist)
+		        (push '("[X]" . "☑") prettify-symbols-alist)
+		        (push '("[-]" . "❍") prettify-symbols-alist)
+		        (prettify-symbols-mode))))
 
 (use-package org-projectile
   :straight t
@@ -311,7 +255,7 @@
       (setq org-projectile-projects-file "~/Documents/Org/Projects.org")
     (org-projectile-per-project))
   (setq org-projectile-capture-template "* TODO %?\n%(mjk/org-capture-cond \"%i\")  %u\n  %a"
-	org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
+	    org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
   (push (org-projectile-project-todo-entry) org-capture-templates))
 
 (use-package org-roam
@@ -485,9 +429,9 @@
 (use-package term
   :demand t				; force load to get the keymap
   :bind (:map term-raw-map
-	      ("C-c" . nil)
-	      ("M-x" . nil)
-	      ("C-x C-y" . term-paste)))
+	          ("C-c" . nil)
+	          ("M-x" . nil)
+	          ("C-x C-y" . term-paste)))
 
 (defun mjk/ansi-term ()
   "Create or visit a terminal buffer."
@@ -543,12 +487,13 @@
   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
   (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
   (setq lsp-ui-sideline-delay 0.5
-	lsp-ui-doc-delay 0.5
-	lsp-ui-doc-enable t
-	lsp-ui-doc-header nil
-	lsp-ui-doc-use-webkit nil
-	lsp-ui-doc-include-signature nil
-	lsp-ui-doc-position 'top))
+	    lsp-ui-doc-delay 0.5
+	    lsp-ui-doc-enable t
+	    lsp-ui-doc-show-with-cursor t
+	    lsp-ui-doc-header nil
+	    lsp-ui-doc-use-webkit nil
+	    lsp-ui-doc-include-signature nil
+	    lsp-ui-doc-position 'top))
 
 (when (string= system-type 'darwin)
   (use-package lsp-sourcekit
@@ -576,31 +521,49 @@
   :config
   (require 'smartparens-config))
 
+(add-hook 'text-mode-hook
+	      (lambda ()
+	        (setq fill-column 80)))
+
 (add-hook 'prog-mode-hook
-	  (lambda ()
-	    (when (display-graphic-p)
-	      (setq linum-format "%5d "
-		    display-fill-column-indicator-column 100)
-	      (if (version<= "26.0.50" emacs-version)
-		  (display-line-numbers-mode)	      
-		(linum-mode 1))
-	      (display-fill-column-indicator-mode)
-	      (hl-line-mode)
-	      (git-gutter-mode))
-	    (smartparens-mode)
-	    (show-smartparens-mode)
-	    (company-quickhelp-mode)
-	    (font-lock-mode)
-	    (flyspell-prog-mode)
-	    (yas-minor-mode)))
+	      (lambda ()
+	        (when (display-graphic-p)
+	          (setq linum-format "%5d "
+		            fill-column 80
+		            display-fill-column-indicator-column 100)
+	          (if (version<= "26.0.50" emacs-version)
+		          (display-line-numbers-mode)	      
+		        (linum-mode 1))
+	          (display-fill-column-indicator-mode)
+	          (hl-line-mode)
+	          (git-gutter-mode))
+	        (smartparens-mode)
+	        (show-smartparens-mode)
+	        (company-quickhelp-mode)
+	        (font-lock-mode)
+	        (flyspell-prog-mode)
+	        (yas-minor-mode)))
+
+;;;;;; APL
+
+(use-package gnu-apl-mode
+  :straight t
+  :hook
+  ((gnu-apl-interactive-mode-hook . mjk/gnu-apl-init)
+   (gnu-apl-mode-hook . mjk/gnu-apl-init)))
+
+(defun mjk/gnu-apl-init ()
+  (setq buffer-face-mode-face 'gnu-apl-default)
+  (buffer-face-mode))
+
 
 ;;;;;; ELisp
 
 (add-hook 'emacs-lisp-mode-hook
-	  (lambda ()
-	    (prettify-symbols-mode)
-	    (rainbow-mode)
-	    (rainbow-delimiters-mode)))
+	      (lambda ()
+	        (prettify-symbols-mode)
+	        (rainbow-mode)
+	        (rainbow-delimiters-mode)))
 
 ;;;;;; C/C++
 
@@ -609,45 +572,66 @@
   (setq c-default-style "linux")
   :hook
   (c-mode . (lambda ()
-	      (setq c-basic-offset 4
-		    tab-width 4)
-	      (lsp-deferred)
-	      (flycheck-add-next-checker 'lsp '(warning . c/c++-cppcheck)))))
+	          (setq c-basic-offset 4
+		            tab-width 4)
+	          (lsp-deferred)
+	          (flycheck-add-next-checker 'lsp '(warning . c/c++-cppcheck)))))
 
 ;;;;;; Go
+
 
 (defvar mjk/gosht-p nil
   "Are we standard or non-standard Go. Default is standard (nil).")
 
 (defun mjk/gosht (&optional force)
-  "Toggle Go style from standard to non-standard, unless FORCE is true."
+  "Toggle between standard Go and bad Go style."
   (interactive)
-  (when (string= force 't)
+  (when (eq force 't)
     (setq mjk/gosht-p 't))
-  (if (string= mjk/gosht-p 't)
+  (if (eq mjk/gosht-p 't)
       (setq mjk/gosht-p nil)
     (setq mjk/gosht-p 't))
+  (when (eq major-mode 'go-mode)
+    (if (eq mjk/gosht-p 't)
+        (setq mode-name "Go 💩")
+      (setq mode-name "Go"))
+    (doom-modeline-update-buffer-file-icon))
   (mjk/go-setup))
 
 (defun mjk/go-setup ()
   "Setup Go style."
-  (if (string= mjk/gosht-p 't)
+  (if (eq mjk/gosht-p 't)               ;ineffective go
       (setq indent-tabs-mode nil
-	    tabs-width 4)
+	        tab-width 4)
     (setq indent-tabs-mode 't
-	  tab-width 4)))
+	      tab-width 4)))
+
+(defun mjk/icon-for-buffer ()
+  "Get the formatted icon for the current buffer.
+
+Replaces the Go icon when in gosht-p is true."
+  (if (and (eq major-mode 'go-mode)
+           (eq mjk/gosht-p 't))
+    (all-the-icons-faicon "frown-o" :face 'all-the-icons-blue)
+    (all-the-icons--icon-info-for-buffer)))
+
+(advice-add 'all-the-icons-icon-for-buffer :override #'mjk/icon-for-buffer)
 
 (use-package go-mode
   :straight t
   :after (lsp-mode)
+  :custom
+  (lsp-go-hover-kind "FullDocumentation")
+  (lsp-go-goimports-local "git.softiron.com")
   :hook ((go-mode . (lambda ()
-		      (mjk/go-setup)
-		      (setq gofmt-command "goimports")
-		      (lsp-deferred)
-		      (flycheck-add-next-checker 'lsp '(warning . go-golint))))
-	 (before-save . (lambda ()
-			  (when (not (string= mjk/gosht-p 't))
-			    (gofmt-before-save))))))
+	                  (mjk/go-setup)
+		              (lsp-deferred)
+		              (flycheck-add-next-checker 'lsp '(warning . go-golint))))
+	     (before-save . (lambda ()
+			              (when (not (eq mjk/gosht-p 't))
+			                (lsp-organize-imports)
+			                (lsp-format-buffer))))))
+
 
 
 ;;;;;; HCL
@@ -661,10 +645,10 @@
   :straight t
   :hook
   (web-mode . (lambda ()
-		(turn-off-smartparens-mode)
-		(when (equal web-mode-content-type "javascript")
-		  (web-mode-set-content-type "jsx")) ;; react
-		(setq web-mode-css-indent-offset 2)))
+		        (turn-off-smartparens-mode)
+		        (when (equal web-mode-content-type "javascript")
+		          (web-mode-set-content-type "jsx")) ;; react
+		        (setq web-mode-css-indent-offset 2)))
   :custom
   (web-mode-enable-auto-indentation nil)
   :config
@@ -703,7 +687,7 @@
   (py-tab-shifts-region-p t)
   (py-python-command "python3")
   :hook ((python-mode . (lambda ()
-			  (python-black-on-save-mode)))))
+			              (python-black-on-save-mode)))))
 
 ;;;;;; Salt
 
@@ -717,17 +701,23 @@
 ;;;;;; Shell
 
 (add-hook 'sh-mode-hook
-	  (lambda ()
-	    (setq sh-basic-offset 8
-		  sh-indentation  8
-		  sh-indent-for-case-label 0
-		  sh-indent-for-case-alt '+)))
+	      (lambda ()
+	        (setq sh-basic-offset 8
+		          sh-indentation  8
+		          sh-indent-for-case-label 0
+		          sh-indent-for-case-alt '+)))
+
+;;;;;; Tcl
+
+(add-hook 'tcl-mode-hook
+          (lambda ()
+            (setq tab-width 4)))
 
 ;;;;;; Toml
 
 (add-hook 'conf-toml-mode-hook
-	  (lambda ()
-	    (setq tab-width 4)))
+	      (lambda ()
+	        (setq tab-width 4)))
 
 ;;;;;; Yaml
 
@@ -832,15 +822,15 @@
      (hl-sexp-mode)
      (rainbow-mode . t)
      (eval when
-	   (require 'rainbow-mode nil t)
-	   (rainbow-mode 1))
+	       (require 'rainbow-mode nil t)
+	       (rainbow-mode 1))
      (eval font-lock-add-keywords nil
-	   `((,(concat "("
-		       (regexp-opt
-			'("sp-do-move-op" "sp-do-move-cl" "sp-do-put-op" "sp-do-put-cl" "sp-do-del-op" "sp-do-del-cl")
-			t)
-		       "\\_>")
-	      1 'font-lock-variable-name-face)))
+	       `((,(concat "("
+		               (regexp-opt
+			            '("sp-do-move-op" "sp-do-move-cl" "sp-do-put-op" "sp-do-put-cl" "sp-do-del-op" "sp-do-del-cl")
+			            t)
+		               "\\_>")
+	          1 'font-lock-variable-name-face)))
      (checkdoc-minor-mode . t)
      (checkdoc-package-keywords-flag)
      (eval outshine-cycle-buffer 2)))
