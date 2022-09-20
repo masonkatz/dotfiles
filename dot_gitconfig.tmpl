@@ -1,20 +1,10 @@
-{{ if eq .org "personal" }}
+{{- if eq .org "personal" }}
 [init]
     defaultBranch = main
-{{ end }}
-
-[commit]
-	template = {{ .chezmoi.homeDir }}/.git-template
+{{- end }}
 
 [core]
 	pager = less -FX
-
-[color]
-	ui = true
-
-[alias]
-	graph = log --graph --pretty=format:'%Cred%h%Creset - %C(cyan)<%an>%Creset%C(yellow)%d%Creset %s %Cgreen(%cr)' --abbrev-commit --date=relative
-	who = blame -c
 
 [rerere]
 	enabled = true
@@ -23,11 +13,12 @@
 	prune = true
 
 [push]
+	autoSetupRemote = true
 	default = current
 	followTags = true
 
-[pull]
-	rebase = false
+[submodule]
+	recurse = true
 
 [gitflow "prefix"]
 	feature = feature/
@@ -38,19 +29,49 @@
 	versiontag =
 
 [gitflow "branch"]
-{{ if eq .org "softiron" }}
+{{- if eq .org "softiron" }}
 	master  = master
-{{ else }}
+{{- else }}
 	master  = main
-{{ end }}
+{{- end }}
 	develop = develop
-
-{{ if eq .org "softiron" }}
+{{- if eq .org "softiron" }}
 [url "ssh://git@git.softiron.com:30022"]
 	insteadOf = https://git.softiron.com
 {{ end }}
 
+[commit]
+	template = {{ .chezmoi.homeDir }}/.config/git/commit-template
+{{- if stat (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") }}
+	gpgSign = true
+{{- end }}
+
+{{- if stat (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") }}
+[tag]
+	gpgSign = true
+	forceSignAnnotated = true
+{{- end }}
+
+[log]
+	showSignature = true
+
+[blame]
+	coloring = highlightRecent
+	date = human
+	showEmail = true
+	
+[gpg]
+	format=ssh
+
+[gpg "ssh"]
+	 allowedSignersFile = {{ .chezmoi.homeDir}}/.config/git/signers
+
+[alias]
+	graph = log --graph --pretty=format:'%Cred%h%Creset - %C(cyan)<%an>%Creset%C(yellow)%d%Creset %s %Cgreen(%cr)' --abbrev-commit --date=relative
+
 [user]
 	name  = {{ .fullname }}
 	email = {{ .email }}
-
+{{- if stat (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") }}
+	signingKey = {{ include (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") }}
+{{ end }}
