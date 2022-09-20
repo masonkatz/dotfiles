@@ -9,6 +9,10 @@ if [ -d /opt/softiron/build/rules ]; then
 fi
 
 {{ if eq .chezmoi.os "darwin" }}
+if [ -d $HOME/.rd/bin ]; then
+	PATH=$HOME/.rd/bin:$PATH
+fi
+
 # Default to brew installed environment to be more gnu, less apple
 
 if [ -d /opt/homebrew/sbin ]; then

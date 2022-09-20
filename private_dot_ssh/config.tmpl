@@ -8,17 +8,17 @@ Host *
   ForwardAgent yes
 
 {{ if eq .chezmoi.os "darwin" }}
-Host buster-dev
-  ProxyCommand ssh localhost -W `minikube ip`:`kubectl get svc buster-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
+Host buster
+  ProxyCommand ssh localhost -W localhost:`kubectl get svc buster-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
 
-Host alma-dev
-  ProxyCommand ssh localhost -W `minikube ip`:`kubectl get svc alma-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
+Host alma
+  ProxyCommand ssh localhost -W localhost:`kubectl get svc alma-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
 
-Host alpine-dev
-  ProxyCommand ssh localhost -W `minikube ip`:`kubectl get svc alpine-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
+Host alpine
+  ProxyCommand ssh localhost -W localhost:`kubectl get svc alpine-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
 
-Host bullseye-dev
-  ProxyCommand ssh localhost -W `minikube ip`:`kubectl get svc bullseye-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
+Host bullseye
+  ProxyCommand ssh localhost -W localhost:`kubectl get svc bullseye-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
 
 Host bluefin-hr-01
   Hostname bluefin-hr-01
