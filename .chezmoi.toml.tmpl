@@ -5,11 +5,8 @@
     fullname = "Mason Katz"
     email    = "Mason.Katz@SoftIron.com"
 {{ else }}
-    {{ $personal := promptBool "Personal machine" }}
-    {{ if $personal }}
-    org      = "personal"
+    org      = "endobit"
     fullname = "Mason Katz"
     email    = "mjk@endobit.io"
-    {{ end }}
 {{ end }}
 
