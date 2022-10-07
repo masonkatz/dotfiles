@@ -1,8 +1,7 @@
 {{- if eq .org "personal" }}
 [init]
-    defaultBranch = main
-{{- end }}
-
+	defaultBranch = main
+{{ end -}}
 [core]
 	pager = less -FX
 
@@ -25,7 +24,7 @@
 	bugfix  = bugfix/
 	release = release/
 	hotfix  = hotfix/
-	support = support/
+ 	support = support/
 	versiontag =
 
 [gitflow "branch"]
@@ -35,18 +34,17 @@
 	master  = main
 {{- end }}
 	develop = develop
-{{- if eq .org "softiron" }}
+{{ if eq .org "softiron" }}
 [url "ssh://git@git.softiron.com:30022"]
 	insteadOf = https://git.softiron.com
-{{ end }}
+{{- end }}
 
 [commit]
 	template = {{ .chezmoi.homeDir }}/.config/git/commit-template
 {{- if stat (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") }}
 	gpgSign = true
 {{- end }}
-
-{{- if stat (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") }}
+{{ if stat (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") }}
 [tag]
 	gpgSign = true
 	forceSignAnnotated = true
@@ -74,4 +72,4 @@
 	email = {{ .email }}
 {{- if stat (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") }}
 	signingKey = {{ include (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") }}
-{{ end }}
+{{- end }}
