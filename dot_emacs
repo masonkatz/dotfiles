@@ -586,8 +586,8 @@
 
 (defvar mjk/organization (getenv "ORGANIZATION"))
 
-(defconst mjk/goimports-alist '((softiron . "git.softiron.com")
-				(endobit  . "github.com/endobit"))
+(defconst mjk/goimports-alist '(("softiron" . "git.softiron.com")
+				("endobit"  . "github.com/endobit"))
   "Mapping of ORGANIZATION to git repository base path.")
 
 (defvar mjk/gosht-p nil
