@@ -106,19 +106,15 @@
   :straight
   (ligatures :type git :host github :repo "mickeynp/ligature.el")  
   :config
-  (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "||=" "||>"
-                                       ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
-                                       "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
-                                       "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
-                                       "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
-                                       "..." "+++" "/==" "///" "_|_" "&&" "^=" "~~" "~@" "~="
-                                       "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
-                                       "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
-                                       ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
-                                       "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
-                                       "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
-                                       "?=" "?." "??" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
-                                       "\\\\" "://")))
+  (ligature-set-ligatures 'prog-mode '("++" "--"
+				       ">=" "<="
+				       "+=" "-=" "/=" "*=" "|=" "~=" "^="
+				       ":=" "!=" "==" "==="
+				       "/*" "*/" "//"
+				       "::" "<<" ">>"
+				       "<-" "->"
+				       "||" "&&"
+				       "...")))
 
 
 (add-hook 'window-setup-hook
@@ -733,9 +729,10 @@
   :config
   (setq hl-todo-highlight-punctuation ":"
         hl-todo-keyword-faces
-        `(("XXX"        error bold)
-	  ("TODO"       warning bold)
+        `(("TODO"       warning bold)
+	  ("XXX"        error bold)
           ("FIXME"      error bold)
+          ("WARNING"    font-lock-constant-face bold)
           ("HACK"       font-lock-constant-face bold)
           ("REVIEW"     font-lock-keyword-face bold)
           ("NOTE"       success bold)
