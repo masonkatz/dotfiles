@@ -2,6 +2,7 @@
 Brewfile
 iterm2.json
 symlink_Cloud
+symlink_src
 {{- end }}
 .oh-my-zsh/cache/completions
 .oh-my-zsh/cache/grep-alias
