@@ -26,6 +26,7 @@
   (load bootstrap-file nil 'nomessage))
 
 (straight-use-package 'use-package)
+(straight-use-package 'org)
 
 ;;;; Startup
 
@@ -287,27 +288,27 @@
   :init
   (which-key-mode))
 
-;;;; Selectrum
+;;;; Vertico
 
-(use-package selectrum
+(use-package vertico
   :straight t
   :init
-  (selectrum-mode))
+  (vertico-mode))
 
 (use-package prescient
   :straight t
   :config
   (prescient-persist-mode))
 
-(use-package selectrum-prescient
+(use-package vertico-prescient
   :straight t
-  :after selectrum
+  :after vertico
   :config
-  (selectrum-prescient-mode))
+  (vertico-prescient-mode))
 
 (use-package marginalia
   :straight t
-  :after selectrum
+  :after vertico
   :init
   (when (> emacs-major-version 26)
     (marginalia-mode)))
@@ -431,7 +432,7 @@
   :bind (:map term-raw-map
 	      ("C-c" . nil)
 	      ("M-x" . nil)
-	      ("C-x C-y" . term-paste)))
+	      ("C-y" . term-paste)))
 
 (defun mjk/ansi-term ()
   "Create or visit a terminal buffer."
@@ -443,7 +444,6 @@
 (global-set-key (kbd "C-c s")  'mjk/ansi-term)
 
 ;;;; Writing
-
 ;;;;; Markdown
 
 (use-package markdown-mode
@@ -452,6 +452,22 @@
   (markdown-header-scaling t))
 
 ;;;; Programming
+;;;;; Copilot
+
+(use-package copilot
+  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :ensure t)
+
+;; (with-eval-after-load 'company
+;;   ;; disable inline previews
+;;   (delq 'company-preview-if-just-one-frontend company-frontends))
+  
+(define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
+(define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
+
+(with-eval-after-load 'company
+  (add-to-list 'company-backends 'copilot-company-backend))
+
 ;;;;; Git
 
 (use-package git-gutter-fringe
