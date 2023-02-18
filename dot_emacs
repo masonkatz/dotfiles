@@ -39,6 +39,8 @@
 (use-package exec-path-from-shell
   :straight t
   :if (memq window-system '(mac ns))
+  :custom
+  (exec-path-from-shell-variables '("PATH" "MANPATH" "ORGANIZATION"))
   :config
   (when (display-graphic-p)
     (exec-path-from-shell-initialize)))
@@ -101,7 +103,9 @@
       (when (find-font (font-spec :name "JetBrains Mono"))
 	(set-face-attribute 'default nil :family "JetBrains Mono")
 	(global-ligature-mode t))
-      (set-face-attribute 'default nil :height (mjk/font-size)))))
+      (set-face-attribute 'default nil :height (mjk/font-size))
+      (set-fontset-font "fontset-default" 'hebrew
+			(font-spec :family "Arial Hebrew" :size (* .12 (mjk/font-size)))))))
 
 (use-package ligature
   :straight
@@ -444,6 +448,7 @@
 (global-set-key (kbd "C-c s")  'mjk/ansi-term)
 
 ;;;; Writing
+
 ;;;;; Markdown
 
 (use-package markdown-mode
@@ -452,6 +457,7 @@
   (markdown-header-scaling t))
 
 ;;;; Programming
+
 ;;;;; Copilot
 
 (use-package copilot
@@ -461,7 +467,7 @@
 ;; (with-eval-after-load 'company
 ;;   ;; disable inline previews
 ;;   (delq 'company-preview-if-just-one-frontend company-frontends))
-  
+
 (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
 (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
 
@@ -700,6 +706,12 @@
   :hook ((python-mode . (lambda ()
 			  (python-black-on-save-mode)))))
 
+;;;;;; Ruby
+
+(add-hook 'ruby-mode-hook
+	  (lambda ()
+	    (lsp-deferred)))
+
 ;;;;;; Salt
 
 (use-package salt-mode
@@ -716,7 +728,8 @@
 	    (setq sh-basic-offset 8
 		  sh-indentation  8
 		  sh-indent-for-case-label 0
-		  sh-indent-for-case-alt '+)))
+		  sh-indent-for-case-alt '+)
+	    (lsp-deferred)))
 
 ;;;;;; Tcl
 
@@ -735,7 +748,9 @@
 (use-package yaml-mode
   :straight t
   :config
-  (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
+  (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+  :hook (yaml-mode . (lambda ()
+		       (lsp-deferred))))
 
 ;;;; Misc
 
