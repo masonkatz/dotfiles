@@ -1,8 +1,8 @@
 {{- if ne .chezmoi.os "darwin" }}
 Brewfile
 iterm2.json
-symlink_Cloud
-symlink_src
+Cloud
+src
 {{- end }}
 .oh-my-zsh/cache/completions
 .oh-my-zsh/cache/grep-alias
