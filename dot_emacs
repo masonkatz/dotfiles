@@ -684,6 +684,15 @@
   :hook ((python-mode . (lambda ()
 			  (python-black-on-save-mode)))))
 
+;;;;;; Protobuf
+
+(use-package protobuf-mode
+  :straight t
+  :hook
+  (protobuf-mode . (lambda ()
+		     (setq c-basic-offset 2
+			   indent-tabs-mode nil))))
+
 ;;;;;; Salt
 
 (use-package salt-mode
