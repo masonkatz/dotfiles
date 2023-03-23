@@ -641,15 +641,18 @@
   (lsp-go-hover-kind "FullDocumentation")
   (web-mode-enable-auto-pairing nil)
   :hook
-  ((go-mode . (lambda ()
-		(setq lsp-go-goimports-local (mjk/goimports-local))
-	        (mjk/go-setup)
-		(lsp-deferred)
-		(flycheck-add-next-checker 'lsp '(warning . go-golint))))
-   (before-save . (lambda ()
-		    (when (not (eq mjk/gosht-p 't))
-		      (lsp-organize-imports)
-		      (lsp-format-buffer))))))
+  (go-mode . (lambda ()
+	       (setq lsp-go-goimports-local (mjk/goimports-local))
+	       (mjk/go-setup)
+	       (lsp-deferred)
+	       (flycheck-add-next-checker 'lsp '(warning . go-golint))
+	       (add-hook 'before-save-hook
+                         (lambda ()
+                           (when (not (eq mjk/gosht-p 't))
+                             (lsp-organize-imports)
+                             (lsp-format-buffer)))
+                         nil
+                         'local))))
 
 ;;;;;; HCL
 
