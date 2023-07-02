@@ -457,7 +457,6 @@
   (markdown-header-scaling t))
 
 ;;;; Programming
-
 ;;;;; Copilot
 
 (use-package copilot
@@ -471,8 +470,8 @@
 (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
 (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
 
-(with-eval-after-load 'company
-  (add-to-list 'company-backends 'copilot-company-backend))
+;; (with-eval-after-load 'company
+;;   (add-to-list 'company-backends 'copilot-company-backend))
 
 ;;;;; Git
 
@@ -564,7 +563,8 @@
 	    (company-quickhelp-mode)
 	    (font-lock-mode)
 	    (flyspell-prog-mode)
-	    (yas-minor-mode)))
+	    (yas-minor-mode)
+	    (copilot-mode)))
 
 ;;;;;; APL
 
@@ -584,8 +584,7 @@
 (add-hook 'emacs-lisp-mode-hook
 	  (lambda ()
 	    (prettify-symbols-mode)
-	    (rainbow-mode)
-	    (rainbow-delimiters-mode)))
+	    (rainbow-mode)))
 
 ;;;;;; C/C++
 
@@ -653,6 +652,23 @@
                              (lsp-format-buffer)))
                          nil
                          'local))))
+
+;; eglot and treesitter are the default for emacs 29.
+
+(when (>= emacs-major-version 29)
+  (add-to-list 'major-mode-remap-alist '(go-mode . go-ts-mode))
+  (setq-default eglot-workspace-configuration
+		'((:gopls .
+                          ((local . "git.softiron.com,github.com/endobit")
+                           (staticcheck . t)))))  
+  (add-hook 'go-ts-mode-hook
+	    (lambda ()
+	      (mjk/go-setup)
+	      (setq go-ts-mode-indent-offset 4)
+	      (eglot-ensure)
+	      (add-hook 'before-save-hook
+			(lambda ()
+			  (eglot-format-buffer))))))
 
 ;;;;;; HCL
 
@@ -807,9 +823,6 @@
   (global-set-key [remap delete-window] 'ace-delete-window)
   (global-set-key (kbd "C-c o") 'ace-swap-window))
 
-
-(use-package rainbow-delimiters
-  :straight t)
 
 (use-package pomidor
   :straight t
