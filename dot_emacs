@@ -523,6 +523,52 @@
     :config
     (setq lsp-sourcekit-executable "/Library/Developer/CommandLineTools/usr/bin/sourcekit-lsp")))
 
+;;;;; Eglot / Treesitter
+
+(when (>= emacs-major-version 29)
+  (add-to-list 'major-mode-remap-alist
+	       '((c-mode . c-ts-mode)
+		 (c++-mode . c++-ts-mode)
+		 (c-or-c++-mode . c-or-c++-ts-mode)
+		 (go-dot-mod-mode . go-mod-ts-mode)
+		 (go-mode . go-ts-mode)))
+  (setq treesit-language-source-alist	; https://tree-sitter.github.io/tree-sitter/
+	'((bash "https://github.com/tree-sitter/tree-sitter-bash")
+	  (c "https://github.com/tree-sitter/tree-sitter-c")
+	  (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+	  (css "https://github.com/tree-sitter/tree-sitter-css")
+	  (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
+	  (dot "https://github.com/rydesun/tree-sitter-dot")
+	  (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+	  (gitcommit "https://github.com/gbprod/tree-sitter-gitcommit")
+	  (gitignore "https://github.com/shunsambongi/tree-sitter-gitignore")
+	  (go "https://github.com/tree-sitter/tree-sitter-go")
+	  (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
+	  (go-work "https://github.com/omertuc/tree-sitter-go-work")
+	  (hcl "https://github.com/MichaHoffmann/tree-sitter-hcl")
+	  (html "https://github.com/tree-sitter/tree-sitter-html")
+	  (java "https://github.com/tree-sitter/tree-sitter-java")
+	  (javascript "https://github.com/tree-sitter/tree-sitter-javascript")
+	  (json "https://github.com/tree-sitter/tree-sitter-json")
+	  (make "https://github.com/alemuller/tree-sitter-make")
+	  (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+	  (org "https://github.com/milisims/tree-sitter-org")
+	  (protobuf "https://github.com/mitchellh/tree-sitter-proto")
+	  (python "https://github.com/tree-sitter/tree-sitter-python")
+	  (ruby "https://github.com/tree-sitter/tree-sitter-ruby")
+	  (rust "https://github.com/tree-sitter/tree-sitter-rust")
+	  (sql . ("https://github.com/derekstride/tree-sitter-sql" "gh-pages"))
+	  (sqlite "https://github.com/dhcmrlchtdj/tree-sitter-sqlite")
+	  (swift "https://github.com/tree-sitter/tree-sitter-swift")
+	  (toml "https://github.com/tree-sitter/tree-sitter-toml")
+	  (typescript "https://github.com/tree-sitter/tree-sitter-typescript")
+	  (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+	  (zig "https://github.com/maxxnino/tree-sitter-zig")))
+  (setq-default eglot-workspace-configuration
+		'((:gopls .
+                          ((local . "git.softiron.com,github.com/endobit")
+                           (staticcheck . t))))))  
+
 ;;;;; Yasnippet
 
 (use-package yasnippet
@@ -598,8 +644,18 @@
 	      (lsp-deferred)
 	      (flycheck-add-next-checker 'lsp '(warning . c/c++-cppcheck)))))
 
-;;;;;; Go
+(when (>= emacs-major-version 29)
+  (require 'c-ts-mode)
+  (add-hook 'c-ts-base-mode-hook
+	    (lambda ()
+	      (setq c-ts-mode-indent-style 'linux
+		    c-ts-mode-indent-offset 8)
+	      (c-ts-mode-toggle-comment-style -1)
+	      (eglot-ensure))))
 
+
+
+;;;;;; Go
 
 (defvar mjk/organization (getenv "ORGANIZATION"))
 
@@ -653,14 +709,7 @@
                          nil
                          'local))))
 
-;; eglot and treesitter are the default for emacs 29.
-
 (when (>= emacs-major-version 29)
-  (add-to-list 'major-mode-remap-alist '(go-mode . go-ts-mode))
-  (setq-default eglot-workspace-configuration
-		'((:gopls .
-                          ((local . "git.softiron.com,github.com/endobit")
-                           (staticcheck . t)))))  
   (add-hook 'go-ts-mode-hook
 	    (lambda ()
 	      (mjk/go-setup)
