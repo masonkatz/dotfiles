@@ -36,10 +36,14 @@ export GOPRIVATE=git.softiron.com
 if [[ -z "$INSIDE_EMACS" ]]; then
 	test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 fi
+
+if [[ -d /opt/homebrew ]]; then
+	PATH=/opt/homebrew/bin:/opt/homebrew/sbin:$PATH
+fi
 {{ end }}
 
 
-eval `dircolors -b "${HOME}/.dircolors"`
+eval `gdircolors -b "${HOME}/.dircolors"`
 
 DEFAULT_USER=`whoami`
 
