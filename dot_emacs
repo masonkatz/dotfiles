@@ -73,7 +73,7 @@
 
 ;;;; Font, Icons & Ligatures
 
-(use-package all-the-icons
+(use-package nerd-icons
   :straight t)
 
 (defvar mjk/resolution-font-size-alist '(((1280 800)  . 14)
@@ -389,15 +389,22 @@
   :config
   (setq treemacs-is-never-other-window t))
 
-(use-package treemacs-all-the-icons
+(use-package treemacs-nerd-icons
   :straight t
-  :after (treemacs))
-
-(use-package treemacs-icons-dired
-  :straight t
-  :after (treemacs dired)
+  :after (treemacs)
   :config
-  (treemacs-icons-dired-mode))
+  (treemacs-load-theme "nerd-icons"))
+
+(use-package nerd-icons-dired
+  :straight t
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
+
+;; (use-package treemacs-icons-dired
+;;   :straight t
+;;   :after (treemacs dired)
+;;   :config
+;;   (treemacs-icons-dired-mode))
 
 (use-package treemacs-projectile
   :straight t
@@ -527,11 +534,14 @@
 
 (when (>= emacs-major-version 29)
   (add-to-list 'major-mode-remap-alist
-	       '((c-mode . c-ts-mode)
-		 (c++-mode . c++-ts-mode)
+	       '((c++-mode . c++-ts-mode)
+		 (c-mode . c-ts-mode)
 		 (c-or-c++-mode . c-or-c++-ts-mode)
 		 (go-dot-mod-mode . go-mod-ts-mode)
-		 (go-mode . go-ts-mode)))
+		 (go-mode . go-ts-mode)
+		 (python-mode . python-ts-mode)
+		 (sh-mode . bash-ts-mode)
+		 (yaml-mode . yaml-ts-mode)))
   (setq treesit-language-source-alist	; https://tree-sitter.github.io/tree-sitter/
 	'((bash "https://github.com/tree-sitter/tree-sitter-bash")
 	  (c "https://github.com/tree-sitter/tree-sitter-c")
@@ -718,6 +728,7 @@
 	      (add-hook 'before-save-hook
 			(lambda ()
 			  (eglot-format-buffer))))))
+
 
 ;;;;;; HCL
 
