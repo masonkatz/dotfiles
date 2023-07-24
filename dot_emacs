@@ -815,8 +815,7 @@
 	    (setq sh-basic-offset 8
 		  sh-indentation  8
 		  sh-indent-for-case-label 0
-		  sh-indent-for-case-alt '+)
-	    (lsp-deferred)))
+		  sh-indent-for-case-alt '+)))
 
 ;;;;;; Tcl
 
