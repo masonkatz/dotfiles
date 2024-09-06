@@ -673,27 +673,6 @@
 				("endobit"  . "github.com/endobit"))
   "Mapping of ORGANIZATION to git repository base path.")
 
-(defvar mjk/gosht-p nil
-  "Are we standard or non-standard Go. Default is standard (nil).")
-
-(defun mjk/gosht (&optional force)
-  "Toggle between standard Go and bad Go style, FORCE means always bad."
-  (interactive)
-  (when (eq force 't)
-    (setq mjk/gosht-p 't))
-  (if (eq mjk/gosht-p 't)
-      (setq mjk/gosht-p nil)
-    (setq mjk/gosht-p 't))
-  (mjk/go-setup))
-
-(defun mjk/go-setup ()
-  "Setup Go style."
-  (if (eq mjk/gosht-p 't)               ;ineffective go
-      (setq indent-tabs-mode nil
-	    tab-width 4)
-    (setq indent-tabs-mode 't
-	  tab-width 4)))
-
 (defun mjk/goimports-local ()
   "Return the string used to set lsp-go-goimports-local."
   (interactive)
@@ -707,15 +686,15 @@
   (web-mode-enable-auto-pairing nil)
   :hook
   (go-mode . (lambda ()
-	       (setq lsp-go-goimports-local (mjk/goimports-local))
-	       (mjk/go-setup)
+	       (setq lsp-go-goimports-local (mjk/goimports-local)
+		     indent-tabs-mode 't
+		     tab-width 4)
 	       (lsp-deferred)
 	       (flycheck-add-next-checker 'lsp '(warning . go-golint))
 	       (add-hook 'before-save-hook
                          (lambda ()
-                           (when (not (eq mjk/gosht-p 't))
                              (lsp-organize-imports)
-                             (lsp-format-buffer)))
+                             (lsp-format-buffer))
                          nil
                          'local))))
 
