@@ -560,7 +560,6 @@
 	  (java "https://github.com/tree-sitter/tree-sitter-java")
 	  (javascript "https://github.com/tree-sitter/tree-sitter-javascript")
 	  (json "https://github.com/tree-sitter/tree-sitter-json")
-	  (make "https://github.com/alemuller/tree-sitter-make")
 	  (markdown "https://github.com/ikatyang/tree-sitter-markdown")
 	  (org "https://github.com/milisims/tree-sitter-org")
 	  (protobuf "https://github.com/mitchellh/tree-sitter-proto")
@@ -579,47 +578,23 @@
                           ((local . "git.softiron.com,github.com/endobit")
                            (staticcheck . t))))))  
 
-;;;;; Yasnippet
-
-(use-package yasnippet
-  :straight t)
-
-(use-package yasnippet-snippets
-  :straight t)
-
 ;;;;; Modes
 ;;;;;; Common
-
-(use-package rainbow-mode
-  :straight t)
 
 (use-package smartparens
   :straight t
   :config
   (require 'smartparens-config))
 
-(add-hook 'text-mode-hook
-	  (lambda ()
-	    (setq fill-column 80)))
-
 (add-hook 'prog-mode-hook
 	  (lambda ()
 	    (when (display-graphic-p)
-	      (setq linum-format "%5d "
-		    fill-column 80
-		    display-fill-column-indicator-column 100)
-	      (if (version<= "26.0.50" emacs-version)
-		  (display-line-numbers-mode)	      
-		(linum-mode 1))
-	      (display-fill-column-indicator-mode)
-	      (hl-line-mode)
-	      (git-gutter-mode))
+	      (setq linum-format "%5d "))
 	    (smartparens-mode)
 	    (show-smartparens-mode)
 	    (company-quickhelp-mode)
 	    (font-lock-mode)
 	    (flyspell-prog-mode)
-	    (yas-minor-mode)
 	    (copilot-mode)))
 
 ;;;;;; APL
