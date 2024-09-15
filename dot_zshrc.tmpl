@@ -26,9 +26,8 @@ plugins+=(brew docker docker-compose gnu-utils kubectl kubectx thefuck)
 plugins+=(zsh-syntax-highlighting) # says it needs to be last
 
 
-{{ if eq .org "softiron" }}
-export SOFTIRON=1
-export GOPRIVATE=git.softiron.com
+{{ if eq .org "teradata" }}
+export GOPRIVATE=git.teradata.com
 {{ end }}
 
 
@@ -41,13 +40,13 @@ if [[ -d /opt/homebrew ]]; then
 	PATH=/opt/homebrew/bin:/opt/homebrew/sbin:$PATH
 fi
 
-if [[ -d /usr/local ]]; then	# old homebrew path
+if [[ -d /usr/local ]]; then	# x86 homebrew path
 	PATH=/usr/local/bin:/usr/local/sbin:$PATH
 fi
 {{ end }}
 
 
-eval `dircolors -b "${HOME}/.dircolors"`
+eval `gdircolors -b "${HOME}/.dircolors"`
 
 DEFAULT_USER=`whoami`
 

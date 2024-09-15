@@ -1,14 +1,9 @@
 #!/bin/zsh
 
-export ORGANIZATION={{ .org }}
-
 [[ -d ~/go/bin ]] || mkdir -p ~/go/bin
 export GOPATH=~/go
 PATH=$PATH:$GOPATH/bin
 
-if [ -d /opt/softiron/build/rules ]; then
-	export SI_BUILD=/opt/softiron/build/rules
-fi
 
 {{ if eq .chezmoi.os "darwin" }}
 if [ -d $HOME/.rd/bin ]; then
@@ -28,10 +23,6 @@ if [ -d /opt/stack/bin ]; then
 	PATH=$PATH:/opt/stack/bin
 fi
 {{ end }}
-
-if [ -d /opt/softiron/bin ]; then
-	PATH=$PATH:/opt/softiron/bin
-fi
 
 if which minikube > /dev/null; then
 	eval $(minikube docker-env)

@@ -1,7 +1,5 @@
-{{- if not (eq .org "softiron") }}
 [init]
 	defaultBranch = main
-{{ end -}}
 [core]
 	pager = less -FX
 
@@ -28,15 +26,11 @@
 	versiontag =
 
 [gitflow "branch"]
-{{- if eq .org "softiron" }}
-	master  = master
-{{- else }}
 	master  = main
-{{- end }}
 	develop = develop
-{{ if eq .org "softiron" }}
-[url "ssh://git@git.softiron.com:30022"]
-	insteadOf = https://git.softiron.com
+{{ if eq .org "teradata" }}
+[url "ssh://git@git.teradata.com"]
+	insteadOf = https://git.teradata.com
 {{- end }}
 
 [commit]
