@@ -1,7 +1,6 @@
 tap "bufbuild/buf"
 tap "d12frosted/emacs-plus"
 tap "homebrew/bundle"
-tap "homebrew/cask-versions"
 tap "homebrew/services"
 tap "universal-ctags/universal-ctags"
 brew "certifi"
@@ -65,9 +64,6 @@ brew "protoc-gen-go"
 brew "protoc-gen-go-grpc"
 brew "pyenv"
 brew "pygments"
-brew "python-charset-normalizer"
-brew "python-urllib3"
-brew "python-requests"
 brew "s3cmd"
 brew "solargraph"
 brew "source-highlight"
@@ -80,7 +76,6 @@ brew "the_silver_searcher"
 brew "thefuck"
 brew "tldr"
 brew "tree-sitter"
-brew "universal-ctags", args: ["HEAD"]
 brew "util-linux"
 brew "virtualenv"
 brew "watch"
@@ -101,6 +96,7 @@ cask "vnc-viewer"
 cask "wireshark"
 mas "Developer", id: 640199958
 mas "Evernote", id: 406056744
+{{ if eq .org "personal" }}
 mas "GarageBand", id: 682658836
 mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
@@ -113,3 +109,5 @@ mas "Slack", id: 803453959
 mas "Tailscale", id: 1475387142
 mas "Twitter", id: 1482454543
 mas "Xcode", id: 497799835
+{{ end }}
+
