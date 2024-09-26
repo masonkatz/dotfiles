@@ -48,6 +48,11 @@
 	 ("NOTE" success bold)
 	 ("DEPRECATED" font-lock-doc-face bold)))
  '(inhibit-startup-screen t)
+ '(major-mode-remap-alist
+   '((js-json-mode . json-ts-mode)
+	 (c++-mode . c++-ts-mode)
+	 (c-mode . c-ts-mode)
+	 (c-or-c++-mode . c-or-c++-ts-mode)))
  '(make-backup-files nil)
  '(markdown-header-scaling t)
  '(menu-bar-mode nil)

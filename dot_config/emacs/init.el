@@ -185,9 +185,6 @@
 
 (mjk/install-treesitter-grammars)
 
-;; (add-to-list 'major-mode-remap-alist
-;; 			 '((elisp-mode )))
-
 ;;;; LSP (eglot) / Copilot
 
 (require 'eglot)
@@ -222,11 +219,6 @@
 
 (require 'c-ts-mode)
 
-(add-to-list 'major-mode-remap-alist
-			 '((c++-mode . c++-ts-mode)
-			   (c-mode . c-ts-mode)
-			   (c-or-c++-mode . c-or-c++-ts-mode)))
-
 (add-hook 'c-ts-base-mode-hook
 	      (lambda ()
 			(copilot-mode)
@@ -259,9 +251,6 @@
 (mjk/install 'markdown-mode)
 
 ;;;; JSON / YAML
-
-(add-to-list 'major-mode-remap-alist
-			 '((json-mode . json-ts-mode)))
 
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-ts-mode))
