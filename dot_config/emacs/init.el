@@ -176,6 +176,7 @@
 	     (gowork . ("https://github.com/omertuc/tree-sitter-go-work"))
 	     (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript"))
 	     (json . ("https://github.com/tree-sitter/tree-sitter-json"))
+	     (python . ("https://github.com/tree-sitter/tree-sitter-python"))
 	     (toml . ("https://github.com/ikatyang/tree-sitter-toml"))
 	     (yaml . ("https://github.com/ikatyang/tree-sitter-yaml"))))
     (add-to-list 'treesit-language-source-alist grammar)
@@ -237,6 +238,14 @@
 	    (add-hook 'before-save-hook
 		      (lambda ()
 			(eglot-format-buffer)))))
+
+;;;; Python
+
+(add-hook 'python-to-mode
+	  (lambda ()
+	    (copilot-mode)
+	    (eglot-ensure)
+	    (flymake-mode)))
 
 ;;;; Go
 
