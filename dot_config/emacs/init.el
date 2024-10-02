@@ -169,16 +169,15 @@
   "Download and install treesitter grammar files."
   (interactive)
   (dolist (grammar
-	   '(
-	     (c   . ("https://github.com/tree-sitter/tree-sitter-c"))
+	   '((c   . ("https://github.com/tree-sitter/tree-sitter-c"))
 	     (cpp . ("https://github.com/tree-sitter/tree-sitter-cpp"))
 	     (go     . ("https://github.com/tree-sitter/tree-sitter-go" "v0.23.1"))
 	     (gomod  . ("https://github.com/camdencheek/tree-sitter-go-mod" "v1.0.2"))
 	     (gowork . ("https://github.com/omertuc/tree-sitter-go-work"))
 	     (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript"))
 	     (json . ("https://github.com/tree-sitter/tree-sitter-json"))
-	     (yaml . ("https://github.com/ikatyang/tree-sitter-yaml"))
-	     ))
+	     (toml . ("https://github.com/ikatyang/tree-sitter-toml"))
+	     (yaml . ("https://github.com/ikatyang/tree-sitter-yaml"))))
     (add-to-list 'treesit-language-source-alist grammar)
     (unless (treesit-language-available-p (car grammar))
       (treesit-install-language-grammar (car grammar)))))
@@ -250,6 +249,13 @@
 	    (add-hook 'before-save-hook
 		      (lambda ()
 			(eglot-format-buffer)))))
+
+;;;; Web
+
+(mjk/install 'web-mode)
+
+(add-to-list 'auto-mode-alist '("\\.tmpl\\'" . web-mode))
+
 
 ;;;; GNU Makefile
 
