@@ -241,7 +241,7 @@
 
 ;;;; Python
 
-(add-hook 'python-to-mode
+(add-hook 'python-ts-mode
 	  (lambda ()
 	    (copilot-mode)
 	    (eglot-ensure)
