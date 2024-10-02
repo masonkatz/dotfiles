@@ -7,6 +7,15 @@ Host *
   TCPKeepAlive no
   ForwardAgent yes
 
+{{ if eq .org "teradata" -}}
+Host github-personal
+  IdentityFile ~/.ssh/github
+  IdentitiesOnly yes
+  User git
+  HostName github.com
+  UseKeychain yes
+{{ end -}}
+
 {{ if eq .chezmoi.os "darwin" }}
 Host buster
   ProxyCommand ssh localhost -W localhost:`kubectl get svc buster-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
@@ -19,19 +28,4 @@ Host alpine
 
 Host bullseye
   ProxyCommand ssh localhost -W localhost:`kubectl get svc bullseye-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
-
-Host bluefin-hr-01
-  Hostname bluefin-hr-01
-  User root
-  ProxyCommand ssh root@bluefin -W %h:%p
-  
-Host bluefin
-  Hostname bluefin-mgr-00
-  User root
-  ProxyCommand ssh root@192.168.11.8 -W %h:%p
-
-Host wahoo
-  Hostname wahoo-mon-00
-  User root
-  ProxyCommand ssh root@192.168.11.8 -W %h:%p
 {{ end }}  
