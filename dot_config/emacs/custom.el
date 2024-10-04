@@ -65,7 +65,6 @@
  '(tab-width 4)
  '(tool-bar-mode nil)
  '(treemacs-is-never-other-window t)
- '(treesit-font-lock-level 4)
  '(uniquify-buffer-name-style 'post-forward nil (uniquify))
  '(world-clock-list
    '(("America/Los_Angeles" "San Diego")
