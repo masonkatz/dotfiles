@@ -45,8 +45,11 @@ if [[ -d /usr/local ]]; then	# x86 homebrew path
 fi
 {{ end }}
 
-
+{{ if eq .chezmoi.os "darwin" }}
 eval `gdircolors -b "${HOME}/.dircolors"`
+{{ else }}
+eval `dircolors -b "${HOME}/.dircolors"`
+{{ end }}
 
 DEFAULT_USER=`whoami`
 
