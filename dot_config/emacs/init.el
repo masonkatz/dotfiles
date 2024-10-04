@@ -171,6 +171,7 @@
   (dolist (grammar
 	   '((c   . ("https://github.com/tree-sitter/tree-sitter-c"))
 	     (cpp . ("https://github.com/tree-sitter/tree-sitter-cpp"))
+	     (dockerfile . ("https://github.com/camdencheek/tree-sitter-dockerfile"))
 	     (go     . ("https://github.com/tree-sitter/tree-sitter-go" "v0.23.1"))
 	     (gomod  . ("https://github.com/camdencheek/tree-sitter-go-mod" "v1.0.2"))
 	     (gowork . ("https://github.com/omertuc/tree-sitter-go-work"))
@@ -278,6 +279,10 @@
 (add-hook 'just-mode-hook
 	  (lambda ()
 	    (setq just-indent-offset 4)))
+
+;;;; Docker
+
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-ts-mode))
 
 ;;;; Markdown
 
