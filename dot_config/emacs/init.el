@@ -177,6 +177,7 @@
 	     (gowork . ("https://github.com/omertuc/tree-sitter-go-work"))
 	     (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript"))
 	     (json . ("https://github.com/tree-sitter/tree-sitter-json"))
+	     (proto . ("https://github.com/mitchellh/tree-sitter-proto"))
 	     (python . ("https://github.com/tree-sitter/tree-sitter-python"))
 	     (toml . ("https://github.com/ikatyang/tree-sitter-toml"))
 	     (yaml . ("https://github.com/ikatyang/tree-sitter-yaml"))))
@@ -259,6 +260,13 @@
 	    (add-hook 'before-save-hook
 		      (lambda ()
 			(eglot-format-buffer)))))
+
+;;;; Protobuf
+
+(mjk/install 'protobuf-ts-mode)
+
+(add-to-list 'auto-mode-alist '("\\.proto\\'" .  protobuf-ts-mode))
+
 
 ;;;; Web
 
