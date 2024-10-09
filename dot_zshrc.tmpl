@@ -28,6 +28,20 @@ plugins+=(zsh-syntax-highlighting) # says it needs to be last
 
 {{ if eq .org "teradata" }}
 export GOPRIVATE=github.com/teradata-tio
+
+# gcloud cli
+
+gcpsdk=${HOME}/src/gcp/google-cloud-sdk
+
+if [[ -f "${gcpsdk}/path.zsh.inc" ]]; then
+	source "${gcpsdk}/path.zsh.inc"
+fi
+
+if [[ -f "${gcpsdk}/completion.zsh.inc" ]]; then
+	source "${gcpsdk}/completion.zsh.inc"
+fi
+
+
 {{ end }}
 
 
@@ -93,7 +107,7 @@ alias m=make
 
 export VISUAL=emacsclient
 export EDITOR=emacsclient
-export ALTERNATE_EDITOR="emacs -nw"
+export ALTERNATE_EDITOR="emacs -nw" # emacs client uses this
 
 setopt inc_append_history
 unsetopt sharehistory
@@ -101,5 +115,8 @@ unsetopt sharehistory
 {{ if eq .chezmoi.os "darwin" }}
 if which bat > /dev/null; then
 	alias less=bat
+fi
+if which moar > /dev/null; then
+	alias less=moar
 fi
 {{ end }}
