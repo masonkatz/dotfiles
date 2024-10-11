@@ -1,0 +1,75 @@
+issues:
+  include:
+    - EXC0004
+    - EXC0005
+    - EXC0011
+    - EXC0012
+    - EXC0013
+    - EXC0014
+    - EXC0015
+
+linters:
+  enable:
+    - asciicheck
+    - bodyclose
+    - dogsled
+    - errname
+    - errorlint
+    - exportloopref
+    - forcetypeassert
+    - gocognit
+    - gocritic
+    - gocyclo
+    - gofmt
+    - goimports
+    - goprintffuncname
+    - gosec
+    - gosimple
+    - importas
+    - makezero
+    - misspell
+    - nakedret
+    - nestif
+    - nilerr
+    - prealloc
+    - predeclared
+    - revive
+    - rowserrcheck
+    - stylecheck
+    - unconvert
+    - unparam
+    - tagliatelle
+    - wastedassign
+linters-settings:
+  govet:
+    disable:
+      - loopclosure
+  errorlint:
+    errorf: true
+  gosec:
+    excludes:
+      - G204
+  gocognit:
+    min-complexity: 50 # TODO: way too high, turn down later
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      - whyNoLint
+      - commentedOutCode
+    settings:
+      hugeParam:
+        sizeThreshold: 256
+      rangeValCopy:
+        sizeThreshold: 256
+  misspell:
+    locale: US
+  tagliatelle:
+    case:
+      rules:
+        json: snake
+        yaml: snake
