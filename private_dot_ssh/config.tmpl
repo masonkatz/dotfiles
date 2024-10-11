@@ -6,6 +6,7 @@ Host *
   ServerAliveInterval 120
   TCPKeepAlive no
   ForwardAgent yes
+  ForwardX11   yes
 
 {{ if eq .org "teradata" -}}
 Host github-personal
@@ -14,18 +15,8 @@ Host github-personal
   User git
   HostName github.com
   UseKeychain yes
+{{ else -}}
+Host tdbook
+  User mason.katz
+  Hostname tdbook.local
 {{ end -}}
-
-{{ if eq .chezmoi.os "darwin" }}
-Host buster
-  ProxyCommand ssh localhost -W localhost:`kubectl get svc buster-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
-
-Host alma
-  ProxyCommand ssh localhost -W localhost:`kubectl get svc alma-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
-
-Host alpine
-  ProxyCommand ssh localhost -W localhost:`kubectl get svc alpine-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
-
-Host bullseye
-  ProxyCommand ssh localhost -W localhost:`kubectl get svc bullseye-devbox -o=go-template --template '{{ `{{ range .spec.ports }}{{.nodePort}}{{end}}` }}'` 
-{{ end }}  
