@@ -100,7 +100,7 @@ alias cz=chezmoi
 alias cza="chezmoi apply"
 alias czd="chezmoi diff"
 alias czs="chezmoi status"
-alias e=emacsclient
+alias e="emacsclient -c"
 alias la="ls -a"
 alias ll="ls -la"
 alias m=make
@@ -117,6 +117,6 @@ if which bat > /dev/null; then
 	alias less=bat
 fi
 if which moar > /dev/null; then
-	alias less=moar
+	alias less="moar --mousemode=select"
 fi
 {{ end }}
