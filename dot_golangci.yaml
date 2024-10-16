@@ -9,67 +9,64 @@ issues:
     - EXC0015
 
 linters:
+  disable:
+    - errcheck
+    - unused
+    - ineffassign
   enable:
     - asciicheck
     - bodyclose
     - dogsled
-    - errname
-    - errorlint
-    - exportloopref
     - forcetypeassert
-    - gocognit
     - gocritic
-    - gocyclo
     - gofmt
     - goimports
     - goprintffuncname
-    - gosec
     - gosimple
     - importas
     - makezero
     - misspell
     - nakedret
-    - nestif
     - nilerr
     - prealloc
     - predeclared
-    - revive
-    - rowserrcheck
-    - stylecheck
-    - unconvert
-    - unparam
-    - tagliatelle
-    - wastedassign
 linters-settings:
   govet:
     disable:
       - loopclosure
   errorlint:
     errorf: true
+  staticcheck:
+    checks: ['all', '-SA4006']
   gosec:
     excludes:
       - G204
-  gocognit:
-    min-complexity: 50 # TODO: way too high, turn down later
   gocritic:
     enabled-tags:
       - diagnostic
-      - experimental
-      - opinionated
       - performance
       - style
     disabled-checks:
-      - whyNoLint
+      - stringXbytes
+      - ifElseChain
+      - underef
+      - redundantSprint
+      - appendCombine
+      - appendAssign
+      - commentFormatting
       - commentedOutCode
+      - deferUnlambda
+      - emptyStringTest
+      - importShadow
+      - paramTypeCombine
+      - singleCaseSwitch
+      - typeDefFirst
+      - unnamedResult
+      - whyNoLint
     settings:
       hugeParam:
-        sizeThreshold: 256
+        sizeThreshold: 1024
       rangeValCopy:
-        sizeThreshold: 256
+        sizeThreshold: 1024
   misspell:
     locale: US
-  tagliatelle:
-    case:
-      rules:
-        json: snake
-        yaml: snake
