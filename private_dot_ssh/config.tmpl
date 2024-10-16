@@ -1,22 +1,24 @@
 Host *
 {{- if eq .chezmoi.os "darwin" }}
-  UseKeychain yes
+  UseKeychain           yes
 {{- end }}
-  AddKeysToAgent yes
-  ServerAliveInterval 120
-  TCPKeepAlive no
-  ForwardAgent yes
-  ForwardX11   yes
+  AddKeysToAgent        yes
+  ServerAliveInterval   120
+  TCPKeepAlive          no
+  ForwardAgent          yes
+{{- if eq .org "personal" }}
+  ForwardX11            yes
+{{- end }}
 
 {{ if eq .org "teradata" -}}
 Host github-personal
-  IdentityFile ~/.ssh/github
-  IdentitiesOnly yes
-  User git
-  HostName github.com
-  UseKeychain yes
+  IdentityFile          ~/.ssh/github
+  IdentitiesOnly        yes
+  User                  git
+  HostName              github.com
+  UseKeychain           yes
 {{ else -}}
 Host tdbook
-  User mason.katz
-  Hostname tdbook.local
+  User                  mason.katz
+  Hostname              tdbook.local
 {{ end -}}
