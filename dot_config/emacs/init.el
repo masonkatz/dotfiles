@@ -35,9 +35,13 @@
   (unless (package-installed-p package)
     (package-install package)))
 
+(defun mjk/graphic-p ()
+  "Return true if running as a graphical application"
+  (or (eq window-system 'ns) (eq system-type 'darwin)))
+
 (defun mjk/macos-graphic-p ()
-  "Return true if running as an Application on MacOS"
-  (eq window-system 'ns))
+  "Return true if running as a graphical application on MacOS"
+  (and (eq system-type 'darwin) (mjk/graphic-p)))
 
 (defun mjk/font-size ()
   "Return font size to use based on resolution."
@@ -49,14 +53,15 @@
   "Set the frame defaults, font, font size, ..."
   (when (display-graphic-p)
     (window-divider-mode)
-    (when (mjk/macos-graphic-p)
+    (when (mjk/graphic-p)
       (when (find-font (font-spec :name "JetBrains Mono"))
 	(set-face-attribute 'default nil :family "JetBrains Mono")
 	(global-ligature-mode t))
-      (set-face-attribute 'default nil :height (mjk/font-size))
-      (set-fontset-font "fontset-default" 'hebrew
-			(font-spec :family "Arial Hebrew" :size (* .12 (mjk/font-size)))))))
-
+      (if (eq window-system 'x)
+	  (set-face-attribute 'default nil :height 135) ; close to what 160 means on MacOS
+	(set-face-attribute 'default nil :height (mjk/font-size))
+	(set-fontset-font "fontset-default" 'hebrew
+			  (font-spec :family "Arial Hebrew" :size (* .12 (mjk/font-size))))))))
 
 ;;;; Startup
 
@@ -83,6 +88,11 @@
 (mjk/install 'dashboard)
 
 (dashboard-setup-startup-hook)
+
+;;;; Ace Windows
+
+(mjk/install 'ace-window)
+(global-set-key (kbd "C-x o") 'ace-window)
 
 
 ;;;; Treemacs, Font, Icons & Ligatures
