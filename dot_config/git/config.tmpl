@@ -1,6 +1,11 @@
 {{/* -*- mode: web -*- */}}# -*- mode: conf -*-
 [init]
+{{- if eq .org "teradata" }}
+	defaultBranch = develop
+{{- else }}
 	defaultBranch = main
+{{- end }}
+
 [core]
 	pager = less -FX
 
@@ -18,6 +23,7 @@
 [submodule]
 	recurse = true
 
+{{- if eq .org "personal" }}
 [gitflow "prefix"]
 	feature = feature/
 	bugfix  = bugfix/
@@ -29,6 +35,11 @@
 [gitflow "branch"]
 	master  = main
 	develop = develop
+
+[log]
+	showSignature = true
+{{- end }}
+
 {{ if eq .org "teradata" }}
 [url "ssh://git@github.com"]
 	insteadOf = https://github.com
@@ -44,11 +55,6 @@
 [tag]
 	gpgSign = true
 	forceSignAnnotated = true
-{{- end }}
-
-{{- if eq .org "personal" -}}
-[log]
-	showSignature = true
 {{- end }}
 
 [blame]
