@@ -54,6 +54,7 @@
   (when (display-graphic-p)
     (window-divider-mode)
     (when (mjk/graphic-p)
+      (set-face-attribute 'aw-leading-char-face nil :height 4.0)
       (when (find-font (font-spec :name "JetBrains Mono"))
 	(set-face-attribute 'default nil :family "JetBrains Mono")
 	(global-ligature-mode t))
@@ -92,7 +93,10 @@
 ;;;; Ace Windows
 
 (mjk/install 'ace-window)
-(global-set-key (kbd "C-x o") 'ace-window)
+
+(global-set-key [remap other-window] 'ace-window)
+(global-set-key [remap delete-window] 'ace-delete-window)
+
 
 
 ;;;; Treemacs, Font, Icons & Ligatures
@@ -202,6 +206,9 @@
 (require 'eglot)
 (require 'flymake)
 
+(define-key eglot-mode-map (kbd "C-c r") 'eglot-rename)
+(define-key eglot-mode-map (kbd "C-c o") 'eglot-code-action-organize-imports)
+
 (setq-default eglot-workspace-configuration
 	      '((:gopls .
                         ((local . "git.softiron.com,github.com/endobit")
@@ -217,6 +224,7 @@
 
 (add-hook 'prog-mode-hook
 	  (lambda ()
+	    (winner-mode)
 	    (flyspell-prog-mode)
 	    (electric-pair-mode)
 	    (hl-todo-mode)
