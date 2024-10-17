@@ -2,7 +2,5 @@
 mason {{ .Key }}
 {{ end -}}
 {{ if and (eq .org "teradata") (eq .chezmoi.os "darwin")  -}}
-{{ if stat (joinPath .chezmoi.homeDir ".ssh/id_ed25519.pub") -}}
 mason {{ include (joinPath .chezmoi.homeDir ".ssh/id_ed25519.pub") -}}
-{{ end -}}
 {{ end -}}
