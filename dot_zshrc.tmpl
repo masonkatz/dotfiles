@@ -27,7 +27,7 @@ plugins+=(zsh-syntax-highlighting) # says it needs to be last
 
 
 {{ if eq .org "teradata" }}
-export GOPRIVATE=github.com/teradata-tio
+export GOPRIVATE="github.com/teradata-tio/*,github.td.teradata.com/*"
 
 # gcloud cli
 
