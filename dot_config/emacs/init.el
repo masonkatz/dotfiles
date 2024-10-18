@@ -93,6 +93,7 @@
 ;;;; Ace Windows
 
 (mjk/install 'ace-window)
+(require 'ace-window)			; so we can modify the faces
 
 (global-set-key [remap other-window] 'ace-window)
 (global-set-key [remap delete-window] 'ace-delete-window)

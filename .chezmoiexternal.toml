@@ -15,3 +15,6 @@
     url = "https://github.com/romkatv/powerlevel10k/archive/v1.16.0.tar.gz"
     exact = true
     stripComponents = 1
+[".config/emacs/straight/repos/straight.el"]
+    type = "git-repo"
+    url = "https://github.com/radian-software/straight.el.git"
