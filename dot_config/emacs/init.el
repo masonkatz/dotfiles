@@ -84,6 +84,14 @@
   (unbind-key "s-t")
   (unbind-key "s-,"))
 
+;;;; Tramp
+
+(require 'tramp)
+(add-to-list 'tramp-remote-path "/opt/homebrew/bin")
+(add-to-list 'tramp-remote-path "/opt/homebrew/sbin")
+(add-to-list 'tramp-remote-path 'tramp-own-remote-path) ; preserves remote's PATH 
+
+
 ;;;; Dashboard
 
 (mjk/install 'dashboard)
@@ -220,6 +228,9 @@
   :straight (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
   :ensure t)
 
+(global-set-key (kbd "C-c <tab>") 'copilot-accept-completion)
+
+
 ;;;; prog-mode
 
 
@@ -285,6 +296,12 @@
 (mjk/install 'protobuf-ts-mode)
 
 (add-to-list 'auto-mode-alist '("\\.proto\\'" .  protobuf-ts-mode))
+
+(add-hook 'protobuf-ts-mode-hook
+	  (lambda ()
+	    (copilot-mode)))
+
+(add-to-list 'copilot-indentation-alist '(protobuf-ts-mode 2))
 
 
 ;;;; Web

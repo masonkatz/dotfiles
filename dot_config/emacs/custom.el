@@ -64,6 +64,8 @@
  '(sentence-end-double-space nil)
  '(tab-width 4)
  '(tool-bar-mode nil)
+ '(tramp-default-method "ssh")
+ '(tramp-syntax 'simplified nil (tramp))
  '(treemacs-is-never-other-window t)
  '(uniquify-buffer-name-style 'post-forward nil (uniquify))
  '(world-clock-list

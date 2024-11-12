@@ -1,7 +1,5 @@
 #!/bin/zsh
 
-[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return # fix for tramp
-
 DISABLE_AUTO_UPDATE="true"
 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
@@ -87,7 +85,11 @@ eterm-*color)
 	;;
 xterm*|screen*color)
 	alias ls="ls -F --color"
-        ;;
+    ;;
+dumb)
+	unsetopt zle
+	PS1="$ "
+	;;
 esac
 
 unalias lsa			# unwanted (from zsh)

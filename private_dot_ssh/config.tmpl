@@ -6,8 +6,14 @@ Host *
   ServerAliveInterval   120
   TCPKeepAlive          no
   ForwardAgent          yes
-{{- if eq .org "personal" }}
+{{- if eq .org "endobit" }}
   ForwardX11            yes
+{{- end }}
+
+{{ if eq .chezmoi.os "darwin" -}}
+Host bookworm
+  Port                  22003
+  Hostname              localhost
 {{- end }}
 
 {{ if eq .org "teradata" -}}
@@ -16,9 +22,10 @@ Host github-personal
   IdentitiesOnly        yes
   User                  git
   HostName              github.com
-  UseKeychain           yes
-{{ else -}}
+{{- end }}  
+
+{{ if eq .org "endobit" -}}
 Host tdbook
   User                  mason.katz
   Hostname              tdbook.local
-{{ end -}}
+{{- end }}
