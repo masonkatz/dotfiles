@@ -86,6 +86,11 @@ if [ -d ~/go/bin ]; then
 	PATH=$PATH:~/go/bin
 fi
 
+if [ -d ~/.rd/bin ]; then
+	PATH=~/.rd/bin:$PATH
+fi
+
+
 CVS_RSH=ssh
 export CVS_RSH
 

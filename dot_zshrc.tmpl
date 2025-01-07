@@ -55,6 +55,10 @@ fi
 if [[ -d /usr/local ]]; then	# x86 homebrew path
 	PATH=/usr/local/bin:/usr/local/sbin:$PATH
 fi
+
+if [[ -d ~/.rd/bin ]]; then
+	PATH=~/.rd/bin:$PATH
+fi
 {{ end }}
 
 {{ if eq .chezmoi.os "darwin" }}

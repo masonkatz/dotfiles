@@ -6,27 +6,18 @@ PATH=$PATH:$GOPATH/bin
 
 
 {{ if eq .chezmoi.os "darwin" }}
-if [ -d $HOME/.rd/bin ]; then
+if [ -d $HOME/.rd/bin ]; then	# rancher desktop
 	PATH=$HOME/.rd/bin:$PATH
 fi
 
-# pyenv at the front
-
-if [ -d ~/.pyenv ]; then
+if [ -d ~/.pyenv ]; then		# pyenv at the front
 	PATH=~/.pyenv/shims:$PATH
 fi
 {{ end }}
-
 
 {{ if eq .chezmoi.os "linux" }}
 if [ -d /opt/stack/bin ]; then
 	PATH=$PATH:/opt/stack/bin
 fi
 {{ end }}
-
-if which minikube > /dev/null; then
-	eval $(minikube docker-env)
-fi
-
-
 
