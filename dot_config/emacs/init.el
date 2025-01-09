@@ -84,6 +84,9 @@
   (unbind-key "s-t")
   (unbind-key "s-,"))
 
+(when (not (display-graphic-p))
+  (xterm-mouse-mode 1))			; mouse click moves cursor
+
 ;;;; Tramp
 
 (require 'tramp)
@@ -153,6 +156,10 @@
 
 (doom-modeline-mode 1)
 (size-indication-mode)
+
+;;;; Page Breaks
+
+(mjk/install 'page-break-lines)
 
 ;;;; Zenburn
 
@@ -241,6 +248,7 @@
 	    (electric-pair-mode)
 	    (hl-todo-mode)
 	    (yas-minor-mode)
+	    (page-break-lines-mode)
 	    (when (display-graphic-p)
 	      (git-gutter-mode)
 	      (hl-line-mode)
