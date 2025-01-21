@@ -1,1 +1,7 @@
 theme = zenburn-emacs
+
+font-size = 16
+window-inherit-font-size = false
+
+window-height = 25
+window-width = 80
