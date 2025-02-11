@@ -1,4 +1,5 @@
 theme = zenburn-emacs
+term = xterm
 
 font-size = 16
 window-inherit-font-size = false
