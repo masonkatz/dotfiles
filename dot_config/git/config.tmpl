@@ -20,6 +20,9 @@
 	default = current
 	followTags = true
 
+[pull]
+    rebase = true
+
 [submodule]
 	recurse = true
 
@@ -79,3 +82,6 @@
 {{- if stat (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") }}
 	signingKey = {{ include (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") }}
 {{- end }}
+
+[help]
+	autocorrect = 20
