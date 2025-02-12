@@ -1,8 +1,11 @@
+auto-update = off
+
 theme = zenburn-emacs
 term = xterm
 
-font-size = 16
+font-size = 18
 window-inherit-font-size = false
 
 window-height = 25
 window-width = 80
+
