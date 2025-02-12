@@ -64,6 +64,18 @@
 	(set-fontset-font "fontset-default" 'hebrew
 			  (font-spec :family "Arial Hebrew" :size (* .12 (mjk/font-size))))))))
 
+(defun mjk/find-executable-in-paths (executable paths)
+  "Search for EXECUTABLE in the given list of PATHS. Returns the
+full path to the executable if found, or nil otherwise."
+  (let ((found nil))
+    (dolist (path paths found)
+      (let ((candidate (expand-file-name executable path)))
+        (when (and (file-exists-p candidate) (file-executable-p candidate))
+          (setq found candidate))))))
+
+
+
+
 ;;;; Startup
 
 (require 'package)
@@ -110,6 +122,10 @@
 (global-set-key [remap delete-window] 'ace-delete-window)
 
 
+;;;; Which Key
+
+(mjk/install 'which-key)
+(which-key-mode)
 
 ;;;; Treemacs, Font, Icons & Ligatures
 
@@ -157,10 +173,6 @@
 (doom-modeline-mode 1)
 (size-indication-mode)
 
-;;;; Page Breaks
-
-(mjk/install 'page-break-lines)
-
 ;;;; Zenburn
 
 (mjk/install 'zenburn-theme)
@@ -188,7 +200,11 @@
 
 ;;;; Prettier
 
-(mjk/install 'prettier-js)				; add prettier-js-mode to mode hooks
+(mjk/install 'prettier-js)		; add prettier-js-mode to mode hooks
+
+;;;; Page Breaks
+
+(mjk/install 'page-break-lines)
 
 
 ;;;; Treesitter
@@ -217,6 +233,19 @@
 
 (mjk/install-treesitter-grammars)
 
+;;;; Org Mode
+
+(require 'org)
+(mjk/install 'org-superstar)
+
+(add-hook 'org-mode-hook
+	  (lambda ()
+	    (org-superstar-mode 1)
+	    (push '("[ ]" . "☐") prettify-symbols-alist)
+	    (push '("[X]" . "☑") prettify-symbols-alist)
+	    (push '("[-]" . "❍") prettify-symbols-alist)
+	    (prettify-symbols-mode)))
+
 ;;;; LSP (eglot) / Copilot
 
 (require 'eglot)
@@ -227,7 +256,7 @@
 
 (setq-default eglot-workspace-configuration
 	      '((:gopls .
-                        ((local . "git.softiron.com,github.com/endobit")
+                        ((local . "github.com/endobit")
                          (staticcheck . t)))))
 
 
@@ -235,11 +264,17 @@
   :straight (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
   :ensure t)
 
-(global-set-key (kbd "C-c <tab>") 'copilot-accept-completion)
+(define-key copilot-mode-map (kbd "C-c <tab>") 'copilot-accept-completion)
 
 
 ;;;; prog-mode
 
+
+(let ((ispell (mjk/find-executable-in-paths
+	       "ispell"
+	       '("/usr/local/bin" "/opt/homebrew/bin" "/usr/bin"))))
+  (when ispell
+    (setq ispell-program-name ispell)))
 
 (add-hook 'prog-mode-hook
 	  (lambda ()
@@ -295,6 +330,7 @@
 	  (lambda ()
 	    (copilot-mode)
 	    (eglot-ensure)
+	    (setq-local page-delimiter "\/\/\/\/") ; use //// instead of ^L (syntax error in go)
 	    (add-hook 'before-save-hook
 		      (lambda ()
 			(eglot-format-buffer)))))
@@ -311,6 +347,15 @@
 
 (add-to-list 'copilot-indentation-alist '(protobuf-ts-mode 2))
 
+
+;;;; SQL
+
+(add-to-list 'copilot-indentation-alist '(sql-mode 8))
+
+(add-hook 'sql-mode-hook
+	  (lambda ()
+	    (setq tab-width 8)
+	    (copilot-mode)))
 
 ;;;; Web
 
