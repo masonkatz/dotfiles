@@ -67,6 +67,10 @@ eval `gdircolors -b "${HOME}/.dircolors"`
 eval `dircolors -b "${HOME}/.dircolors"`
 {{ end }}
 
+if [[ -d ~/pyenv/bin ]]; then
+	PATH=~/pyenv/bin:$PATH
+fi
+
 DEFAULT_USER=`whoami`
 
 source $ZSH/oh-my-zsh.sh
@@ -110,6 +114,7 @@ alias e="emacsclient -c"
 alias la="ls -a"
 alias ll="ls -la"
 alias m=make
+alias python=python3
 
 export VISUAL=emacsclient
 export EDITOR=emacsclient
