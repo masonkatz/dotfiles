@@ -1,0 +1,33 @@
+#!/bin/zsh
+
+export VISUAL=emacsclient
+export EDITOR=emacsclient
+export ALTERNATE_EDITOR="emacs -nw" # emacs client uses this
+
+if type thefuck &>/dev/null; then
+	eval $(thefuck --alias)
+fi
+
+[[ -f ~/.dircolors ]] && eval `dircolors -b "${HOME}/.dircolors"`
+
+case $TERM in
+xterm*)
+	eval "$(starship init zsh)"
+	export STARSHIP_CONFIG="$HOME/.config/starship/config.toml"
+
+{{ if eq .chezmoi.os "darwin" }}
+	include $HOMEBREW/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+{{ end }}
+	;;
+eterm-*color)
+	chpwd() { print -P "\033AnSiTc %d" }
+	print -P "\033AnSiTu %n"
+	print -P "\033AnSiTc %d"
+	;;
+dumb)
+	unsetopt zle
+	PS1="$ "
+	;;
+esac
+
+			 

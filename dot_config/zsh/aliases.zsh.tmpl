@@ -1,0 +1,38 @@
+#!/bin/zsh
+
+case $TERM in
+xterm*|eterm-*color|screen*color)
+{{ if eq .chezmoi.os "darwin" }}
+	alias ls="gls -F --color"
+{{ else }}
+	alias ls="ls -F --color"
+{{ end }}
+	;;
+esac
+
+{{ if eq .chezmoi.os "darwin" }}
+alias ack="ag"
+alias bubo="brew update && brew outdated"
+alias bubu="bubo && bup"
+alias bup="brew upgrade"
+alias dircolors="gdircolors"
+alias fack="ag -Q"
+{{ end  }}
+
+alias cz=chezmoi
+alias cza="chezmoi apply"
+alias czd="chezmoi diff"
+alias czs="chezmoi status"
+
+alias gd="git diff"
+alias gl="git log"
+alias gst="git status"
+
+alias e="emacsclient -c"
+
+alias l=less
+alias la="ls -a"
+alias ll="ls -la"
+
+alias m=make
+

@@ -1,133 +1,18 @@
 #!/bin/zsh
 
-DISABLE_AUTO_UPDATE="true"
+function include() {
+	[[ -f $1 ]] && source $1
+}
 
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-	source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+if type brew &>/dev/null; then
+    FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+
+    autoload -Uz compinit
+    compinit -u
 fi
 
-export ZSH=~/.oh-my-zsh
+include "$HOME/.config/zsh/options.zsh"
+include "$HOME/.config/zsh/aliases.zsh"
+include "$HOME/.config/zsh/devel.zsh"
+include "$HOME/.config/zsh/term.zsh"
 
-if [[ "$TERM" != "dumb" ]]; then
-	ZSH_THEME="powerlevel10k/powerlevel10k"
-	[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-fi
-
-CASE_SENSITIVE="true"
-
-plugins=(git git-flow-avh golang httpie)
-
-{{ if eq .chezmoi.os "darwin" }}
-plugins+=(brew docker docker-compose gnu-utils kubectl kubectx thefuck)
-{{ end }}
-
-plugins+=(zsh-syntax-highlighting) # says it needs to be last
-
-
-{{ if eq .org "teradata" }}
-export GOPRIVATE="github.com/teradata-tio/*,github.td.teradata.com/*"
-
-# gcloud cli
-
-gcpsdk=${HOME}/src/gcp/google-cloud-sdk
-
-if [[ -f "${gcpsdk}/path.zsh.inc" ]]; then
-	source "${gcpsdk}/path.zsh.inc"
-fi
-
-if [[ -f "${gcpsdk}/completion.zsh.inc" ]]; then
-	source "${gcpsdk}/completion.zsh.inc"
-fi
-
-
-{{ end }}
-
-
-{{ if eq .chezmoi.os "darwin" }}
-if [[ -z "$INSIDE_EMACS" ]]; then
-	test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-fi
-
-if [[ -d /opt/homebrew ]]; then
-	PATH=/opt/homebrew/bin:/opt/homebrew/sbin:$PATH
-fi
-
-if [[ -d /usr/local ]]; then	# x86 homebrew path
-	PATH=/usr/local/bin:/usr/local/sbin:$PATH
-fi
-
-if [[ -d ~/.rd/bin ]]; then
-	PATH=~/.rd/bin:$PATH
-fi
-{{ end }}
-
-{{ if eq .chezmoi.os "darwin" }}
-eval `gdircolors -b "${HOME}/.dircolors"`
-{{ else }}
-eval `dircolors -b "${HOME}/.dircolors"`
-{{ end }}
-
-if [[ -d ~/pyenv/bin ]]; then
-	PATH=~/pyenv/bin:$PATH
-fi
-
-DEFAULT_USER=`whoami`
-
-source $ZSH/oh-my-zsh.sh
-
-COMPLETIONS=~/.completions
-[[ -d $COMPLETIONS ]] || mkdir $COMPLETIONS
-fpath=($COMPLETIONS $fpath)
-
-autoload -Uz compinit; compinit
-
-# Do this after zsh setup to fix the ls aliases
-
-case $TERM in
-eterm-*color)
-	chpwd() { print -P "\033AnSiTc %d" }
-	print -P "\033AnSiTu %n"
-	print -P "\033AnSiTc %d"
-	alias ls="ls -F --color"
-	DISABLE_AUTO_TITLE="true"
-	;;
-xterm*|screen*color)
-	alias ls="ls -F --color"
-    ;;
-dumb)
-	unsetopt zle
-	PS1="$ "
-	;;
-esac
-
-unalias lsa			# unwanted (from zsh)
-
-{{ if eq .chezmoi.os "darwin" }}
-alias ack="ag"
-alias fack="ag -Q"
-{{ end }}
-alias cz=chezmoi
-alias cza="chezmoi apply"
-alias czd="chezmoi diff"
-alias czs="chezmoi status"
-alias e="emacsclient -c"
-alias la="ls -a"
-alias ll="ls -la"
-alias m=make
-alias python=python3
-
-export VISUAL=emacsclient
-export EDITOR=emacsclient
-export ALTERNATE_EDITOR="emacs -nw" # emacs client uses this
-
-setopt inc_append_history
-unsetopt sharehistory
-
-{{ if eq .chezmoi.os "darwin" }}
-if which bat > /dev/null; then
-	alias less=bat
-fi
-if which moar > /dev/null; then
-	alias less="moar --mousemode=select"
-fi
-{{ end }}

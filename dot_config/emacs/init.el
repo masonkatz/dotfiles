@@ -256,7 +256,7 @@ full path to the executable if found, or nil otherwise."
 
 (setq-default eglot-workspace-configuration
 	      '((:gopls .
-                        ((local . "github.com/endobit")
+                        ((local . "endobit.io")
                          (staticcheck . t)))))
 
 

@@ -1,0 +1,19 @@
+#!/bin/zsh
+
+{{ if eq .chezmoi.os "darwin" }}
+unsetopt CASE_GLOB
+{{ end }}
+
+setopt AUTO_CD
+setopt INC_APPEND_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_REDUCE_BLANKS
+setopt HIST_VERIFY
+setopt EMACS
+
+
+
+
+
+

@@ -1,0 +1,40 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+[directory]
+truncation_length = 5
+truncation_symbol = '…/'
+before_repo_root_style = 'red'
+repo_root_style = 'bold cyan'
+
+[directory.substitutions]
+'Music' = ''
+'Desktop' = ''
+'Movies' = '󰿎'
+'Pictures' = ''
+
+[buf]
+symbol = "buf "
+
+[git_branch]
+ignore_branches = [ 'master', 'main']
+always_show_remote = true
+symbol = ' '
+
+[git_commit]
+tag_disabled = false
+
+[git_metrics]
+disabled = false
+
+[golang]
+format = "via [$symbol($version) ]($style)"
+symbol = '󰟓 '
+version_format = "v${major}.${minor}"
+detect_files = [ "go.mod", "go.work" ]
+
+[custom.sqlc]
+symbol = "sqlc "
+style = "bold blue"
+detect_files = [ "sqlc.yml", "sqlc.yaml" ]
+
+

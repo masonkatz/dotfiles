@@ -1,0 +1,17 @@
+#!/bin/zsh
+
+{{ if eq .org "teradata" }}
+export GOPRIVATE="github.com/teradata-tio/*,github.td.teradata.com/*"
+
+# gcloud cli
+
+gcpsdk=${HOME}/src/gcp/google-cloud-sdk
+
+if [[ -f "${gcpsdk}/path.zsh.inc" ]]; then
+	source "${gcpsdk}/path.zsh.inc"
+fi
+
+if [[ -f "${gcpsdk}/completion.zsh.inc" ]]; then
+	source "${gcpsdk}/completion.zsh.inc"
+fi
+{{ end }}

@@ -1,11 +1,4 @@
 {{- if ne .chezmoi.os "darwin" }}
 Brewfile
-iterm2.json
-Cloud
-src
 {{- end }}
-.oh-my-zsh/cache/completions
-.oh-my-zsh/cache/grep-alias
-.oh-my-zsh/cache/thefuck
-.oh-my-zsh/custom/themes/powerlevel10k/*.zwc
-.oh-my-zsh/custom/themes/powerlevel10k/*/*.zwc
+
