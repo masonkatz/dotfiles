@@ -8,15 +8,20 @@ HOMEBREW=/usr/local
 HOMEBREW=/opt/homebrew
 {{ end }}
 
-if [[ -d $HOMEBREW ]]; then
-	PATH=$HOMEBREW/bin:$HOMEBREW/sbin:$PATH
-fi
-
 if [ -d $HOME/.rd/bin ]; then	# rancher desktop
 	PATH=$HOME/.rd/bin:$PATH
 fi
-
 {{ end }}
+
+
+{{ if eq .chezmoi.os "linux" }}
+HOMEBREW=/home/linuxbrew/.linuxbrew
+PATH=$PATH:$HOME/bin
+{{ end }}
+
+if [[ -d $HOMEBREW ]]; then
+	PATH=$HOMEBREW/bin:$HOMEBREW/sbin:$PATH
+fi
 
 if [ -d ~/.pyenv ]; then		# pyenv at the front
 	PATH=~/.pyenv/shims:$PATH
