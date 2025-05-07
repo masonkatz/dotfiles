@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 case $TERM in
-xterm*|eterm-*color|screen*color)
+xterm*|eat-*color|eterm-*color|screen*color)
 {{ if eq .chezmoi.os "darwin" }}
 	alias ls="gls -F --color"
 {{ else }}

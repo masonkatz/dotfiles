@@ -1,4 +1,17 @@
-{{/* -*- mode: web -*- */}}# -*- mode: conf -*-
+# -*- mode: conf -*-
+[user]
+	name  = {{ .fullname }}
+	email = {{ .email }}
+{{- if stat (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") }}
+	signingKey = {{ include (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") }}
+{{- end }}
+
+[column]
+	ui = auto
+
+[branch]
+	sort = -committerdate
+
 [init]
 {{- if eq .org "teradata" }}
 	defaultBranch = develop
@@ -6,22 +19,32 @@
 	defaultBranch = main
 {{- end }}
 
+[diff]
+	algorithm = histogram
+	colorMoved = plain
+	renames = true
+	
 [core]
 	pager = less -FX
 
 [rerere]
 	enabled = true
+	autoupdate = true
 
 [fetch]
+	all = true
 	prune = true
+	pruneTags = true
 
 [push]
 	autoSetupRemote = true
-	default = current
 	followTags = true
 
 [pull]
     rebase = true
+
+[merge]
+	conflictstyle = zdiff3
 
 [submodule]
 	recurse = true
@@ -57,8 +80,9 @@
 	gpgSign = true
 {{- end }}
 
-{{ if stat (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") -}}
 [tag]
+	sort = version:refname
+{{ if stat (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") -}}
 	gpgSign = true
 	forceSignAnnotated = true
 {{- end }}
@@ -76,12 +100,5 @@
 [alias]
 	graph = log --graph --pretty=format:'%Cred%h%Creset - %C(cyan)<%an>%Creset%C(yellow)%d%Creset %s %Cgreen(%cr)' --abbrev-commit --date=relative
 
-[user]
-	name  = {{ .fullname }}
-	email = {{ .email }}
-{{- if stat (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") }}
-	signingKey = {{ include (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") }}
-{{- end }}
-
 [help]
-	autocorrect = 20
+	autocorrect = prompt

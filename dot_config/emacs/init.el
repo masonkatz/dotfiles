@@ -6,28 +6,6 @@
 ;;
 ;;; Code:
 
-;;;; Bootstrap straight package manager
-
-;; Trying to stick with simpler configs, but copilot needs use-package.
-;; Hopefully it goes into melpa soon.
-
-;; https://github.com/raxod502/straight.el#getting-started
-
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         nil 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-(straight-use-package 'use-package)
-
 ;;;; Functions
 
 (defun mjk/install (package)
@@ -73,6 +51,10 @@ full path to the executable if found, or nil otherwise."
         (when (and (file-exists-p candidate) (file-executable-p candidate))
           (setq found candidate))))))
 
+(defun mjk/add-to-list-multiple (list &rest items)
+  "Add multiple ITEMS to LIST."
+  (dolist (item items)
+    (add-to-list list item)))
 
 
 
@@ -124,7 +106,6 @@ full path to the executable if found, or nil otherwise."
 
 ;;;; Which Key
 
-(mjk/install 'which-key)
 (which-key-mode)
 
 ;;;; Treemacs, Font, Icons & Ligatures
@@ -183,6 +164,13 @@ full path to the executable if found, or nil otherwise."
 (mjk/install 'rainbow-mode)		; highlights color strings
 (mjk/install 'hl-todo)
 
+;;;; Terminal
+
+(mjk/install 'eat)
+
+(add-hook 'eshell-load-hook #'eat-eshell-mode)
+(add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
+
 ;;;; Git
 
 (mjk/install 'git-gutter-fringe)
@@ -191,7 +179,9 @@ full path to the executable if found, or nil otherwise."
 ;;;; Company
 
 (mjk/install 'company)
+(mjk/install 'company-box)
 (global-company-mode t)
+(add-hook 'company-mode-hook 'company-box-mode)
 
 ;;;; Yasnippet
 
@@ -240,6 +230,7 @@ full path to the executable if found, or nil otherwise."
 
 (add-hook 'org-mode-hook
 	  (lambda ()
+	    (visual-line-mode t)	; wrap lines (needed to copilot-chat)
 	    (org-superstar-mode 1)
 	    (push '("[ ]" . "☐") prettify-symbols-alist)
 	    (push '("[X]" . "☑") prettify-symbols-alist)
@@ -261,10 +252,18 @@ full path to the executable if found, or nil otherwise."
 
 
 (use-package copilot
-  :straight (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
-  :ensure t)
+  :vc (:url "https://github.com/copilot-emacs/copilot.el"
+            :rev :newest
+            :branch "main"))
 
-(define-key copilot-mode-map (kbd "C-c <tab>") 'copilot-accept-completion)
+(mjk/install 'copilot-chat)
+
+(mjk/add-to-list-multiple 'copilot-indentation-alist
+			  '((emacs-lisp-mode 1)
+			    (protobuf-ts-mode 2)
+			    (sql-mode 8)))
+
+(define-key copilot-mode-map (kbd "<tab>") 'copilot-accept-completion)
 
 
 ;;;; prog-mode
@@ -345,12 +344,8 @@ full path to the executable if found, or nil otherwise."
 	  (lambda ()
 	    (copilot-mode)))
 
-(add-to-list 'copilot-indentation-alist '(protobuf-ts-mode 2))
-
 
 ;;;; SQL
-
-(add-to-list 'copilot-indentation-alist '(sql-mode 8))
 
 (add-hook 'sql-mode-hook
 	  (lambda ()
