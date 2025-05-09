@@ -6,6 +6,8 @@
  '(c-ts-mode-indent-offset 4)
  '(c-ts-mode-indent-style 'k&r)
  '(calendar-hebrew-all-holidays-flag t)
+ '(calendar-latitude 32.7157)
+ '(calendar-longitude -117.1611)
  '(calendar-mark-holidays-flag t)
  '(calendar-week-start-day 1)
  '(company-idle-delay 0.5)

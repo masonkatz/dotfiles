@@ -1,4 +1,4 @@
-;; emacs.el --- top level config -*- eval: (outline-minor-mode) -*-
+;; emacs.el --- top level config
 ;;; Commentary:
 ;;
 ;; Portable across MacOS and Linux, but assumes a fairly recent
@@ -68,6 +68,7 @@ full path to the executable if found, or nil otherwise."
 					;(package-refresh-contents)
 
 (unless (server-running-p)
+  (setq server-use-tcp t)
   (server-start))
 
 (when (display-graphic-p)
@@ -80,6 +81,12 @@ full path to the executable if found, or nil otherwise."
 
 (when (not (display-graphic-p))
   (xterm-mouse-mode 1))			; mouse click moves cursor
+
+(let ((ispell (mjk/find-executable-in-paths
+	       "ispell"
+	       '("/usr/local/bin" "/opt/homebrew/bin" "/usr/bin"))))
+  (when ispell
+    (setq ispell-program-name ispell)))
 
 ;;;; Tramp
 
@@ -205,18 +212,18 @@ full path to the executable if found, or nil otherwise."
   "Download and install treesitter grammar files."
   (interactive)
   (dolist (grammar
-	   '((c   . ("https://github.com/tree-sitter/tree-sitter-c"))
-	     (cpp . ("https://github.com/tree-sitter/tree-sitter-cpp"))
+	   '((c          . ("https://github.com/tree-sitter/tree-sitter-c"))
+	     (cpp        . ("https://github.com/tree-sitter/tree-sitter-cpp"))
 	     (dockerfile . ("https://github.com/camdencheek/tree-sitter-dockerfile"))
-	     (go     . ("https://github.com/tree-sitter/tree-sitter-go" "v0.23.1"))
-	     (gomod  . ("https://github.com/camdencheek/tree-sitter-go-mod" "v1.0.2"))
-	     (gowork . ("https://github.com/omertuc/tree-sitter-go-work"))
+	     (go         . ("https://github.com/tree-sitter/tree-sitter-go" "v0.23.1"))
+	     (gomod      . ("https://github.com/camdencheek/tree-sitter-go-mod" "v1.0.2"))
+	     (gowork     . ("https://github.com/omertuc/tree-sitter-go-work"))
 	     (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript"))
-	     (json . ("https://github.com/tree-sitter/tree-sitter-json"))
-	     (proto . ("https://github.com/mitchellh/tree-sitter-proto"))
-	     (python . ("https://github.com/tree-sitter/tree-sitter-python"))
-	     (toml . ("https://github.com/ikatyang/tree-sitter-toml"))
-	     (yaml . ("https://github.com/ikatyang/tree-sitter-yaml"))))
+	     (json       . ("https://github.com/tree-sitter/tree-sitter-json"))
+	     (proto      . ("https://github.com/mitchellh/tree-sitter-proto"))
+	     (python     . ("https://github.com/tree-sitter/tree-sitter-python"))
+	     (toml       . ("https://github.com/ikatyang/tree-sitter-toml"))
+	     (yaml       . ("https://github.com/ikatyang/tree-sitter-yaml"))))
     (add-to-list 'treesit-language-source-alist grammar)
     (unless (treesit-language-available-p (car grammar))
       (treesit-install-language-grammar (car grammar)))))
@@ -230,7 +237,7 @@ full path to the executable if found, or nil otherwise."
 
 (add-hook 'org-mode-hook
 	  (lambda ()
-	    (visual-line-mode t)	; wrap lines (needed to copilot-chat)
+	    (visual-line-mode t)	; wrap lines (needed for copilot-chat)
 	    (org-superstar-mode 1)
 	    (push '("[ ]" . "☐") prettify-symbols-alist)
 	    (push '("[X]" . "☑") prettify-symbols-alist)
@@ -259,21 +266,23 @@ full path to the executable if found, or nil otherwise."
 (mjk/install 'copilot-chat)
 
 (mjk/add-to-list-multiple 'copilot-indentation-alist
-			  '((emacs-lisp-mode 1)
-			    (protobuf-ts-mode 2)
+			  '((protobuf-ts-mode 2)
 			    (sql-mode 8)))
 
-(define-key copilot-mode-map (kbd "<tab>") 'copilot-accept-completion)
+(define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
+(define-key copilot-completion-map (kbd "C-<return>") 'copilot-accept-completion)
+(define-key copilot-completion-map (kbd "C-g") 'copilot-clear-overlay)
+(define-key copilot-completion-map (kbd "C-p n") 'copilot-next-completion)
+(define-key copilot-completion-map (kbd "C-p p") 'copilot-previous-completion)
 
 
-;;;; prog-mode
+;;;; Utilities
+;;;;; Docker
 
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-ts-mode))
 
-(let ((ispell (mjk/find-executable-in-paths
-	       "ispell"
-	       '("/usr/local/bin" "/opt/homebrew/bin" "/usr/bin"))))
-  (when ispell
-    (setq ispell-program-name ispell)))
+;;;; Programming Modes
+
 
 (add-hook 'prog-mode-hook
 	  (lambda ()
@@ -290,16 +299,7 @@ full path to the executable if found, or nil otherwise."
 	      (display-line-numbers-mode))))
 
 
-;;;; Lisp
-
-; Lisp indents with both tabs and spaces. If we redefine tabs the file will look
-; bad outside of our editor.
-
-(add-hook 'emacs-lisp-mode-hook
-	  (lambda ()
-    	    (setq tab-width 8)))
-
-;;;; C/C++
+;;;;; C/C++
 
 (require 'c-ts-mode)
 
@@ -313,15 +313,12 @@ full path to the executable if found, or nil otherwise."
 		      (lambda ()
 			(eglot-format-buffer)))))
 
-;;;; Python
+;;;;; GNU Makefile
 
-(add-hook 'python-ts-mode
-	  (lambda ()
-	    (copilot-mode)
-	    (eglot-ensure)
-	    (flymake-mode)))
+(add-to-list 'auto-mode-alist '("[Mm]akefile\\'" . makefile-gmake-mode))
+(add-to-list 'auto-mode-alist '("\\.mk\\'" . makefile-gmake-mode))
 
-;;;; Go
+;;;;; Go
 
 (add-to-list 'auto-mode-alist '("\\.go\\'" .  go-ts-mode))
 
@@ -334,37 +331,7 @@ full path to the executable if found, or nil otherwise."
 		      (lambda ()
 			(eglot-format-buffer)))))
 
-;;;; Protobuf
-
-(mjk/install 'protobuf-ts-mode)
-
-(add-to-list 'auto-mode-alist '("\\.proto\\'" .  protobuf-ts-mode))
-
-(add-hook 'protobuf-ts-mode-hook
-	  (lambda ()
-	    (copilot-mode)))
-
-
-;;;; SQL
-
-(add-hook 'sql-mode-hook
-	  (lambda ()
-	    (setq tab-width 8)
-	    (copilot-mode)))
-
-;;;; Web
-
-(mjk/install 'web-mode)
-
-(add-to-list 'auto-mode-alist '("\\.tmpl\\'" . web-mode))
-
-
-;;;; GNU Makefile
-
-(add-to-list 'auto-mode-alist '("[Mm]akefile\\'" . makefile-gmake-mode))
-(add-to-list 'auto-mode-alist '("\\.mk\\'" . makefile-gmake-mode))
-
-;;;; Just
+;;;;; Just
 
 (mjk/install 'just-mode)
 
@@ -372,15 +339,7 @@ full path to the executable if found, or nil otherwise."
 	  (lambda ()
 	    (setq just-indent-offset 4)))
 
-;;;; Docker
-
-(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-ts-mode))
-
-;;;; Markdown
-
-(mjk/install 'markdown-mode)
-
-;;;; JSON / YAML
+;;;;; JSON / YAML
 
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-ts-mode))
@@ -392,6 +351,56 @@ full path to the executable if found, or nil otherwise."
 (add-hook 'yaml-ts-mode-hook
 	  (lambda ()
 	    (prettier-js-mode)))
+
+;;;;; Lisp
+
+; Lisp indents with both tabs and spaces. If we redefine tabs the file will look
+; bad outside of our editor.
+
+(add-hook 'emacs-lisp-mode-hook
+	  (lambda ()
+	    (outline-minor-mode)
+	    (setq-local outline-regexp ";;;\\{1,\\} ")
+	    (setq-local outline-minor-mode-cycle t)
+	    (outline-hide-body)
+    	    (setq tab-width 8)))
+
+;;;;; Markdown
+
+(mjk/install 'markdown-mode)
+
+;;;;; Python
+
+(add-hook 'python-ts-mode
+	  (lambda ()
+	    (copilot-mode)
+	    (eglot-ensure)
+	    (flymake-mode)))
+
+;;;;; Protobuf
+
+(mjk/install 'protobuf-ts-mode)
+
+(add-to-list 'auto-mode-alist '("\\.proto\\'" .  protobuf-ts-mode))
+
+(add-hook 'protobuf-ts-mode-hook
+	  (lambda ()
+	    (copilot-mode)))
+
+
+;;;;; SQL
+
+(add-hook 'sql-mode-hook
+	  (lambda ()
+	    (setq tab-width 8)
+	    (copilot-mode)))
+
+;;;;; Web
+
+(mjk/install 'web-mode)
+
+(add-to-list 'auto-mode-alist '("\\.tmpl\\'" . web-mode))
+
 
 ;;;; Custom setting into own file
 
