@@ -1,30 +1,9 @@
 #!/bin/zsh
 
-{{- if eq .chezmoi.os "darwin" }}
-{{- if eq .chezmoi.arch "amd64" }}
-HOMEBREW=/usr/local
-{{- else }}
-HOMEBREW=/opt/homebrew
-{{- end }}
-{{- end }}
+# prepend
+[[ -d ~/go/bin ]]  && path=(~/go/bin $path)
+[[ -d ~/.pyenv ]]  && path=(~/.pyenv/shims $path)
+[[ -d ~/.rd/bin ]] && path=(~/.rd/bin $path) # rancher desktop
 
-{{- if eq .chezmoi.os "linux" }}
-HOMEBREW=/home/linuxbrew/.linuxbrew
-PATH=$PATH:$HOME/bin
-{{- end }}
-
-if [[ -d $HOMEBREW ]]; then
-	PATH=$HOMEBREW/bin:$HOMEBREW/sbin:$PATH
-fi
-
-if [ -d $HOME/go/bin ]; then
-	PATH=$HOME/go/bin:$PATH
-fi
-
-if [ -d $HOME/.rd/bin ]; then	# rancher desktop
-	PATH=$HOME/.rd/bin:$PATH
-fi
-
-if [ -d ~/.pyenv ]; then		# pyenv at the front
-	PATH=~/.pyenv/shims:$PATH
-fi
+# append
+[[ -d ~/bin ]]     && path+=(~/bin)
