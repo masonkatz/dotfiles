@@ -1,6 +1,22 @@
-{{ range (gitHubKeys "masonkatz") -}}
-mason {{ .Key }}
-{{ end -}}
-{{ if and (eq .org "teradata") (eq .chezmoi.os "darwin")  -}}
-mason {{ include (joinPath .chezmoi.homeDir ".ssh/id_ed25519.pub") -}}
-{{ end -}}
+{{/*
+add in all github (not github enterprise) keys
+*/}}
+
+{{- range (gitHubKeys "masonkatz") }}
+{{ $.shortname }} {{ .Key }}
+{{- end -}}
+
+
+{{/*
+add in local keys (might be duplicates)
+*/}}
+
+{{- $edKey  := (joinPath .chezmoi.homeDir ".ssh/id_ed25519.pub") }}
+{{- $rsaKey := (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") }}
+
+{{- if stat $edKey }}
+{{ .shortname }} {{ include $edKey }}
+{{- end }}
+{{- if stat $rsaKey }}
+{{ .shortname }} {{ include $rsaKey }}
+{{- end }}

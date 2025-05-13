@@ -10,13 +10,15 @@ Host *
   ForwardX11            yes
 {{- end }}
 
-{{ if eq .chezmoi.os "darwin" -}}
+{{- if eq .chezmoi.os "darwin" }}
+
 Host bookworm
   Port                  22003
   Hostname              localhost
 {{- end }}
 
-{{ if eq .org "teradata" -}}
+{{- if eq .org "teradata" }}
+
 Host github-personal
   IdentityFile          ~/.ssh/github
   IdentitiesOnly        yes
@@ -24,7 +26,8 @@ Host github-personal
   HostName              github.com
 {{- end }}  
 
-{{ if eq .org "endobit" -}}
+{{- if eq .org "endobit" }}
+
 Host tdbook
   User                  mason.katz
   Hostname              tdbook.local
