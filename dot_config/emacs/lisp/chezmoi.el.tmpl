@@ -1,0 +1,16 @@
+;; chezmoi.el --- Variables from user's chezmoi state
+
+;;; Commentary:
+;;
+;; This is generated from a template, do not edit directly. Any changes in the
+;; "chezmoi init" can change the contents of this file.
+;;
+;;; Code:
+
+(defvar chezmoi-org "{{ .org }}"
+  "User's org from chezmoi configuration.")
+
+(defvar chezmoi-golocal "{{ .golocal }}"
+  "Comma delimited list of paths for local Go modules.")
+
+(provide 'chezmoi)

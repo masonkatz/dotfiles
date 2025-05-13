@@ -8,6 +8,23 @@
 
 ;;;; Functions
 
+(defun mjk/eldoc-doc-buffer ()
+  "Show and prettify the Eldoc documentation buffer in a new window,
+without selecting it."
+  (interactive)
+  (let ((buf (eldoc-doc-buffer)))
+    (with-current-buffer buf
+      (visual-line-mode 1)
+      (setq-local truncate-lines nil)
+      (setq-local word-wrap t)
+      ;; Reconstruct paragraphs where gopls collapsed newlines
+      (goto-char (point-min))
+      (while (re-search-forward "\\([^\n]\\)\n\\([^ \n]\\)" nil t)
+        (replace-match "\\1 \\2"))
+      (goto-char (point-min)))
+    ;; Display buffer without selecting it
+    (display-buffer buf)))
+
 (defun mjk/install (package)
   "Installs package if not already installed"
   (unless (package-installed-p package)
@@ -59,6 +76,9 @@ full path to the executable if found, or nil otherwise."
 
 
 ;;;; Startup
+
+(add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
+(require 'chezmoi)
 
 (require 'package)
 (require 'server)
@@ -117,6 +137,8 @@ full path to the executable if found, or nil otherwise."
 
 ;;;; Treemacs, Font, Icons & Ligatures
 
+(global-set-key (kbd "C-c t") 'treemacs-select-window)
+
 (when (display-graphic-p)
   (mjk/install 'treemacs)
   (mjk/install 'ligature)
@@ -124,7 +146,6 @@ full path to the executable if found, or nil otherwise."
   (mjk/install 'nerd-icons-dired)
   (mjk/install 'treemacs-nerd-icons)
   ;;  (treemacs-load-theme "nerd-icons")
-  (global-set-key (kbd "C-c t") 'treemacs-select-window)
   (ligature-set-ligatures 'prog-mode '("++" "--"
 				       ">=" "<="
 				       "+=" "-=" "/=" "*=" "|=" "~=" "^="
@@ -251,11 +272,14 @@ full path to the executable if found, or nil otherwise."
 
 (define-key eglot-mode-map (kbd "C-c r") 'eglot-rename)
 (define-key eglot-mode-map (kbd "C-c o") 'eglot-code-action-organize-imports)
+(define-key eglot-mode-map (kbd "C-h .") 'mjk/eldoc-doc-buffer)
+
 
 (setq-default eglot-workspace-configuration
-	      '((:gopls .
-                        ((local . "endobit.io")
-                         (staticcheck . t)))))
+	      `((:gopls .
+			((local . ,chezmoi-golocal)
+			 (hoverKind . "FullDocumentation")
+			 (staticcheck . t)))))
 
 
 (use-package copilot

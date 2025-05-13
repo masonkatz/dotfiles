@@ -1,12 +1,14 @@
 [data]
-{{ $softiron := promptBool "Teradata machine" }}
-{{ if $softiron }}
-    org      = "teradata"
-    fullname = "Mason Katz"
-    email    = "Mason.Katz@Teradata.com"
+{{ $td := promptBool "Teradata machine" }}
+{{ if $td }}
+    org   = "teradata"
+    email = "Mason.Katz@Teradata.com"
+	golocal = "github.com/teradata-"
 {{ else }}
-    org      = "endobit"
-    fullname = "Mason Katz"
-    email    = "mjk@endobit.io"
+    org   = "endobit"
+    email = "mjk@endobit.io"
+	golocal = "github.com/masonkatz,endobit.io"
 {{ end }}
+    fullname = "Mason Katz"
+    shortname = "mason"
 
