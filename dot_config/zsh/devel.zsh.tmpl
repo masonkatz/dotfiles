@@ -1,6 +1,7 @@
 #!/bin/zsh
 
 {{- if eq .org "teradata" }}
+export ORGANIZATION=teradata
 export GOPRIVATE="github.com/Teradata-*,github.td.teradata.com/*"
 
 # gcloud cli
@@ -14,4 +15,8 @@ fi
 if [[ -f "${gcpsdk}/completion.zsh.inc" ]]; then
 	source "${gcpsdk}/completion.zsh.inc"
 fi
+{{- end }}
+
+{{- if eq .org "endobit" }}
+export ORGANIZATION=endobit
 {{- end }}
