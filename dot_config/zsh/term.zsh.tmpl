@@ -8,6 +8,8 @@ case $TERM in
 eat-*)
 	TERM=xterm-color
 	;;
+xterm-ghostty)
+	[[ -n "$SSH_CONNECTION" ]] && TERM=xterm-color
 esac
 
 [[ -f ${HOME}/.dircolors ]] && eval `dircolors -b "${HOME}/.dircolors"`
