@@ -91,9 +91,11 @@ full path to the executable if found, or nil otherwise."
   (setq server-use-tcp t)
   (server-start))
 
-(when (display-graphic-p)
-  (mjk/install 'exec-path-from-shell)
-  (setq default-directory "~/"))
+(mjk/install 'exec-path-from-shell)
+
+(when (or (daemonp) (mjk/macos-graphic-p))
+  (setq default-directory "~/")
+  (exec-path-from-shell-initialize))
 
 (when (mjk/macos-graphic-p)
   (unbind-key "s-t")
@@ -192,6 +194,10 @@ full path to the executable if found, or nil otherwise."
 (mjk/install 'rainbow-mode)		; highlights color strings
 (mjk/install 'hl-todo)
 
+;;;; EditorConfig
+(require 'editorconfig)
+(editorconfig-mode)
+
 ;;;; Terminal
 
 (mjk/install 'eat)
@@ -199,10 +205,15 @@ full path to the executable if found, or nil otherwise."
 (add-hook 'eshell-load-hook #'eat-eshell-mode)
 (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
 
+;;;; SSH
+
+(mjk/install 'ssh-config-mode)
+
 ;;;; Git
 
 (mjk/install 'git-gutter-fringe)
 (mjk/install 'magit)
+(mjk/install 'git-modes)
 
 ;;;; Company
 
@@ -265,15 +276,17 @@ full path to the executable if found, or nil otherwise."
 	    (push '("[-]" . "❍") prettify-symbols-alist)
 	    (prettify-symbols-mode)))
 
-;;;; LSP (eglot) / Copilot
+;;;; Eglot / Copilot
 
 (require 'eglot)
 (require 'flymake)
 
+(mjk/install 'eldoc-box)
+(add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t)
+
 (define-key eglot-mode-map (kbd "C-c r") 'eglot-rename)
 (define-key eglot-mode-map (kbd "C-c o") 'eglot-code-action-organize-imports)
 (define-key eglot-mode-map (kbd "C-h .") 'mjk/eldoc-doc-buffer)
-
 
 (setq-default eglot-workspace-configuration
 	      `((:gopls .

@@ -1,0 +1,20 @@
+root=true
+
+[*]
+end_of_line = lf
+
+[*.{c,h,cc,hh}]
+indent_style = tab
+indent_size = 4
+
+[*.go]
+indent_style = tab
+indent_size = 4
+
+[*.py]
+indent_style = space
+indent_size = 4
+
+[Makefile]
+indent_style = tab
+indent_size = 4

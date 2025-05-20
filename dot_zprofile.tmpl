@@ -1,15 +1,17 @@
 #!/bin/zsh
 
+{{- define "brew" }}
+[[ -d {{ . }} ]] && eval "$({{ . }}/bin/brew shellenv)"
+{{- end }}
+
 {{- if eq .chezmoi.os "darwin" }}
   {{- if eq .chezmoi.arch "amd64" }}
-brew=/usr/local
+    {{ template "brew" "/usr/local" }}
   {{- else }}
-brew=/opt/homebrew
+    {{ template "brew" "/opt/homebrew" }}
   {{- end }}
 {{- end }}
 
 {{- if eq .chezmoi.os "linux" }}
-brew=/home/linuxbrew/.linuxbrew
+    {{ template "brew" "/home/linuxbrew/.linuxbrew" }}
 {{- end }}
-
-[[ -d $brew ]] && eval "$($brew/bin/brew shellenv)"

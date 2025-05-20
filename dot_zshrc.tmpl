@@ -1,8 +1,8 @@
 #!/bin/zsh
 
-function include() {
-	[[ -f $1 ]] && source $1
-}
+{{- define "include" }}
+[[ -f {{ . }} ]] && source {{ . }}
+{{- end }}
 
 if type brew &>/dev/null; then
     FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
@@ -11,8 +11,8 @@ if type brew &>/dev/null; then
     compinit -u
 fi
 
-include "$HOME/.config/zsh/options.zsh"
-include "$HOME/.config/zsh/aliases.zsh"
-include "$HOME/.config/zsh/devel.zsh"
-include "$HOME/.config/zsh/emacs.zsh"
-include "$HOME/.config/zsh/term.zsh"
+{{- template "include" "$HOME/.config/zsh/options.zsh" }}
+{{- template "include" "$HOME/.config/zsh/aliases.zsh" }}
+{{- template "include" "$HOME/.config/zsh/devel.zsh" }}
+{{- template "include" "$HOME/.config/zsh/emacs.zsh" }}
+{{- template "include" "$HOME/.config/zsh/term.zsh" }}

@@ -3,7 +3,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(c-ts-mode-indent-offset 4)
  '(c-ts-mode-indent-style 'k&r)
  '(calendar-hebrew-all-holidays-flag t)
  '(calendar-latitude 32.7157)
@@ -33,10 +32,10 @@
  '(doom-modeline-indent-info t)
  '(doom-modeline-project-name t)
  '(doom-modeline-vcs-max-length 20)
+ '(eldoc-box-only-multi-line t)
  '(exec-path-from-shell-variables '("PATH" "MANPATH"))
  '(fill-column 80)
  '(global-auto-revert-mode t)
- '(go-ts-mode-indent-offset 4)
  '(hl-todo-highlight-punctuation ":")
  '(hl-todo-keyword-faces
    `(("TODO" warning bold) ("XXX" error bold) ("FIXME" error bold)
@@ -54,12 +53,12 @@
  '(mouse-wheel-progressive-speed nil)
  '(package-selected-packages
    '(company company-mode copilot copilot-chat dashboard doom-modeline eat
-	     editor-config editorconfig exec-path-from-shell git-gutter-fringe
-	     hl-todo ligature ligatures magit magit-gitflow markdown-mode
-	     markdown-ts-mode nerd-icons nerd-icons-dired prettier-js quelpa
-	     quelpa-use-package rainbow-mode treemacs treemacs-nerd-icons
-	     yasnippet yasnippet-snippets zenburd-theme zenburn-mode
-	     zenburn-theme))
+	     editor-config editorconfig eldoc-box exec-path-from-shell
+	     git-gutter-fringe git-modes hl-todo ligature ligatures magit
+	     magit-gitflow markdown-mode markdown-ts-mode nerd-icons
+	     nerd-icons-dired prettier-js quelpa quelpa-use-package rainbow-mode
+	     ssh-config-mode treemacs treemacs-nerd-icons yasnippet
+	     yasnippet-snippets zenburd-theme zenburn-mode zenburn-theme))
  '(package-vc-selected-packages
    '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch "main")))
  '(project-mode-line t)
@@ -70,6 +69,7 @@
  '(tramp-default-method "ssh")
  '(tramp-syntax 'simplified nil (tramp))
  '(treemacs-is-never-other-window t)
+ '(treesit-font-lock-level 4)
  '(uniquify-buffer-name-style 'post-forward nil (uniquify))
  '(world-clock-list
    '(("America/Los_Angeles" "San Diego") ("America/Phoenix" "Tucson")

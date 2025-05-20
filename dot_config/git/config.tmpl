@@ -1,7 +1,6 @@
-# -*- mode: conf -*-
 {{- $rsaKey := (joinPath .chezmoi.homeDir ".ssh/id_rsa.pub") }}
 {{- $edKey  := (joinPath .chezmoi.homeDir ".ssh/id_ed25519.pub") }}
-{{- $hasKey := or (stat $rsaKey) (stat $edKey) }}
+{{- $hasKey := or (stat $rsaKey) (stat $edKey) -}}
 [user]
 	name  = {{ .fullname }}
 	email = {{ .email }}
@@ -98,7 +97,7 @@
 	format=ssh
 
 [gpg "ssh"]
-	 allowedSignersFile = {{ .chezmoi.homeDir}}/.config/git/signers
+	allowedSignersFile = {{ .chezmoi.homeDir}}/.config/git/signers
 
 [alias]
 	graph = log --graph --pretty=format:'%Cred%h%Creset - %C(cyan)<%an>%Creset%C(yellow)%d%Creset %s %Cgreen(%cr)' --abbrev-commit --date=relative

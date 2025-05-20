@@ -1,20 +1,33 @@
+{{- define "local-container" }}
+Host {{ .Name }}
+  Port     {{ .Port }}
+  Hostname localhost
+{{- end }}
+
+{{- define "host-alias" }}
+Host {{ .Alias }}
+  User     {{ .User }}
+  Hostname {{ .Host }}
+{{- end -}}
+
 Host *
 {{- if eq .chezmoi.os "darwin" }}
   UseKeychain           yes
 {{- end }}
   AddKeysToAgent        yes
   ServerAliveInterval   120
-  TCPKeepAlive          no
+  TCPKeepAlive          yes
   ForwardAgent          yes
 {{- if eq .org "endobit" }}
   ForwardX11            yes
 {{- end }}
 
 {{- if eq .chezmoi.os "darwin" }}
+{{ template "local-container" (dict "Name" "bookworm" "Port" "22003") }}
+{{- end }}
 
-Host bookworm
-  Port                  22003
-  Hostname              localhost
+{{- if eq .org "endobit" }}
+{{ template "host-alias" (dict "Host" "tdbook.local" "Alias" "tdbook" "User" "mason.katz" )}}
 {{- end }}
 
 {{- if eq .org "teradata" }}
@@ -24,11 +37,4 @@ Host github-personal
   IdentitiesOnly        yes
   User                  git
   HostName              github.com
-{{- end }}  
-
-{{- if eq .org "endobit" }}
-
-Host tdbook
-  User                  mason.katz
-  Hostname              tdbook.local
 {{- end }}

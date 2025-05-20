@@ -20,7 +20,7 @@ xterm*)
 	export STARSHIP_CONFIG="$HOME/.config/starship/config.toml"
 
 {{- if eq .chezmoi.os "darwin" }}
-	include $HOMEBREW/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+	[[ -d $HOMEBREW_PREFIX ]] && source ${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 {{- end }}
 	;;
 eterm-*color)

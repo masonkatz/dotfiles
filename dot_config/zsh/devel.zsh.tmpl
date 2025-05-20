@@ -8,13 +8,8 @@ export GOPRIVATE="github.com/Teradata-*,github.td.teradata.com/*"
 
 gcpsdk=${HOME}/src/gcp/google-cloud-sdk
 
-if [[ -f "${gcpsdk}/path.zsh.inc" ]]; then
-	source "${gcpsdk}/path.zsh.inc"
-fi
-
-if [[ -f "${gcpsdk}/completion.zsh.inc" ]]; then
-	source "${gcpsdk}/completion.zsh.inc"
-fi
+[[ -f "${gcpsdk}/path.zsh.inc" ]] && source "${gcpsdk}/path.zsh.inc"
+[[ -f "${gcpsdk}/completion.zsh.inc" ]] && source "${gcpsdk}/completion.zsh.inc"
 {{- end }}
 
 {{- if eq .org "endobit" }}
