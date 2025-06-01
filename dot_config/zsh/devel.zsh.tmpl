@@ -1,17 +1,34 @@
 #!/bin/zsh
 
-{{- if eq .org "teradata" }}
+{{ template "zsh/path-prepend.tmpl" "~/go/bin" }}
+
+{{ if eq .org "teradata" }}
 export ORGANIZATION=teradata
 export GOPRIVATE="github.com/Teradata-*,github.td.teradata.com/*"
 
 # gcloud cli
 
-gcpsdk=${HOME}/src/gcp/google-cloud-sdk
+gcpsdk=~/src/gcp/google-cloud-sdk
 
-[[ -f "${gcpsdk}/path.zsh.inc" ]] && source "${gcpsdk}/path.zsh.inc"
-[[ -f "${gcpsdk}/completion.zsh.inc" ]] && source "${gcpsdk}/completion.zsh.inc"
-{{- end }}
+{{ template "zsh/source.tmpl" "${gcpsdk}/path.zsh.inc" }}
+{{ template "zsh/source.tmpl" "${gcpsdk}/completion.zsh.inc" }}
+{{ end }}
 
-{{- if eq .org "endobit" }}
+{{ if eq .org "endobit" }}
 export ORGANIZATION=endobit
-{{- end }}
+{{ end }}
+
+# python
+
+type pyenv &>/dev/null && eval "$(pyenv init - zsh)"
+
+{{ template "zsh/source.tmpl" "~/.venvs/default/bin/activate" }}
+
+# rancher desktop
+{{ template "zsh/path-prepend.tmpl" "~/.rd/bin"}}
+
+{{- if eq .chezmoi.os "darwin" }}
+export OLLAMA_API_BASE=http://127.0.0.1:11434
+export OLLAMA_CONTEXT_LENGTH=8192
+{{- end}}
+

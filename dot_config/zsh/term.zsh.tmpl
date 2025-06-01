@@ -1,8 +1,6 @@
 #!/bin/zsh
 
-if type thefuck &>/dev/null; then
-	eval $(thefuck --alias)
-fi
+type thefuck &>/dev/null && eval "$(thefuck --alias)"
 
 case $TERM in
 eat-*)
@@ -12,12 +10,12 @@ xterm-ghostty)
 	[[ -n "$SSH_CONNECTION" ]] && TERM=xterm-color
 esac
 
-[[ -f ${HOME}/.dircolors ]] && eval `dircolors -b "${HOME}/.dircolors"`
+[[ -f ~/.dircolors ]] && eval `dircolors -b ~/.dircolors`
 
 case $TERM in
 xterm*)
-	eval "$(starship init zsh)"
-	export STARSHIP_CONFIG="$HOME/.config/starship/config.toml"
+	type starship &>/dev/null && eval "$(starship init zsh)"
+	export STARSHIP_CONFIG="~/.config/starship/config.toml"
 
 {{- if eq .chezmoi.os "darwin" }}
 	[[ -d $HOMEBREW_PREFIX ]] && source ${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

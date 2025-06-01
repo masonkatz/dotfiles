@@ -1,5 +1,8 @@
 #!/bin/zsh
 
+log INFO "start"
+log DEBUG "path =" $path
+
 {{- define "brew" }}
 [[ -d {{ . }} ]] && eval "$({{ . }}/bin/brew shellenv)"
 {{- end }}
@@ -15,3 +18,7 @@
 {{- if eq .chezmoi.os "linux" }}
     {{ template "brew" "/home/linuxbrew/.linuxbrew" }}
 {{- end }}
+
+log INFO "end"
+log DEBUG "path =" $path
+

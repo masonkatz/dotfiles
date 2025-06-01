@@ -1,9 +1,37 @@
 #!/bin/zsh
 
-# prepend
-[[ -d ~/go/bin ]]  && path=(~/go/bin $path)
-[[ -d ~/.pyenv ]]  && path=(~/.pyenv/shims $path)
-[[ -d ~/.rd/bin ]] && path=(~/.rd/bin $path) # rancher desktop
+SHELL_LOG_LEVEL="${SHELL_LOG_LEVEL:-ERROR}"
 
-# append
-[[ -d ~/bin ]]     && path+=(~/bin)
+function log_level_num() {
+	case "$1" in
+		ERROR) echo 0 ;;
+		WARN)  echo 1 ;;
+		INFO)  echo 2 ;;
+		DEBUG) echo 3 ;;
+		*)     echo 9 ;;
+	esac
+}
+
+function log() {
+	local level="$1"
+	shift
+	local message="$*"
+	local level_num current_num
+
+	level_num="$(log_level_num "$level")"
+	current_num="$(log_level_num "$SHELL_LOG_LEVEL")"
+
+	if [ "$level_num" -le "$current_num" ]; then
+		local file="${BASH_SOURCE[1]:-${(%):-%x}}"
+		printf "[%s] %s: %s\n" "$level" "$file" "$message" >&2
+	fi
+}
+
+log INFO start
+log DEBUG "path =" $path
+
+{{ template "zsh/path-append.tmpl" "~/bin" }}
+{{ template "zsh/path-append.tmpl" "~/.local/bin" }}
+
+log INFO end
+log DEBUG "path =" $path
