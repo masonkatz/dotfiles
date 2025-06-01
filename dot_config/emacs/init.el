@@ -425,6 +425,10 @@ full path to the executable if found, or nil otherwise."
 	    (copilot-mode)))
 
 
+;;;;; Salt Stack (sls)
+
+(mjk/install 'salt-mode)
+
 ;;;;; SQL
 
 (add-hook 'sql-mode-hook

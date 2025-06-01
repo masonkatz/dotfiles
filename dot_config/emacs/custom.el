@@ -52,13 +52,12 @@
  '(menu-bar-mode nil)
  '(mouse-wheel-progressive-speed nil)
  '(package-selected-packages
-   '(company company-mode copilot copilot-chat dashboard doom-modeline eat
-	     editor-config editorconfig eldoc-box exec-path-from-shell
-	     git-gutter-fringe git-modes hl-todo ligature ligatures magit
-	     magit-gitflow markdown-mode markdown-ts-mode nerd-icons
-	     nerd-icons-dired prettier-js quelpa quelpa-use-package rainbow-mode
-	     ssh-config-mode treemacs treemacs-nerd-icons yasnippet
-	     yasnippet-snippets zenburd-theme zenburn-mode zenburn-theme))
+   '(company-box copilot copilot-chat dashboard doom-modeline eat eldoc-box
+		 exec-path-from-shell git-gutter-fringe git-modes hl-todo
+		 just-mode ligature magit nerd-icons-dired org-superstar
+		 page-break-lines prettier-js protobuf-ts-mode rainbow-mode
+		 salt-mode ssh-config-mode treemacs-nerd-icons web-mode
+		 yasnippet-snippets zenburn-theme))
  '(package-vc-selected-packages
    '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch "main")))
  '(project-mode-line t)
