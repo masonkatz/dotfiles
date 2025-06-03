@@ -360,7 +360,12 @@ full path to the executable if found, or nil otherwise."
 
 (add-hook 'text-mode-hook
 	  (lambda ()
-	    (flyspell-mode)))
+	    (flyspell-mode)
+	    (when (display-graphic-p)
+	      (git-gutter-mode)
+	      (hl-line-mode)
+	      (display-fill-column-indicator-mode)
+	      (display-line-numbers-mode))))
 
 ;;;;; Markdown
 
