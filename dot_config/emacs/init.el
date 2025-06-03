@@ -92,6 +92,8 @@ full path to the executable if found, or nil otherwise."
   (server-start))
 
 (mjk/install 'exec-path-from-shell)
+(setopt exec-path-from-shell-variables '("PATH" "MANPATH"))
+
 
 (when (or (daemonp) (mjk/macos-graphic-p))
   (setq default-directory "~/")
@@ -121,8 +123,19 @@ full path to the executable if found, or nil otherwise."
 ;;;; Dashboard
 
 (mjk/install 'dashboard)
-
 (dashboard-setup-startup-hook)
+
+(setopt dashboard-banner-logo-title ""
+	dashboard-items '((projects . 5)
+			  (recents . 5)
+			  (bookmarks . 5)
+			  (registers . 5))
+	dashboard-projects-backend 'project-el
+	dashboard-set-file-icons t
+	dashboard-set-footer nil
+	dashboard-set-heading-icons t
+	dashboard-set-init-info nil
+	dashboard-set-navigator t)
 
 ;;;; Ace Windows
 
@@ -143,6 +156,7 @@ full path to the executable if found, or nil otherwise."
 
 (when (display-graphic-p)
   (mjk/install 'treemacs)
+  (setopt treemacs-is-never-other-window t)
   (mjk/install 'ligature)
   (mjk/install 'nerd-icons) ; (nerd-icons-install-fonts)
   (mjk/install 'nerd-icons-dired)
@@ -157,7 +171,6 @@ full path to the executable if found, or nil otherwise."
 				       "<-" "->"
 				       "||" "&&"
 				       "...")))
-
 
 (add-hook 'dired-mode-hook 'nerd-icons-dired-mode)
 
@@ -184,15 +197,35 @@ full path to the executable if found, or nil otherwise."
 (doom-modeline-mode 1)
 (size-indication-mode)
 
+(setopt doom-modeline-buffer-encoding t
+	doom-modeline-hud t
+	doom-modeline-indent-info t
+	doom-modeline-project-name t
+	doom-modeline-vcs-max-length 20)
+
 ;;;; Zenburn
 
 (mjk/install 'zenburn-theme)
 (load-theme 'zenburn t)
 
+(setq zenburn-scale-org-headlines t
+      zenburn-scale-outline-headlines t
+      zenburn-use-variable-pitch t)
+
 ;;;; Misc
 
 (mjk/install 'rainbow-mode)		; highlights color strings
+
 (mjk/install 'hl-todo)
+(setopt hl-todo-highlight-punctuation ":"
+	hl-todo-keyword-faces `(("DEPRECATED" font-lock-doc-face bold)
+				("FIXME" error bold)
+				("NOTE" success bold)
+				("REVIEW" font-lock-keyword-face bold)
+				("TODO" warning bold)
+				("WARN" font-lock-constant-face bold)
+				("WARNING" font-lock-constant-face bold)
+				("XXX" error bold)))
 
 ;;;; EditorConfig
 (require 'editorconfig)
@@ -240,6 +273,8 @@ full path to the executable if found, or nil otherwise."
 
 (require 'treesit)
 
+(setopt treesit-font-lock-level 4)
+
 (defun mjk/install-treesitter-grammars ()
   "Download and install treesitter grammar files."
   (interactive)
@@ -247,8 +282,8 @@ full path to the executable if found, or nil otherwise."
 	   '((c          . ("https://github.com/tree-sitter/tree-sitter-c"))
 	     (cpp        . ("https://github.com/tree-sitter/tree-sitter-cpp"))
 	     (dockerfile . ("https://github.com/camdencheek/tree-sitter-dockerfile"))
-	     (go         . ("https://github.com/tree-sitter/tree-sitter-go" "v0.23.1"))
-	     (gomod      . ("https://github.com/camdencheek/tree-sitter-go-mod" "v1.0.2"))
+	     (go         . ("https://github.com/tree-sitter/tree-sitter-go"))
+	     (gomod      . ("https://github.com/camdencheek/tree-sitter-go-mod"))
 	     (gowork     . ("https://github.com/omertuc/tree-sitter-go-work"))
 	     (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript"))
 	     (json       . ("https://github.com/tree-sitter/tree-sitter-json"))
@@ -279,10 +314,12 @@ full path to the executable if found, or nil otherwise."
 ;;;; Eglot / Copilot
 
 (require 'eglot)
-(require 'flymake)
+(require 'flymake)			; eglot will enable flymake-mode
 
 (mjk/install 'eldoc-box)
 (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t)
+
+(setopt eldoc-box-only-multi-line t)
 
 (define-key eglot-mode-map (kbd "C-c r") 'eglot-rename)
 (define-key eglot-mode-map (kbd "C-c o") 'eglot-code-action-organize-imports)
@@ -297,7 +334,7 @@ full path to the executable if found, or nil otherwise."
 
 (use-package copilot
   :vc (:url "https://github.com/copilot-emacs/copilot.el"
-            :rev :newest
+	    :rev :newest
             :branch "main"))
 
 (mjk/install 'copilot-chat)
@@ -306,24 +343,42 @@ full path to the executable if found, or nil otherwise."
 			  '((protobuf-ts-mode 2)
 			    (sql-mode 8)))
 
-(define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
-(define-key copilot-completion-map (kbd "C-<return>") 'copilot-accept-completion)
+(define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
+(define-key copilot-completion-map (kbd "<backtab>") 'copilot-accept-completion-by-line)
+(define-key copilot-completion-map (kbd "C-RET") 'copilot-accept-completion)
 (define-key copilot-completion-map (kbd "C-g") 'copilot-clear-overlay)
-(define-key copilot-completion-map (kbd "C-p n") 'copilot-next-completion)
-(define-key copilot-completion-map (kbd "C-p p") 'copilot-previous-completion)
+(define-key copilot-completion-map (kbd "C-n") 'copilot-next-completion)
+(define-key copilot-completion-map (kbd "C-p") 'copilot-previous-completion)
 
 
 ;;;; Utilities
 ;;;;; Docker
 
-(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-ts-mode))
+(require 'dockerfile-ts-mode)
+
+;;;; Text Modes
+
+(add-hook 'text-mode-hook
+	  (lambda ()
+	    (flyspell-mode)))
+
+;;;;; Markdown
+
+(mjk/install 'markdown-mode)
+(setopt markdown-header-scaling t)
 
 ;;;; Programming Modes
 
+(setopt major-mode-remap-alist '((c++-mode      . c++-ts-mode)
+				 (c-mode        . c-ts-mode)
+				 (c-or-c++-mode . c-or-c++-ts-mode)
+				 (js-json-mode  . json-ts-mode)
+				 (python-mode   . python-ts-mode)))
 
 (add-hook 'prog-mode-hook
 	  (lambda ()
 	    (winner-mode)
+	    (copilot-mode)
 	    (flyspell-prog-mode)
 	    (electric-pair-mode)
 	    (hl-todo-mode)
@@ -340,11 +395,11 @@ full path to the executable if found, or nil otherwise."
 
 (require 'c-ts-mode)
 
+(setopt c-ts-mode-indent-style 'k&r)
+
 (add-hook 'c-ts-base-mode-hook
 	  (lambda ()
-	    (copilot-mode)
 	    (eglot-ensure)
-	    (flymake-mode)
 	    (c-ts-mode-toggle-comment-style -1) ; c++ style comments
 	    (add-hook 'before-save-hook
 		      (lambda ()
@@ -357,13 +412,12 @@ full path to the executable if found, or nil otherwise."
 
 ;;;;; Go
 
-(add-to-list 'auto-mode-alist '("\\.go\\'" .  go-ts-mode))
+(require 'go-ts-mode)
 
 (add-hook 'go-ts-mode-hook
 	  (lambda ()
-	    (copilot-mode)
 	    (eglot-ensure)
-	    (setq-local page-delimiter "\/\/\/\/") ; use //// instead of ^L (syntax error in go)
+	    (setq-local page-delimiter "\/\*\*\/") ; use /**/ instead of ^L (syntax error in go)
 	    (add-hook 'before-save-hook
 		      (lambda ()
 			(eglot-format-buffer)))))
@@ -378,8 +432,7 @@ full path to the executable if found, or nil otherwise."
 
 ;;;;; JSON / YAML
 
-(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-ts-mode))
+(require 'yaml-ts-mode)
 
 (add-hook 'json-ts-mode-hook
 	  (lambda ()
@@ -402,39 +455,22 @@ full path to the executable if found, or nil otherwise."
 	    (outline-hide-body)
     	    (setq tab-width 8)))
 
-;;;;; Markdown
-
-(mjk/install 'markdown-mode)
-
 ;;;;; Python
 
-(add-hook 'python-ts-mode
+(add-hook 'python-ts-mode-hook
 	  (lambda ()
-	    (copilot-mode)
-	    (eglot-ensure)
-	    (flymake-mode)))
+	    (eglot-ensure)))
 
 ;;;;; Protobuf
 
 (mjk/install 'protobuf-ts-mode)
-
-(add-to-list 'auto-mode-alist '("\\.proto\\'" .  protobuf-ts-mode))
-
-(add-hook 'protobuf-ts-mode-hook
-	  (lambda ()
-	    (copilot-mode)))
-
-
-;;;;; Salt Stack (sls)
-
-(mjk/install 'salt-mode)
+(require 'protobuf-ts-mode)
 
 ;;;;; SQL
 
 (add-hook 'sql-mode-hook
 	  (lambda ()
-	    (setq tab-width 8)
-	    (copilot-mode)))
+	    (setq tab-width 8)))
 
 ;;;;; Web
 
