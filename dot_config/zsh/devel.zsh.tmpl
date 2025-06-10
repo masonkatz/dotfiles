@@ -22,7 +22,7 @@ export ORGANIZATION=endobit
 
 type pyenv &>/dev/null && eval "$(pyenv init - zsh)"
 
-{{ template "zsh/source.tmpl" "~/.venvs/default/bin/activate" }}
+{{ template "zsh/source.tmpl" "~/.venv/default/bin/activate" }}
 
 # rancher desktop
 {{ template "zsh/path-prepend.tmpl" "~/.rd/bin"}}
