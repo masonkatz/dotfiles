@@ -341,6 +341,7 @@ full path to the executable if found, or nil otherwise."
 
 (mjk/add-to-list-multiple 'copilot-indentation-alist
 			  '((protobuf-ts-mode 2)
+			    (python-ts-mode 4)
 			    (sql-mode 8)))
 
 (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
@@ -462,8 +463,12 @@ full path to the executable if found, or nil otherwise."
 
 ;;;;; Python
 
+(mjk/install 'python-black)
+(mjk/install 'pyvenv)
+
 (add-hook 'python-ts-mode-hook
 	  (lambda ()
+	    (python-black-on-save-mode)
 	    (eglot-ensure)))
 
 ;;;;; Protobuf
