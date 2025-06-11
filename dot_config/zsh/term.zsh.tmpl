@@ -14,8 +14,8 @@ esac
 
 case $TERM in
 xterm*)
+	export STARSHIP_CONFIG=~/.config/starship/config.toml
 	type starship &>/dev/null && eval "$(starship init zsh)"
-	export STARSHIP_CONFIG="~/.config/starship/config.toml"
 
 {{- if eq .chezmoi.os "darwin" }}
 	[[ -d $HOMEBREW_PREFIX ]] && source ${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

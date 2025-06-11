@@ -6,14 +6,17 @@ truncation_symbol = '…/'
 before_repo_root_style = 'red'
 repo_root_style = 'bold cyan'
 
-[directory.substitutions]
-'Music' = ''
-'Desktop' = ''
-'Movies' = '󰿎'
-'Pictures' = ''
+[status]
+disabled = false
+
+[sudo]
+disabled = false
 
 [buf]
 symbol = "buf "
+
+[cpp]
+disabled = false
 
 [git_branch]
 ignore_branches = [ 'master', 'main']
@@ -27,10 +30,11 @@ tag_disabled = false
 disabled = false
 
 [golang]
-format = "via [$symbol($version) ]($style)"
-symbol = '󰟓 '
 version_format = "v${major}.${minor}"
 detect_files = [ "go.mod", "go.work" ]
+
+[python]
+pyenv_version_name = true
 
 [custom.sqlc]
 symbol = "sqlc "

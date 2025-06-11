@@ -48,7 +48,7 @@ without selecting it."
   "Set the frame defaults, font, font size, ..."
   (when (display-graphic-p)
     (window-divider-mode)
-    (when (mjk/graphic-p)
+    (when (mjk/macos-graphic-p)
       (set-face-attribute 'aw-leading-char-face nil :height 4.0)
       (when (find-font (font-spec :name "JetBrains Mono"))
 	(set-face-attribute 'default nil :family "JetBrains Mono")
@@ -76,6 +76,9 @@ full path to the executable if found, or nil otherwise."
 
 
 ;;;; Startup
+
+(defvar mjk/graphic-initialized nil
+  "Flag to indicate if the graphic mode has been initialized.")
 
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 (require 'chezmoi)
@@ -154,27 +157,34 @@ full path to the executable if found, or nil otherwise."
 
 (global-set-key (kbd "C-c t") 'treemacs-select-window)
 
-(when (display-graphic-p)
-  (mjk/install 'treemacs)
-  (setopt treemacs-is-never-other-window t)
-  (mjk/install 'ligature)
-  (mjk/install 'nerd-icons) ; (nerd-icons-install-fonts)
-  (mjk/install 'nerd-icons-dired)
-  (mjk/install 'treemacs-nerd-icons)
-  ;;  (treemacs-load-theme "nerd-icons")
-  (ligature-set-ligatures 'prog-mode '("++" "--"
-				       ">=" "<="
-				       "+=" "-=" "/=" "*=" "|=" "~=" "^="
-				       ":=" "!=" "==" "==="
-				       "/*" "*/" "//"
-				       "::" "<<" ">>"
-				       "<-" "->"
-				       "||" "&&"
-				       "...")))
-
 (add-hook 'dired-mode-hook 'nerd-icons-dired-mode)
 
-(add-hook 'window-setup-hook 'mjk/window-config)
+(if (or (daemonp) (display-graphic-p))
+    (add-hook 'after-make-frame-functions
+	      (lambda (frame)
+		(when (not mjk/graphic-initialized)
+		  (mjk/window-config)
+		  (mjk/install 'treemacs)
+		  (setopt treemacs-is-never-other-window t)
+		  (mjk/install 'ligature)
+		  (mjk/install 'nerd-icons) ; (nerd-icons-install-fonts)
+		  (mjk/install 'nerd-icons-dired)
+		  (mjk/install 'treemacs-nerd-icons)
+		  ;;  (treemacs-load-theme "nerd-icons")
+		  (ligature-set-ligatures 'prog-mode '("++" "--"
+						       ">=" "<="
+						       "+=" "-=" "/=" "*=" "|=" "~=" "^="
+						       ":=" "!=" "==" "==="
+						       "/*" "*/" "//"
+						       "::" "<<" ">>"
+						       "<-" "->"
+						       "||" "&&"
+						       "..."))
+		  (setq mjk/graphic-initialized t)))))
+
+
+;;  (add-hook 'window-setup-hook 'mjk/window-config))
+
 
 (defvar mjk/resolution-font-size-alist '(((1280 800)  . 14)
 					 ((1440 900)  . 14)

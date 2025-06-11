@@ -2,16 +2,21 @@
 
 export VISUAL=emacsclient
 export EDITOR=emacsclient
-export ALTERNATE_EDITOR="emacs -nw"	# emacs client uses this
+export ALTERNATE_EDITOR="emacs -nw"	# emacsclient uses this
 
-alias e="emacsclient -c"
+alias emacs='emacsclient -c -a ""' # -a"" means start a server if it doesn't exist
+alias e=emacs
 
-function restart-emacs() {
-	if emacsclient -e '(progn (message "Killing Emacs...") (kill-emacs))' >/dev/null 2>&1; then
+function emacs-stop() {
+	if emacsclient -e '(progn (message "Stopping Emacs...") (kill-emacs))' >/dev/null 2>&1; then
 		echo "Stopped Emacs daemon."
 	else
 		echo "Emacs daemon was not running."
 	fi
+}
+
+function emacs-restart() {
+	emacs-stop
 
 	echo "Starting Emacs daemon..."
 	"emacs" --daemon
