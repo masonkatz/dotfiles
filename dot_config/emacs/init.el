@@ -44,21 +44,6 @@ without selecting it."
 	 (resolution (cddr geometry)))
     (* 10 (cdr (assoc (cddr geometry) mjk/resolution-font-size-alist)))))
 
-(defun mjk/window-config ()
-  "Set the frame defaults, font, font size, ..."
-  (when (display-graphic-p)
-    (window-divider-mode)
-    (when (mjk/macos-graphic-p)
-      (set-face-attribute 'aw-leading-char-face nil :height 4.0)
-      (when (find-font (font-spec :name "JetBrains Mono"))
-	(set-face-attribute 'default nil :family "JetBrains Mono")
-	(global-ligature-mode t))
-      (if (eq window-system 'x)
-	  (set-face-attribute 'default nil :height 135) ; close to what 160 means on MacOS
-	(set-face-attribute 'default nil :height (mjk/font-size))
-	(set-fontset-font "fontset-default" 'hebrew
-			  (font-spec :family "Arial Hebrew" :size (* .12 (mjk/font-size))))))))
-
 (defun mjk/find-executable-in-paths (executable paths)
   "Search for EXECUTABLE in the given list of PATHS. Returns the
 full path to the executable if found, or nil otherwise."
@@ -76,9 +61,6 @@ full path to the executable if found, or nil otherwise."
 
 
 ;;;; Startup
-
-(defvar mjk/graphic-initialized nil
-  "Flag to indicate if the graphic mode has been initialized.")
 
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 (require 'chezmoi)
@@ -114,6 +96,64 @@ full path to the executable if found, or nil otherwise."
 	       '("/usr/local/bin" "/opt/homebrew/bin" "/usr/bin"))))
   (when ispell
     (setq ispell-program-name ispell)))
+
+;;;; Graphic Settings
+
+(defvar mjk/graphic-initialized nil
+  "Flag to indicate if the graphic mode has been initialized.")
+
+(defvar mjk/resolution-font-size-alist '(((1280 800)  . 14)
+					 ((1440 900)  . 14)
+					 ((1470 956)  . 14)
+					 ((1512 982)  . 14)
+					 ((1680 1050) . 14)
+					 ((1920 1080) . 14)
+					 ((2560 1440) . 16)
+					 ((3008 1692) . 16)
+					 ((3360 1890) . 16)
+					 ((3440 1440) . 16)
+					 ((3840 2160) . 20))
+  "Font sizes for different monitors.")
+
+(defun mjk/window-config ()
+  "Set the frame defaults, font, font size, ..."
+  (when (and (display-graphic-p) (not mjk/graphic-initialized))
+    (window-divider-mode)
+    (setopt treemacs-is-never-other-window t)
+    (mjk/install 'ligature)
+    (mjk/install 'nerd-icons) ; (nerd-icons-install-fonts)
+    (mjk/install 'nerd-icons-dired)
+    (mjk/install 'treemacs-nerd-icons)
+    (add-hook 'dired-mode-hook 'nerd-icons-dired-mode)
+    (ligature-set-ligatures 'prog-mode '("++" "--"
+					 ">=" "<="
+					 "+=" "-=" "/=" "*=" "|=" "~=" "^="
+					 ":=" "!=" "==" "==="
+					 "/*" "*/" "//"
+					 "::" "<<" ">>"
+					 "<<<" ">>>"
+					 "<-" "->"
+					 "||" "&&"
+					 "..."))
+    (when (mjk/macos-graphic-p)		; MacOS specific settings
+      (set-face-attribute 'aw-leading-char-face nil :height 4.0)
+      (when (find-font (font-spec :name "JetBrains Mono"))
+	(set-face-attribute 'default nil :family "JetBrains Mono")
+	(global-ligature-mode t))
+      (if (eq window-system 'x)
+	  (set-face-attribute 'default nil :height 135) ; close to what 160 means on MacOS
+	(set-face-attribute 'default nil :height (mjk/font-size))
+	(when (find-font (font-spec :name "Arial Hebrew"))
+	  (set-fontset-font "fontset-default" 'hebrew
+			    (font-spec :family "Arial Hebrew" :size (* .12 (mjk/font-size))))))
+  (setq mjk/graphic-initialized t))
+
+(if (daemonp)
+    (add-hook 'server-after-make-frame-hook
+	      (lambda ()
+		(mjk/window-config)))
+  (add-hook 'window-setup-hook 'mjk/window-config))
+
 
 ;;;; Tramp
 
@@ -155,49 +195,11 @@ full path to the executable if found, or nil otherwise."
 
 ;;;; Treemacs, Font, Icons & Ligatures
 
+(mjk/install 'treemacs)
+
 (global-set-key (kbd "C-c t") 'treemacs-select-window)
 
-(add-hook 'dired-mode-hook 'nerd-icons-dired-mode)
 
-(if (or (daemonp) (display-graphic-p))
-    (add-hook 'after-make-frame-functions
-	      (lambda (frame)
-		(when (not mjk/graphic-initialized)
-		  (mjk/window-config)
-		  (mjk/install 'treemacs)
-		  (setopt treemacs-is-never-other-window t)
-		  (mjk/install 'ligature)
-		  (mjk/install 'nerd-icons) ; (nerd-icons-install-fonts)
-		  (mjk/install 'nerd-icons-dired)
-		  (mjk/install 'treemacs-nerd-icons)
-		  ;;  (treemacs-load-theme "nerd-icons")
-		  (ligature-set-ligatures 'prog-mode '("++" "--"
-						       ">=" "<="
-						       "+=" "-=" "/=" "*=" "|=" "~=" "^="
-						       ":=" "!=" "==" "==="
-						       "/*" "*/" "//"
-						       "::" "<<" ">>"
-						       "<-" "->"
-						       "||" "&&"
-						       "..."))
-		  (setq mjk/graphic-initialized t)))))
-
-
-;;  (add-hook 'window-setup-hook 'mjk/window-config))
-
-
-(defvar mjk/resolution-font-size-alist '(((1280 800)  . 14)
-					 ((1440 900)  . 14)
-					 ((1470 956)  . 14)
-					 ((1512 982)  . 14)
-					 ((1680 1050) . 14)
-					 ((1920 1080) . 14)
-					 ((2560 1440) . 16)
-					 ((3008 1692) . 16)
-					 ((3360 1890) . 16)
-					 ((3440 1440) . 16)
-					 ((3840 2160) . 20))
-  "Font sizes for different monitors.")
 
 
 ;;;; Modeline
@@ -373,10 +375,10 @@ full path to the executable if found, or nil otherwise."
 	  (lambda ()
 	    (flyspell-mode)
 	    (when (display-graphic-p)
-	      (git-gutter-mode)
-	      (hl-line-mode)
-	      (display-fill-column-indicator-mode)
-	      (display-line-numbers-mode))))
+              (git-gutter-mode)
+              (hl-line-mode)
+              (display-fill-column-indicator-mode)
+              (display-line-numbers-mode))))
 
 ;;;;; Markdown
 

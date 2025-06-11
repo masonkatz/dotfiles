@@ -26,8 +26,8 @@
 	     editor-config editorconfig eldoc-box exec-path-from-shell
 	     git-gutter-fringe git-modes hl-todo ligature ligatures magit
 	     magit-gitflow markdown-mode markdown-ts-mode nerd-icons
-	     nerd-icons-dired prettier-js pyenv python-back python-black pyvenv
-	     quelpa quelpa-use-package rainbow-mode ssh-config-mode treemacs
+	     nerd-icons-dired prettier-js python-black pyvenv quelpa
+	     quelpa-use-package rainbow-mode ssh-config-mode treemacs
 	     treemacs-nerd-icons yasnippet yasnippet-snippets zenburn-mode
 	     zenburn-theme))
  '(package-vc-selected-packages
