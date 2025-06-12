@@ -30,14 +30,6 @@ without selecting it."
   (unless (package-installed-p package)
     (package-install package)))
 
-(defun mjk/graphic-p ()
-  "Return true if running as a graphical application"
-  (or (eq window-system 'ns) (eq system-type 'darwin)))
-
-(defun mjk/macos-graphic-p ()
-  "Return true if running as a graphical application on MacOS"
-  (and (eq system-type 'darwin) (mjk/graphic-p)))
-
 (defun mjk/font-size ()
   "Return font size to use based on resolution."
   (let* ((geometry (cdr (assoc 'geometry (car (display-monitor-attributes-list)))))
@@ -73,29 +65,39 @@ full path to the executable if found, or nil otherwise."
 					;(package-refresh-contents)
 
 (unless (server-running-p)
-  (setq server-use-tcp t)
   (server-start))
 
 (mjk/install 'exec-path-from-shell)
 (setopt exec-path-from-shell-variables '("PATH" "MANPATH"))
 
-
-(when (or (daemonp) (mjk/macos-graphic-p))
+(when (or (daemonp) (display-graphic-p))
   (setq default-directory "~/")
   (exec-path-from-shell-initialize))
 
-(when (mjk/macos-graphic-p)
-  (unbind-key "s-t")
-  (unbind-key "s-,"))
-
-(when (not (display-graphic-p))
-  (xterm-mouse-mode 1))			; mouse click moves cursor
+(cond
+ ((eq window-system 'ns)		
+  (unbind-key "C-z")			; disable suspending the frame
+  (unbind-key "s-t")			; disable font menu
+  (unbind-key "s-,"))			; disable preferences menu
+ ((eq window-system 'x)
+  (setq x-alt-keysym 'meta		; replicate MacOS behavior
+	x-meta-keysym 'super)
+  (global-set-key (kbd "s-v") 'yank))
+ ((not window-system)
+  (xterm-mouse-mode 1)))		; mouse click moves cursor
 
 (let ((ispell (mjk/find-executable-in-paths
 	       "ispell"
 	       '("/usr/local/bin" "/opt/homebrew/bin" "/usr/bin"))))
   (when ispell
     (setq ispell-program-name ispell)))
+
+;;;; Spacing
+
+(setopt tab-width 4
+	sentence-end-double-space nil
+	fill-column 80
+	display-fill-column-indicator-column 100)
 
 ;;;; Graphic Settings
 
@@ -116,8 +118,11 @@ full path to the executable if found, or nil otherwise."
   "Font sizes for different monitors.")
 
 (defun mjk/window-config ()
-  "Set the frame defaults, font, font size, ..."
-  (when (and (display-graphic-p) (not mjk/graphic-initialized))
+  "Set the frame defaults, font, font size, ...
+Will only change settings once, so it is safe to run as a frame creation
+hook"
+  (when (and (display-graphic-p)
+	     (not mjk/graphic-initialized))
     (window-divider-mode)
     (setopt treemacs-is-never-other-window t)
     (mjk/install 'ligature)
@@ -135,33 +140,53 @@ full path to the executable if found, or nil otherwise."
 					 "<-" "->"
 					 "||" "&&"
 					 "..."))
-    (when (mjk/macos-graphic-p)		; MacOS specific settings
+    (cond
+     ((eq system-type 'darwin)		; MacOS
       (set-face-attribute 'aw-leading-char-face nil :height 4.0)
       (when (find-font (font-spec :name "JetBrains Mono"))
 	(set-face-attribute 'default nil :family "JetBrains Mono")
 	(global-ligature-mode t))
-      (if (eq window-system 'x)
-	  (set-face-attribute 'default nil :height 135) ; close to what 160 means on MacOS
-	(set-face-attribute 'default nil :height (mjk/font-size))
-	(when (find-font (font-spec :name "Arial Hebrew"))
-	  (set-fontset-font "fontset-default" 'hebrew
-			    (font-spec :family "Arial Hebrew" :size (* .12 (mjk/font-size))))))
+      (when (find-font (font-spec :name "Arial Hebrew"))
+	(set-fontset-font "fontset-default" 'hebrew
+			  (font-spec :family "Arial Hebrew" :size (* .12 (mjk/font-size))))))
+     ((eq window-system 'x)			    ; X11
+      (set-face-attribute 'default nil :height 135) ; close to what 160 means on MacOS
+      (set-face-attribute 'default nil :height (mjk/font-size)))))
   (setq mjk/graphic-initialized t))
 
 (if (daemonp)
-    (add-hook 'server-after-make-frame-hook
-	      (lambda ()
-		(mjk/window-config)))
+    (add-hook 'server-after-make-frame-hook 'mjk/window-config)
   (add-hook 'window-setup-hook 'mjk/window-config))
 
 
 ;;;; Tramp
 
 (require 'tramp)
-(add-to-list 'tramp-remote-path "/opt/homebrew/bin")
-(add-to-list 'tramp-remote-path "/opt/homebrew/sbin")
+
+(setopt tramp-default-method "ssh")
+
+(when (eq system-type 'darwin)
+  (add-to-list 'tramp-remote-path "/opt/homebrew/bin")
+  (add-to-list 'tramp-remote-path "/opt/homebrew/sbin"))
 (add-to-list 'tramp-remote-path 'tramp-own-remote-path) ; preserves remote's PATH 
 
+
+;;;; Time & Calendar
+
+(setopt calendar-hebrew-all-holidays-flag t
+	calendar-latitude 32.7157
+	calendar-longitude -117.1611
+	calendar-mark-holidays-flag t
+	calendar-week-start-day 1)
+
+(setopt world-clock-list
+	'(("America/Los_Angeles" "San Diego")
+	  ("America/Phoenix" "Tucson")
+	  ("America/Denver" "Santa Fe")
+	  ("Etc/UTC" "UTC")
+	  ("Asia/Jerusalem" "Jerusalem")
+	  ("Asia/Tokyo" "Kobe"))
+	world-clock-time-format "%a %b %d%t%I:%M %p%t%Z")
 
 ;;;; Dashboard
 
@@ -199,9 +224,6 @@ full path to the executable if found, or nil otherwise."
 
 (global-set-key (kbd "C-c t") 'treemacs-select-window)
 
-
-
-
 ;;;; Modeline
 
 (mjk/install 'doom-modeline)
@@ -214,6 +236,10 @@ full path to the executable if found, or nil otherwise."
 	doom-modeline-indent-info t
 	doom-modeline-project-name t
 	doom-modeline-vcs-max-length 20)
+
+(setopt display-time-load-average-threshold 10
+	display-time-mail-string ""
+	project-mode-line t)
 
 ;;;; Zenburn
 
@@ -240,6 +266,7 @@ full path to the executable if found, or nil otherwise."
 				("XXX" error bold)))
 
 ;;;; EditorConfig
+
 (require 'editorconfig)
 (editorconfig-mode)
 
@@ -264,6 +291,9 @@ full path to the executable if found, or nil otherwise."
 
 (mjk/install 'company)
 (mjk/install 'company-box)
+
+(setopt company-idle-delay 0.5)
+
 (global-company-mode t)
 (add-hook 'company-mode-hook 'company-box-mode)
 
@@ -364,11 +394,6 @@ full path to the executable if found, or nil otherwise."
 (define-key copilot-completion-map (kbd "C-p") 'copilot-previous-completion)
 
 
-;;;; Utilities
-;;;;; Docker
-
-(require 'dockerfile-ts-mode)
-
 ;;;; Text Modes
 
 (add-hook 'text-mode-hook
@@ -386,6 +411,16 @@ full path to the executable if found, or nil otherwise."
 (setopt markdown-header-scaling t)
 
 ;;;; Programming Modes
+
+(setopt compilation-always-kill t
+	compilation-ask-about-save nil
+	compilation-auto-jump-to-first-error t
+	compilation-scroll-output t
+	compilation-window-height 12)
+
+
+(global-set-key (kbd "C-c n") 'next-error)
+(global-set-key (kbd "C-c p") 'previous-error)
 
 (setopt major-mode-remap-alist '((c++-mode      . c++-ts-mode)
 				 (c-mode        . c-ts-mode)
@@ -423,6 +458,10 @@ full path to the executable if found, or nil otherwise."
 		      (lambda ()
 			(eglot-format-buffer)))))
 
+;;;;; Docker
+
+(require 'dockerfile-ts-mode)
+
 ;;;;; GNU Makefile
 
 (add-to-list 'auto-mode-alist '("[Mm]akefile\\'" . makefile-gmake-mode))
@@ -444,10 +483,6 @@ full path to the executable if found, or nil otherwise."
 
 (mjk/install 'just-mode)
 
-(add-hook 'just-mode-hook
-	  (lambda ()
-	    (setq just-indent-offset 4)))
-
 ;;;;; JSON / YAML
 
 (require 'yaml-ts-mode)
@@ -462,14 +497,14 @@ full path to the executable if found, or nil otherwise."
 
 ;;;;; Lisp
 
-; Lisp indents with both tabs and spaces. If we redefine tabs the file will look
-; bad outside of our editor.
+; Lisp indents with both tabs and spaces. If we redefine tabs (from 8 spaces)
+; the file will look bad outside of our editor.
 
 (add-hook 'emacs-lisp-mode-hook
 	  (lambda ()
 	    (outline-minor-mode)
-	    (setq-local outline-regexp ";;;\\{1,\\} ")
-	    (setq-local outline-minor-mode-cycle t)
+	    (setq-local outline-regexp ";;;\\{1,\\} "
+			outline-minor-mode-cycle t)
 	    (outline-hide-body)
     	    (setq tab-width 8)))
 
