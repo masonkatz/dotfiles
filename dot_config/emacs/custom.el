@@ -7,16 +7,15 @@
  '(make-backup-files nil)
  '(mouse-wheel-progressive-speed nil)
  '(package-selected-packages
-   '(company company-mode copilot copilot-chat dashboard doom-modeline eat
-	     editor-config editorconfig eldoc-box exec-path-from-shell
-	     git-gutter-fringe git-modes hl-todo ligature ligatures magit
-	     magit-gitflow markdown-mode markdown-ts-mode nerd-icons
-	     nerd-icons-dired prettier-js python-black pyvenv quelpa
-	     quelpa-use-package rainbow-mode ssh-config-mode treemacs
-	     treemacs-nerd-icons yasnippet yasnippet-snippets zenburn-mode
-	     zenburn-theme))
+   '(ag company company-mode copilot copilot-chat dashboard docker doom-modeline
+	eat editor-config editorconfig eldoc-box exec-path-from-shell
+	git-gutter-fringe git-modes hl-todo ligature ligatures magit
+	magit-gitflow markdown-mode markdown-ts-mode nerd-icons nerd-icons-dired
+	prettier-js python-black pyvenv quelpa quelpa-use-package rainbow-mode
+	ssh-config-mode swift-mode treemacs treemacs-nerd-icons yasnippet
+	yasnippet-snippets zenburn-mode zenburn-theme))
  '(package-vc-selected-packages
-   '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch "main")))
+   '((copilot :url "https://github.com/masonkatz/copilot.el" :branch "main")))
  '(uniquify-buffer-name-style 'post-forward nil (uniquify)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

@@ -7,14 +7,16 @@ export ALTERNATE_EDITOR="emacs -nw"	# emacsclient uses this
 alias emacs='emacsclient -c -a ""' # -a"" means start a server if it doesn't exist
 alias e=emacs
 
+# Kill the Emacs daemon if it is running.
 function emacs-stop() {
-	if emacsclient -e '(progn (message "Stopping Emacs...") (kill-emacs))' >/dev/null 2>&1; then
+	if emacsclient -a false -e '(progn (message "Stopping Emacs...") (kill-emacs))' >/dev/null 2>&1; then
 		echo "Stopped Emacs daemon."
 	else
 		echo "Emacs daemon was not running."
 	fi
 }
 
+# Kill and restart the Emacs daemon.
 function emacs-restart() {
 	emacs-stop
 
@@ -23,10 +25,12 @@ function emacs-restart() {
 }
 
 {{- if eq .chezmoi.os "darwin" }}
-if [ -x /usr/local/bin/emacs ]; then
+
+if [[ -x /usr/local/bin/emacs ]]; then
 	if /usr/local/bin/emacs --batch --eval '(kill-emacs (if (string-match "X11" system-configuration-features) 0 1))'; then
 		alias xe=/usr/local/bin/emacs # emacs w/ X11 support
 	fi
 fi
+
 {{- end }}
 

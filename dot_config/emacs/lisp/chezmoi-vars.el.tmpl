@@ -1,4 +1,4 @@
-;; chezmoi.el --- Variables from user's chezmoi state
+;; chezmoi-vars.el --- Variables from user's chezmoi state
 
 ;;; Commentary:
 ;;
@@ -7,10 +7,10 @@
 ;;
 ;;; Code:
 
-(defvar chezmoi-org "{{ .org }}"
+(defvar chezmoi-vars-org "{{ .org }}"
   "User's org from chezmoi configuration.")
 
-(defvar chezmoi-golocal "{{ .golocal }}"
+(defvar chezmoi-vars-golocal "{{ .golocal }}"
   "Comma delimited list of paths for local Go modules.")
 
-(provide 'chezmoi)
+(provide 'chezmoi-vars)

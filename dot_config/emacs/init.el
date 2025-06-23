@@ -8,7 +8,7 @@
 
 ;;;; Functions
 
-(defun mjk/eldoc-doc-buffer ()
+(defun my--eldoc-doc-buffer ()
   "Show and prettify the Eldoc documentation buffer in a new window,
 without selecting it."
   (interactive)
@@ -20,32 +20,32 @@ without selecting it."
       ;; Reconstruct paragraphs where gopls collapsed newlines
       (goto-char (point-min))
       (while (re-search-forward "\\([^\n]\\)\n\\([^ \n]\\)" nil t)
-        (replace-match "\\1 \\2"))
+	(replace-match "\\1 \\2"))
       (goto-char (point-min)))
     ;; Display buffer without selecting it
     (display-buffer buf)))
 
-(defun mjk/install (package)
+(defun my--install (package)
   "Installs package if not already installed"
   (unless (package-installed-p package)
     (package-install package)))
 
-(defun mjk/font-size ()
+(defun my--font-size ()
   "Return font size to use based on resolution."
   (let* ((geometry (cdr (assoc 'geometry (car (display-monitor-attributes-list)))))
 	 (resolution (cddr geometry)))
-    (* 10 (cdr (assoc (cddr geometry) mjk/resolution-font-size-alist)))))
+    (* 10 (cdr (assoc (cddr geometry) my--resolution-font-size-alist)))))
 
-(defun mjk/find-executable-in-paths (executable paths)
+(defun my--find-executable-in-paths (executable paths)
   "Search for EXECUTABLE in the given list of PATHS. Returns the
 full path to the executable if found, or nil otherwise."
   (let ((found nil))
     (dolist (path paths found)
       (let ((candidate (expand-file-name executable path)))
-        (when (and (file-exists-p candidate) (file-executable-p candidate))
-          (setq found candidate))))))
+	(when (and (file-exists-p candidate) (file-executable-p candidate))
+	  (setq found candidate))))))
 
-(defun mjk/add-to-list-multiple (list &rest items)
+(defun my--add-to-list-multiple (list &rest items)
   "Add multiple ITEMS to LIST."
   (dolist (item items)
     (add-to-list list item)))
@@ -55,7 +55,7 @@ full path to the executable if found, or nil otherwise."
 ;;;; Startup
 
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
-(require 'chezmoi)
+(require 'chezmoi-vars)
 
 (require 'package)
 (require 'server)
@@ -67,7 +67,7 @@ full path to the executable if found, or nil otherwise."
 (unless (server-running-p)
   (server-start))
 
-(mjk/install 'exec-path-from-shell)
+(my--install 'exec-path-from-shell)
 (setopt exec-path-from-shell-variables '("PATH" "MANPATH"))
 
 (when (or (daemonp) (display-graphic-p))
@@ -86,7 +86,7 @@ full path to the executable if found, or nil otherwise."
  ((not window-system)
   (xterm-mouse-mode 1)))		; mouse click moves cursor
 
-(let ((ispell (mjk/find-executable-in-paths
+(let ((ispell (my--find-executable-in-paths
 	       "ispell"
 	       '("/usr/local/bin" "/opt/homebrew/bin" "/usr/bin"))))
   (when ispell
@@ -101,10 +101,10 @@ full path to the executable if found, or nil otherwise."
 
 ;;;; Graphic Settings
 
-(defvar mjk/graphic-initialized nil
+(defvar my--graphic-initialized nil
   "Flag to indicate if the graphic mode has been initialized.")
 
-(defvar mjk/resolution-font-size-alist '(((1280 800)  . 14)
+(defvar my--resolution-font-size-alist '(((1280 800)  . 14)
 					 ((1440 900)  . 14)
 					 ((1470 956)  . 14)
 					 ((1512 982)  . 14)
@@ -117,18 +117,18 @@ full path to the executable if found, or nil otherwise."
 					 ((3840 2160) . 20))
   "Font sizes for different monitors.")
 
-(defun mjk/window-config ()
+(defun my--window-config ()
   "Set the frame defaults, font, font size, ...
 Will only change settings once, so it is safe to run as a frame creation
 hook"
   (when (and (display-graphic-p)
-	     (not mjk/graphic-initialized))
+	     (not my--graphic-initialized))
     (window-divider-mode)
     (setopt treemacs-is-never-other-window t)
-    (mjk/install 'ligature)
-    (mjk/install 'nerd-icons) ; (nerd-icons-install-fonts)
-    (mjk/install 'nerd-icons-dired)
-    (mjk/install 'treemacs-nerd-icons)
+    (my--install 'ligature)
+    (my--install 'nerd-icons) ; (nerd-icons-install-fonts)
+    (my--install 'nerd-icons-dired)
+    (my--install 'treemacs-nerd-icons)
     (add-hook 'dired-mode-hook 'nerd-icons-dired-mode)
     (ligature-set-ligatures 'prog-mode '("++" "--"
 					 ">=" "<="
@@ -143,20 +143,20 @@ hook"
     (cond
      ((eq system-type 'darwin)		; MacOS
       (set-face-attribute 'aw-leading-char-face nil :height 4.0)
+      (set-face-attribute 'default nil :height (my--font-size))
       (when (find-font (font-spec :name "JetBrains Mono"))
 	(set-face-attribute 'default nil :family "JetBrains Mono")
 	(global-ligature-mode t))
       (when (find-font (font-spec :name "Arial Hebrew"))
 	(set-fontset-font "fontset-default" 'hebrew
-			  (font-spec :family "Arial Hebrew" :size (* .12 (mjk/font-size))))))
+			  (font-spec :family "Arial Hebrew" :size (* .12 (my--font-size))))))
      ((eq window-system 'x)			    ; X11
-      (set-face-attribute 'default nil :height 135) ; close to what 160 means on MacOS
-      (set-face-attribute 'default nil :height (mjk/font-size)))))
-  (setq mjk/graphic-initialized t))
+      (set-face-attribute 'default nil :height 135)))) ; close to what 160 means on MacOS
+  (setq my--graphic-initialized t))
 
 (if (daemonp)
-    (add-hook 'server-after-make-frame-hook 'mjk/window-config)
-  (add-hook 'window-setup-hook 'mjk/window-config))
+    (add-hook 'server-after-make-frame-hook 'my--window-config)
+  (add-hook 'window-setup-hook 'my--window-config))
 
 
 ;;;; Tramp
@@ -190,7 +190,7 @@ hook"
 
 ;;;; Dashboard
 
-(mjk/install 'dashboard)
+(my--install 'dashboard)
 (dashboard-setup-startup-hook)
 
 (setopt dashboard-banner-logo-title ""
@@ -205,9 +205,11 @@ hook"
 	dashboard-set-init-info nil
 	dashboard-set-navigator t)
 
-;;;; Ace Windows
+;;;; Ag (Silver Searcher)
+(my--install 'ag)
 
-(mjk/install 'ace-window)
+;;;; Ace Windows
+(my--install 'ace-window)
 (require 'ace-window)			; so we can modify the faces
 
 (global-set-key [remap other-window] 'ace-window)
@@ -220,13 +222,13 @@ hook"
 
 ;;;; Treemacs, Font, Icons & Ligatures
 
-(mjk/install 'treemacs)
+(my--install 'treemacs)
 
 (global-set-key (kbd "C-c t") 'treemacs-select-window)
 
 ;;;; Modeline
 
-(mjk/install 'doom-modeline)
+(my--install 'doom-modeline)
 
 (doom-modeline-mode 1)
 (size-indication-mode)
@@ -243,7 +245,7 @@ hook"
 
 ;;;; Zenburn
 
-(mjk/install 'zenburn-theme)
+(my--install 'zenburn-theme)
 (load-theme 'zenburn t)
 
 (setq zenburn-scale-org-headlines t
@@ -252,9 +254,9 @@ hook"
 
 ;;;; Misc
 
-(mjk/install 'rainbow-mode)		; highlights color strings
+(my--install 'rainbow-mode)		; highlights color strings
 
-(mjk/install 'hl-todo)
+(my--install 'hl-todo)
 (setopt hl-todo-highlight-punctuation ":"
 	hl-todo-keyword-faces `(("DEPRECATED" font-lock-doc-face bold)
 				("FIXME" error bold)
@@ -272,25 +274,25 @@ hook"
 
 ;;;; Terminal
 
-(mjk/install 'eat)
+(my--install 'eat)
 
 (add-hook 'eshell-load-hook #'eat-eshell-mode)
 (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
 
 ;;;; SSH
 
-(mjk/install 'ssh-config-mode)
+(my--install 'ssh-config-mode)
 
 ;;;; Git
 
-(mjk/install 'git-gutter-fringe)
-(mjk/install 'magit)
-(mjk/install 'git-modes)
+(my--install 'git-gutter-fringe)
+(my--install 'magit)
+(my--install 'git-modes)
 
 ;;;; Company
 
-(mjk/install 'company)
-(mjk/install 'company-box)
+(my--install 'company)
+(my--install 'company-box)
 
 (setopt company-idle-delay 0.5)
 
@@ -299,16 +301,16 @@ hook"
 
 ;;;; Yasnippet
 
-(mjk/install 'yasnippet)
-(mjk/install 'yasnippet-snippets)
+(my--install 'yasnippet)
+(my--install 'yasnippet-snippets)
 
 ;;;; Prettier
 
-(mjk/install 'prettier-js)		; add prettier-js-mode to mode hooks
+(my--install 'prettier-js)		; add prettier-js-mode to mode hooks
 
 ;;;; Page Breaks
 
-(mjk/install 'page-break-lines)
+(my--install 'page-break-lines)
 
 
 ;;;; Treesitter
@@ -317,32 +319,35 @@ hook"
 
 (setopt treesit-font-lock-level 4)
 
-(defun mjk/install-treesitter-grammars ()
+(defun my--install-treesitter-grammars ()
   "Download and install treesitter grammar files."
   (interactive)
   (dolist (grammar
-	   '((c          . ("https://github.com/tree-sitter/tree-sitter-c"))
-	     (cpp        . ("https://github.com/tree-sitter/tree-sitter-cpp"))
+	   '((bash	 . ("https://github.com/tree-sitter/tree-sitter-bash"))
+	     (c		 . ("https://github.com/tree-sitter/tree-sitter-c"))
+	     (cpp	 . ("https://github.com/tree-sitter/tree-sitter-cpp"))
+	     (css	 . ("https://github.com/tree-sitter/tree-sitter-css"))
 	     (dockerfile . ("https://github.com/camdencheek/tree-sitter-dockerfile"))
-	     (go         . ("https://github.com/tree-sitter/tree-sitter-go"))
-	     (gomod      . ("https://github.com/camdencheek/tree-sitter-go-mod"))
-	     (gowork     . ("https://github.com/omertuc/tree-sitter-go-work"))
+	     (go	 . ("https://github.com/tree-sitter/tree-sitter-go"))
+	     (gomod	 . ("https://github.com/camdencheek/tree-sitter-go-mod"))
+	     (gowork	 . ("https://github.com/omertuc/tree-sitter-go-work"))
+	     (html	 . ("https://github.com/tree-sitter/tree-sitter-html"))
 	     (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript"))
-	     (json       . ("https://github.com/tree-sitter/tree-sitter-json"))
-	     (proto      . ("https://github.com/mitchellh/tree-sitter-proto"))
-	     (python     . ("https://github.com/tree-sitter/tree-sitter-python"))
-	     (toml       . ("https://github.com/ikatyang/tree-sitter-toml"))
-	     (yaml       . ("https://github.com/ikatyang/tree-sitter-yaml"))))
+	     (json	 . ("https://github.com/tree-sitter/tree-sitter-json"))
+	     (proto	 . ("https://github.com/mitchellh/tree-sitter-proto"))
+	     (python	 . ("https://github.com/tree-sitter/tree-sitter-python"))
+	     (toml	 . ("https://github.com/ikatyang/tree-sitter-toml"))
+	     (yaml	 . ("https://github.com/ikatyang/tree-sitter-yaml"))))
     (add-to-list 'treesit-language-source-alist grammar)
     (unless (treesit-language-available-p (car grammar))
       (treesit-install-language-grammar (car grammar)))))
 
-(mjk/install-treesitter-grammars)
+(my--install-treesitter-grammars)
 
 ;;;; Org Mode
 
 (require 'org)
-(mjk/install 'org-superstar)
+(my--install 'org-superstar)
 
 (add-hook 'org-mode-hook
 	  (lambda ()
@@ -358,32 +363,35 @@ hook"
 (require 'eglot)
 (require 'flymake)			; eglot will enable flymake-mode
 
-(mjk/install 'eldoc-box)
+(when (eq system-type 'darwin)
+  (add-to-list 'eglot-server-programs
+	       '(swift-mode . ("xcrun" "sourcekit-lsp"))))b
+
+(my--install 'eldoc-box)
 (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t)
 
 (setopt eldoc-box-only-multi-line t)
 
 (define-key eglot-mode-map (kbd "C-c r") 'eglot-rename)
 (define-key eglot-mode-map (kbd "C-c o") 'eglot-code-action-organize-imports)
-(define-key eglot-mode-map (kbd "C-h .") 'mjk/eldoc-doc-buffer)
+(define-key eglot-mode-map (kbd "C-h .") 'my--eldoc-doc-buffer)
 
 (setq-default eglot-workspace-configuration
 	      `((:gopls .
-			((local . ,chezmoi-golocal)
+			((local . ,chezmoi-vars-golocal)
 			 (hoverKind . "FullDocumentation")
 			 (staticcheck . t)))))
 
 
 (use-package copilot
-  :vc (:url "https://github.com/copilot-emacs/copilot.el"
+  :vc (:url "https://github.com/masonkatz/copilot.el.git"
 	    :rev :newest
-            :branch "main"))
+	    :branch "main"))
 
-(mjk/install 'copilot-chat)
+(my--install 'copilot-chat)
 
-(mjk/add-to-list-multiple 'copilot-indentation-alist
+(my--add-to-list-multiple 'copilot-indentation-alist
 			  '((protobuf-ts-mode 2)
-			    (python-ts-mode 4)
 			    (sql-mode 8)))
 
 (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
@@ -400,15 +408,21 @@ hook"
 	  (lambda ()
 	    (flyspell-mode)
 	    (when (display-graphic-p)
-              (git-gutter-mode)
-              (hl-line-mode)
-              (display-fill-column-indicator-mode)
-              (display-line-numbers-mode))))
+	      (git-gutter-mode)
+	      (hl-line-mode)
+	      (display-fill-column-indicator-mode)
+	      (display-line-numbers-mode))))
 
 ;;;;; Markdown
 
-(mjk/install 'markdown-mode)
+(my--install 'markdown-mode)
 (setopt markdown-header-scaling t)
+
+(add-hook 'markdown-mode-hook
+	  (lambda ()
+	    (prettier-js-mode)))
+
+
 
 ;;;; Programming Modes
 
@@ -419,14 +433,15 @@ hook"
 	compilation-window-height 12)
 
 
-(global-set-key (kbd "C-c n") 'next-error)
-(global-set-key (kbd "C-c p") 'previous-error)
+(define-key prog-mode-map (kbd "C-c n") 'next-error)
+(define-key prog-mode-map (kbd "C-c p") 'previous-error)
 
-(setopt major-mode-remap-alist '((c++-mode      . c++-ts-mode)
-				 (c-mode        . c-ts-mode)
+(setopt major-mode-remap-alist '((c++-mode	. c++-ts-mode)
+				 (c-mode	. c-ts-mode)
 				 (c-or-c++-mode . c-or-c++-ts-mode)
-				 (js-json-mode  . json-ts-mode)
-				 (python-mode   . python-ts-mode)))
+				 (js-json-mode	. json-ts-mode)
+				 (python-mode	. python-ts-mode)
+				 (yaml-mode	. yaml-ts-mode)))
 
 (add-hook 'prog-mode-hook
 	  (lambda ()
@@ -460,6 +475,7 @@ hook"
 
 ;;;;; Docker
 
+(my--install 'docker)
 (require 'dockerfile-ts-mode)
 
 ;;;;; GNU Makefile
@@ -481,7 +497,7 @@ hook"
 
 ;;;;; Just
 
-(mjk/install 'just-mode)
+(my--install 'just-mode)
 
 ;;;;; JSON / YAML
 
@@ -497,21 +513,20 @@ hook"
 
 ;;;;; Lisp
 
-; Lisp indents with both tabs and spaces. If we redefine tabs (from 8 spaces)
-; the file will look bad outside of our editor.
-
 (add-hook 'emacs-lisp-mode-hook
 	  (lambda ()
+	    (indent-tabs-mode)	    ; This is the factory default, but
+	    (setq tab-width 8)	    ; explicitly enforce it anyway.
 	    (outline-minor-mode)
-	    (setq-local outline-regexp ";;;\\{1,\\} "
-			outline-minor-mode-cycle t)
-	    (outline-hide-body)
-    	    (setq tab-width 8)))
+	    (setq-local copilot-indent-offset-warning-disable t
+			outline-regexp ";;;\\{1,\\} "
+			outline-minor-mode-cycle t)))
+
 
 ;;;;; Python
 
-(mjk/install 'python-black)
-(mjk/install 'pyvenv)
+(my--install 'python-black)
+(my--install 'pyvenv)
 
 (add-hook 'python-ts-mode-hook
 	  (lambda ()
@@ -520,18 +535,22 @@ hook"
 
 ;;;;; Protobuf
 
-(mjk/install 'protobuf-ts-mode)
+(my--install 'protobuf-ts-mode)
 (require 'protobuf-ts-mode)
 
-;;;;; SQL
+;;;;; Shell
 
-(add-hook 'sql-mode-hook
+(add-hook 'sh-mode-hook
 	  (lambda ()
-	    (setq tab-width 8)))
+	    (eglot-ensure)))
+
+;;;;; Swift
+
+(my--install 'swift-mode)
 
 ;;;;; Web
 
-(mjk/install 'web-mode)
+(my--install 'web-mode)
 
 (add-to-list 'auto-mode-alist '("\\.tmpl\\'" . web-mode))
 
