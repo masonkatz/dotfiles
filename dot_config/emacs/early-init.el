@@ -10,6 +10,6 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-(setq inhibit-startup-screen t)
-
-
+(setopt
+ site-run-file nil ; don't include system level files (looking at you debian)
+ inhibit-startup-screen t)

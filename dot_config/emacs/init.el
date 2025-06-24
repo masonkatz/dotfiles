@@ -399,7 +399,7 @@ hook"
 (when (eq system-type 'darwin)
   (add-to-list
    'eglot-server-programs '(swift-mode . ("xcrun" "sourcekit-lsp"))))
-b
+
 
 (my--install 'eldoc-box)
 (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t)
