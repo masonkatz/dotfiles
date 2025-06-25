@@ -574,6 +574,8 @@ hook"
  'python-ts-mode-hook
  (lambda ()
    (python-black-on-save-mode)
+   (pyvenv-mode)
+   (pyvenv-tracking-mode)
    (eglot-ensure)))
 
 ;;;;; Protobuf
