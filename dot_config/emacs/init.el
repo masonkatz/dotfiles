@@ -1,4 +1,4 @@
-;; emacs.el --- top level config
+;; emacs.el --- top level config -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;
 ;; Portable across MacOS and Linux, but assumes a fairly recent
@@ -433,9 +433,9 @@ hook"
                           '((protobuf-ts-mode 2) (sql-mode 8)))
 
 (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
+(define-key copilot-completion-map (kbd "C-RET") 'copilot-accept-completion)
 (define-key
  copilot-completion-map (kbd "<backtab>") 'copilot-accept-completion-by-line)
-(define-key copilot-completion-map (kbd "C-RET") 'copilot-accept-completion)
 (define-key copilot-completion-map (kbd "C-g") 'copilot-clear-overlay)
 (define-key copilot-completion-map (kbd "C-n") 'copilot-next-completion)
 (define-key copilot-completion-map (kbd "C-p") 'copilot-previous-completion)
@@ -561,8 +561,8 @@ hook"
    (setq-local
     copilot-indent-offset-warning-disable t
     outline-regexp ";;;\\{1,\\} "
-    outline-minor-mode-cycle t)
-   (elisp-autofmt-mode)))
+    outline-minor-mode-cycle t)))
+;; (elisp-autofmt-mode)))
 
 
 ;;;;; Python
