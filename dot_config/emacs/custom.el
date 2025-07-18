@@ -6,7 +6,6 @@
  '(global-auto-revert-mode t)
  '(make-backup-files nil)
  '(mouse-wheel-progressive-speed nil)
- '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((copilot :url "https://github.com/masonkatz/copilot.el" :branch "main")))
  '(uniquify-buffer-name-style 'post-forward nil (uniquify)))

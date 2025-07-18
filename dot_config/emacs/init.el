@@ -101,7 +101,9 @@ full path to the executable if found, or nil otherwise."
  tab-width 4
  sentence-end-double-space nil
  fill-column 80
- display-fill-column-indicator-column 100)
+ display-fill-column-indicator-column 100
+ x-stretch-cursor t)
+
 
 ;;;; Graphic Settings
 
@@ -198,12 +200,23 @@ hook"
 
 ;;;; Time & Calendar
 
+(require 'calendar)
+
 (setopt
  calendar-hebrew-all-holidays-flag t
  calendar-latitude 32.7157
  calendar-longitude -117.1611
  calendar-mark-holidays-flag t
- calendar-week-start-day 1)
+ calendar-location-name "San Diego"
+ calendar-week-start-day 1
+ calendar-holidays
+ (append
+  holiday-general-holidays
+  holiday-local-holidays
+  holiday-other-holidays
+  holiday-christian-holidays
+  holiday-hebrew-holidays
+  holiday-solar-holidays))
 
 (setopt
  world-clock-list
@@ -257,8 +270,10 @@ hook"
 
 (doom-modeline-mode 1)
 (size-indication-mode)
+(column-number-mode)
 
 (setopt
+ doom-modeline-column-zero-based nil
  doom-modeline-buffer-encoding t
  doom-modeline-hud t
  doom-modeline-indent-info t
@@ -269,6 +284,36 @@ hook"
  display-time-load-average-threshold 10
  display-time-mail-string ""
  project-mode-line t)
+
+;;;; Ibuffer
+
+(my--install 'nerd-icons-ibuffer)
+
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
+(setq ibuffer-show-empty-filter-groups nil)
+
+(setq ibuffer-saved-filter-groups
+      '(("default"
+         ("Lisp" (or (mode . emacs-lisp-mode) (mode . lisp-mode)))
+         ("Dired" (mode . dired-mode))
+         ("Org" (mode . org-mode))
+         ("Python" (mode . python-mode))
+         ("Go" (mode . go-ts-mode))
+         ("C/C++" (or (mode . c-ts-mode) (mode . c++-ts-mode)))
+         ("Shell" (or (mode . sh-mode) (mode . shell-script-mode)))
+         ("Web" (or (mode . web-mode) (mode . js-ts-mode)))
+         ("Markdown" (mode . markdown-mode))
+         ("Text" (mode . text-mode))
+         ("Other" (name . "^\\*")))))
+
+(add-hook
+ 'ibuffer-mode-hook
+ (lambda ()
+   (when (display-graphic-p)
+     (hl-line-mode))
+   (nerd-icons-ibuffer-mode)
+   (ibuffer-switch-to-saved-filter-groups "default")))
 
 ;;;; Zenburn
 
@@ -391,7 +436,7 @@ hook"
    (push '("[-]" . "❍") prettify-symbols-alist)
    (prettify-symbols-mode)))
 
-;;;; Eglot / Copilot
+;;;; Eglot
 
 (require 'eglot)
 (require 'flymake) ; eglot will enable flymake-mode
@@ -418,6 +463,8 @@ hook"
                   (staticcheck . t)))))
 
 
+;;;; Copilot / GPTel
+
 (use-package
  copilot
  :vc
@@ -427,19 +474,23 @@ hook"
   :newest
   :branch "main"))
 
-(my--install 'copilot-chat)
+;; using gptel instead
+;;(my--install 'copilot-chat)
 
 (my--add-to-list-multiple 'copilot-indentation-alist
                           '((protobuf-ts-mode 2) (sql-mode 8)))
 
 (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
-(define-key copilot-completion-map (kbd "C-RET") 'copilot-accept-completion)
 (define-key
  copilot-completion-map (kbd "<backtab>") 'copilot-accept-completion-by-line)
+(define-key copilot-completion-map (kbd "C-RET") 'copilot-accept-completion)
 (define-key copilot-completion-map (kbd "C-g") 'copilot-clear-overlay)
 (define-key copilot-completion-map (kbd "C-n") 'copilot-next-completion)
 (define-key copilot-completion-map (kbd "C-p") 'copilot-previous-completion)
 
+(my--install 'gptel)
+
+(gptel-make-gh-copilot "Copilot")
 
 ;;;; Text Modes
 
@@ -548,9 +599,7 @@ hook"
 ;;;;; Lisp
 
 (my--install 'elisp-autofmt)
-(setopt
- elisp-autofmt-python-bin "/usr/bin/python3"
- elisp-autofmt-on-save-p 'always)
+(setopt elisp-autofmt-python-bin "/usr/bin/python3")
 
 (add-hook
  'emacs-lisp-mode-hook
@@ -562,7 +611,6 @@ hook"
     copilot-indent-offset-warning-disable t
     outline-regexp ";;;\\{1,\\} "
     outline-minor-mode-cycle t)))
-;; (elisp-autofmt-mode)))
 
 
 ;;;;; Python
