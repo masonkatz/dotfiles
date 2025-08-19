@@ -2,6 +2,7 @@
   "singleQuote": true,
   "jsxSingleQuote": true,
   "bracketSameLine": true,
-  "singleAttributePerLine": true,
-  "proseWrap": "always"
+  "objectWrap": "collapse",
+  "proseWrap": "always",
+  "singleAttributePerLine": true
 }
