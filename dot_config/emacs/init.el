@@ -429,6 +429,9 @@ hook"
    :newest
    :branch "main"))
 
+(setopt copilot-log-max 10000
+	copilot-server-log-level 4)
+
 ;; using gptel instead
 ;;(my--install 'copilot-chat)
 
@@ -541,7 +544,7 @@ hook"
   (add-hook 'before-save-hook (lambda () (eglot-format-buffer))))
 
 
-(add-hook 'go-ts-mode-hook 'my-go-mode-hook)
+(add-hook 'go-ts-mode-hook 'my--go-mode-hook)
 
 ;;;;; JSON / YAML
 
@@ -550,7 +553,18 @@ hook"
 (add-hook 'json-ts-mode-hook (lambda () (prettier-js-mode)))
 (add-hook 'yaml-ts-mode-hook (lambda () (prettier-js-mode)))
 
+
+;;;;; Javascript
+
 ;;;;; Lisp
+
+(defun my--js-mode-hook ()
+  "Javascript mode hook"
+  (copilot-mode)
+  (eglot-ensure)
+  (prettier-js-mode))
+
+(add-hook 'js-mode-hook 'my--js-mode-hook)
 
 (add-hook 'emacs-lisp-mode-hook
 	  (lambda ()
