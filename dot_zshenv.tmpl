@@ -33,5 +33,14 @@ log DEBUG "path =" $path
 {{ template "zsh/path-append.tmpl" "~/bin" }}
 {{ template "zsh/path-append.tmpl" "~/.local/bin" }}
 
+{{- if eq .chezmoi.os "darwin" }}
+{{/*
+  On MacOS TMPDIR is somewhere in /var/folders/zz. Corporate device management
+  has the permissions broken so just use a peronal tmp dir.
+ */}}
+
+[[ -d ~/.tmp ]] && TMPDIR=~/.tmp
+{{- end }}
+
 log INFO end
 log DEBUG "path =" $path
