@@ -63,14 +63,15 @@ full path to the executable if found, or nil otherwise."
   (setq default-directory "~/")
   (exec-path-from-shell-initialize))
 
+;; s-`
+;; s-
 (cond ((eq window-system 'ns)
        (unbind-key "C-z") ; disable suspending the frame
        (unbind-key "s-t") ; disable font menu
        (unbind-key "s-,")) ; disable preferences menu
       ((eq window-system 'x)
-       (setq
-	x-alt-keysym 'meta ; replicate MacOS behavior
-	x-meta-keysym 'super)
+       (setq x-alt-keysym 'meta ; replicate MacOS behavior
+	     x-meta-keysym 'super)
        (global-set-key (kbd "s-v") 'yank))
       ((not window-system)
        (xterm-mouse-mode 1))) ; mouse click moves cursor
@@ -540,7 +541,7 @@ hook"
   "Go mode hook"
   (copilot-mode)
   (eglot-ensure)			 ; gopls
-  (setq-local page-delimiter "\/\*\*\/") ; use /**/ instead of ^L (syntax error in go)
+  (setq-local page-delimiter "\/\/\/\/") ; use //// instead of ^L (syntax error in go)
   (add-hook 'before-save-hook (lambda () (eglot-format-buffer))))
 
 
