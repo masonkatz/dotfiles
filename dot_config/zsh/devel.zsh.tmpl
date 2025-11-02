@@ -39,10 +39,10 @@ type pyenv &>/dev/null && eval "$(pyenv init - zsh)"
 
 {{ template "zsh/source.tmpl" "~/.venv/default/bin/activate" }}
 
+{{- if eq .chezmoi.os "darwin" }}
 # rancher desktop
 {{ template "zsh/path-prepend.tmpl" "~/.rd/bin"}}
 
-{{- if eq .chezmoi.os "darwin" }}
 export OLLAMA_API_BASE=http://127.0.0.1:11434
 export OLLAMA_CONTEXT_LENGTH=8192
 {{- end}}
