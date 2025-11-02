@@ -32,6 +32,7 @@ log DEBUG "path =" $path
 
 {{ template "zsh/path-append.tmpl" "~/bin" }}
 {{ template "zsh/path-append.tmpl" "~/.local/bin" }}
+{{ template "zsh/path-append.tmpl" "~/node_modules/.bin" }}
 
 {{- if eq .chezmoi.os "darwin" }}
 {{/*
