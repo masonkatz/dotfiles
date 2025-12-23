@@ -7,7 +7,10 @@ eat-*)
 	TERM=xterm-color
 	;;
 xterm-ghostty)
-	[[ -n "$SSH_CONNECTION" ]] && TERM=xterm-color
+	ssh() {
+		TERM=xterm-256color command ssh "$@"
+	}
+	;;
 esac
 
 [[ -f ~/.dircolors ]] && eval `dircolors -b ~/.dircolors`
