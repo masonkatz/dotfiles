@@ -26,10 +26,8 @@ function emacs-restart() {
 
 {{- if eq .chezmoi.os "darwin" }}
 
-if [[ -x /usr/local/bin/emacs ]]; then
-	if /usr/local/bin/emacs --batch --eval '(kill-emacs (if (string-match "X11" system-configuration-features) 0 1))'; then
-		alias xe=/usr/local/bin/emacs # emacs w/ X11 support
-	fi
+if [[ -x /opt/xemacs/bin/emacs ]]; then # X11 version
+	alias xe=/opt/xemacs/bin/emacs
 fi
 
 {{- end }}
