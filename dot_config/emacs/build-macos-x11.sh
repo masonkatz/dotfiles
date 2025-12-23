@@ -3,6 +3,8 @@
 # Builds and installs  Emacs on MacOS with X11 support.
 # Run this in the root of the Emacs source tree.
 #
+# git clone https://git.savannah.gnu.org/git/emacs.git
+#
 # requires:
 #
 # brew install xquartz
