@@ -23,19 +23,23 @@ export ORGANIZATION=endobit
 #
 # We can't pip install into HomeBrew python so use pyenv to get a private python
 # and then use venv to virtualize it. Just virtualizing the HomeBrew python
-# still doesn't allow pip install to work.
+# still doesn't allow pip install to work. Further if it does work eventually
+# HomeBrew will upgrade and delete the version our virtual environment is
+# symbolic linked to.
 
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 # requires pyenv (brew package)
 # created with:
 #
-# pyenv install <python-version>
-type pyenv &>/dev/null && eval "$(pyenv init - zsh)"
+# pyenv install 3
+eval "$(pyenv init - zsh)"
 
 # created with:
 #
-# python3 -mvenv ~/.venv/default
+# pyenv versions
+# pyenv global <version>
+# python -mvenv ~/.venv/default
 
 {{ template "zsh/source.tmpl" "~/.venv/default/bin/activate" }}
 
