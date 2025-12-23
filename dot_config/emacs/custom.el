@@ -16,6 +16,7 @@
 	yasnippet-snippets zenburn-theme))
  '(package-vc-selected-packages
    '((copilot :url "https://github.com/masonkatz/copilot.el" :branch "main")))
+ '(project-vc-extra-root-markers '(".project"))
  '(uniquify-buffer-name-style 'post-forward nil (uniquify)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

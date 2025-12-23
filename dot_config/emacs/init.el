@@ -516,12 +516,12 @@ hook"
 
 (defun my--c-mode-hook ()
   "C mode hook"
-  (setq-local c-ts-mode-indent-style 'k&r)
+  (setq-local c-ts-mode-indent-style 'bsd)
   (c-ts-mode-toggle-comment-style -1)) ; c++ style comments
 
 (defun my--c++-mode-hook ()
   "C++ mode hook"
-  (setq-local c-ts-mode-indent-style 'stroustrup))
+  (setq-local c-ts-mode-indent-style 'bsd))
 
 
 (add-hook 'c-ts-base-mode-hook 'my--c-base-mode-hook)
@@ -542,6 +542,8 @@ hook"
   (copilot-mode)
   (eglot-ensure)			 ; gopls
   (setq-local page-delimiter "\/\/\/\/") ; use //// instead of ^L (syntax error in go)
+  (setopt tab-width 4
+		go-ts-mode-indent-offset 4)
   (add-hook 'before-save-hook (lambda () (eglot-format-buffer))))
 
 

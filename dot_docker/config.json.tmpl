@@ -1,0 +1,10 @@
+{
+	"auths": {},
+	"credsStore": "desktop",
+	"currentContext": "desktop-linux",
+{{- if eq .chezmoi.arch "arm64" }}
+	"cliPluginsExtraDirs": ["/opt/homebrew/lib/docker/cli-plugins"]
+{{- else }}
+	"cliPluginsExtraDirs": ["/usr/local/lib/docker/cli-plugins"]
+{{- end  }}
+}
