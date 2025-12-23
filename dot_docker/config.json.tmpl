@@ -1,4 +1,5 @@
 {
+{{- if eq .chezmoi.os "darwin" }}
 	"auths": {},
 	"credsStore": "desktop",
 	"currentContext": "desktop-linux",
@@ -6,5 +7,6 @@
 	"cliPluginsExtraDirs": ["/opt/homebrew/lib/docker/cli-plugins"]
 {{- else }}
 	"cliPluginsExtraDirs": ["/usr/local/lib/docker/cli-plugins"]
+{{- end  }}
 {{- end  }}
 }
