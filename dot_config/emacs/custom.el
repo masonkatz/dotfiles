@@ -6,14 +6,7 @@
  '(global-auto-revert-mode t)
  '(make-backup-files nil)
  '(mouse-wheel-progressive-speed nil)
- '(package-selected-packages
-   '(ag company-box copilot copilot-chat dashboard docker doom-modeline eat
-	eldoc-box elisp-autofmt elisp-format exec-path-from-shell
-	git-gutter-fringe git-modes gptel hl-todo just-mode ligature magit
-	nerd-icons-dired nerd-icons-ibuffer org-superstar page-break-lines
-	prettier-js protobuf-ts-mode python-black pyvenv rainbow-mode
-	ssh-config-mode swift-mode treemacs-nerd-icons web-mode which-key
-	yasnippet-snippets zenburn-theme))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((copilot :url "https://github.com/masonkatz/copilot.el" :branch "main")))
  '(project-vc-extra-root-markers '(".project"))

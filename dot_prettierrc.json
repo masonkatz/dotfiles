@@ -4,5 +4,6 @@
   "bracketSameLine": true,
   "objectWrap": "collapse",
   "proseWrap": "always",
-  "singleAttributePerLine": true
+  "singleAttributePerLine": true,
+  "printWidth": 100
 }
