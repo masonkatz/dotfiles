@@ -135,7 +135,7 @@ hook"
 			      "<-" "->"
 			      "||" "&&"
 			      "..."))
-    (cond ((eq system-type 'darwin) ; MacOS
+    (cond ((eq window-system 'ns) ; MacOS
 	   (set-face-attribute 'aw-leading-char-face nil :height 4.0)
 	   (set-face-attribute 'default nil :height (my--font-size))
 	   (when (find-font (font-spec :name "JetBrains Mono"))
