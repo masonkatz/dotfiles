@@ -36,10 +36,11 @@ full path to the executable if found, or nil otherwise."
 
 (defun my--graphic-setup ()
   "Common graphic mode hook."
-  (git-gutter-mode)
-  (hl-line-mode)
-  (display-fill-column-indicator-mode)
-  (display-line-numbers-mode))
+  (if (not (display-graphic-p))
+      (message "my--graphic-setup: not in graphic mode")
+    (git-gutter-mode)
+    (display-fill-column-indicator-mode)
+    (display-line-numbers-mode)))
 
 ;;;; Startup
 
@@ -134,7 +135,7 @@ hook"
 			      "<-" "->"
 			      "||" "&&"
 			      "..."))
-    (cond ((eq system-type 'darwin) ; MacOS
+    (cond ((eq window-system 'ns) ; MacOS
 	   (set-face-attribute 'aw-leading-char-face nil :height 4.0)
 	   (set-face-attribute 'default nil :height (my--font-size))
 	   (when (find-font (font-spec :name "JetBrains Mono"))
@@ -151,6 +152,8 @@ hook"
 (if (daemonp)
     (add-hook 'server-after-make-frame-hook 'my--window-config)
   (add-hook 'window-setup-hook 'my--window-config))
+
+
 
 
 ;;;; Tramp
@@ -266,8 +269,6 @@ hook"
 
 (add-hook 'ibuffer-mode-hook
 	  (lambda ()
-	    (when (display-graphic-p)
-	      (hl-line-mode))
 	    (nerd-icons-ibuffer-mode)
 	    (ibuffer-switch-to-saved-filter-groups "default")))
 
@@ -316,7 +317,11 @@ hook"
 
 (my--install 'git-gutter-fringe)
 (my--install 'magit)
-(my--install 'git-modes)
+(my--install 'forge)			; github/gitlab
+(my--install 'git-modes)		; major modes for git files
+
+(with-eval-after-load 'magit
+  (require 'forge))
 
 ;;;; Company
 
@@ -425,13 +430,15 @@ hook"
 (use-package copilot
   :vc
   (:url
-   "https://github.com/masonkatz/copilot.el.git"
+   ;; "https://github.com/masonkatz/copilot.el.git"
+   "https://github.com/copilot-emacs/copilot.el"
    :rev
    :newest
    :branch "main"))
 
-(setopt copilot-log-max 10000
-	copilot-server-log-level 4)
+;; debug copilot
+;; (setopt copilot-log-max 10000
+;; 	copilot-server-log-level 4)
 
 ;; using gptel instead
 ;;(my--install 'copilot-chat)
@@ -496,6 +503,7 @@ hook"
   (flyspell-prog-mode)
   (winner-mode)
   (electric-pair-mode)
+  (hl-line-mode)
   (hl-todo-mode)
   (yas-minor-mode)
   (page-break-lines-mode)
@@ -632,3 +640,16 @@ hook"
 (setopt custom-file (locate-user-emacs-file "custom.el"))
 (load custom-file t)
 ;; (customize-save-customized)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-vc-selected-packages
+   '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch "main"))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
