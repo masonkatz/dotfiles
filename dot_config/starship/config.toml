@@ -10,7 +10,7 @@ repo_root_style = 'bold cyan'
 disabled = false
 
 [sudo]
-disabled = false
+disabled = true
 
 [buf]
 symbol = "buf "
