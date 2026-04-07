@@ -1,24 +1,12 @@
-tap "homebrew/bundle"
-tap "buo/cask-upgrade"
-brew "mas"
-
-tap "bufbuild/buf"
-tap "d12frosted/emacs-plus"
-tap "homebrew/bundle"
-tap "homebrew/services"
-
 brew "bash-language-server"
 brew "black", restart_service: true
 brew "btop"
-brew "bufbuild/buf/buf"
+brew "buf"
 brew "calc"
 brew "certifi"
 brew "chezmoi"
 brew "cloc"
 brew "coreutils"
-brew "d12frosted/emacs-plus/emacs-plus@29"
-brew "docker"
-brew "docker-compose"
 brew "dos2unix"
 brew "figlet"
 brew "gdk-pixbuf"
@@ -32,28 +20,36 @@ brew "go"
 brew "golangci-lint"
 brew "gopls"
 brew "graphviz"
+brew "graphql-cli"
 brew "harfbuzz"
 brew "htop"
 brew "httpie"
+brew "hugo"
+brew "icu4c@78"
 brew "imagemagick"
 brew "ispell"
+brew "just"
 brew "kubectx"
 brew "librsvg"
 brew "llvm"
+brew "mage"
 brew "markdown"
+brew "mas"
 brew "microplane"
-brew "moar"
+brew "moor"
 brew "ncftp"
-brew "neofetch"
 brew "nmap"
 brew "node"
+brew "opencode"
 brew "pango"
 brew "pipx"
 brew "prettier"
+brew "protobuf"
 brew "protoc-gen-go"
 brew "protoc-gen-go-grpc"
 brew "pyenv"
 brew "pygments"
+brew "python-lsp-server"
 brew "qemu"
 brew "s3cmd"
 brew "solargraph"
@@ -62,14 +58,16 @@ brew "source-highlight"
 brew "telnet"
 brew "the_silver_searcher"
 brew "thefuck"
-brew "tldr"
+brew "tlrc"
 brew "tree-sitter"
-brew "unbound", restart_service: true
+brew "tree-sitter@0.25"
+brew "unbound", restart_service: :changed
 brew "util-linux"
 brew "virtualenv"
 brew "watch"
-brew "wireshark", link: false
+brew "wget"
 brew "with-readline"
+brew "witr"
 brew "yaml-language-server"
 brew "zsh-completions"
 brew "zsh-syntax-highlighting"
@@ -77,10 +75,12 @@ brew "zsh-syntax-highlighting"
 cask "1password"
 cask "1password-cli"
 cask "anaconda"
+cask "brave-browser"
+cask "copilot-cli"
+cask "emacs-app"
 cask "font-jetbrains-mono"
 cask "font-jetbrains-mono-nerd-font"
 cask "ghostty"
-cask "google-chrome"
 cask "hhkb-studio"
 cask "knockknock"
 cask "monitorcontrol"
@@ -91,39 +91,29 @@ cask "omniplan"
 cask "oversight"
 cask "reikey"
 cask "stats"
-cask "utm"
 cask "vnc-viewer"
-cask "wireshark"
+cask "wireshark-app"
 
 mas "Developer", id: 640199958
 mas "Kindle", id: 302584613
-mas "Slack", id: 803453959
 mas "Tailscale", id: 1475387142
-{{ if eq .org "teradata" }}
-cask "rancher"
-
-brew "angular-cli"
-brew "ansible"
-brew "ansible-language-server"
-brew "just"
-brew "rancher-cli"
-{{ end }}
+mas "Xcode", id: 497799835
 {{ if eq .org "endobit" }}
 brew "ffmpeg"
 brew "gatsby-cli"
-brew "git-flow-avh"
+brew "git-flow-next"
 brew "hugo"
 brew "mage"
 brew "npm"
 brew "swift-format"
+brew "sqlc"
 brew "yarn"
 brew "zig"
 
-cask "ollama"
+cask "docker-desktop"
+cask "transmission"
 cask "vlc"
 cask "xquartz"
-cask "transmission"
-cask "whisky"
 
 mas "Evernote", id: 406056744
 mas "GarageBand", id: 682658836
@@ -131,9 +121,18 @@ mas "Keynote", id: 409183694
 mas "Notability", id: 736189492
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
-mas "Playgrounds", id: 1496833156
-mas "Twitter", id: 1482454543
-mas "Xcode", id: 497799835
+mas "Slack", id: 803453959
+mas "Swift Playground", id: 1496833156
 mas "iMovie", id: 408981434
+{{ else }}
+brew "rancher-cli"
+
+cask "rancher"
+{{ end }}
+
+{{ if eq .org "teradata" }}
+brew "angular-cli"
+brew "ansible"
+brew "ansible-language-server"
 {{ end }}
 
