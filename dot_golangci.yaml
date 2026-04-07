@@ -1,72 +1,87 @@
-issues:
-  include:
-    - EXC0004
-    - EXC0005
-    - EXC0011
-    - EXC0012
-    - EXC0013
-    - EXC0014
-    - EXC0015
-
+version: '2'
 linters:
-  disable:
-    - errcheck
-    - unused
-    - ineffassign
+  exclusions:
+    presets:
+      - comments
+      - common-false-positives
+      - std-error-handling
   enable:
     - asciicheck
     - bodyclose
+    - copyloopvar
     - dogsled
+    - dupl
+    - dupword
+    - errchkjson
+    - errname
+    - errorlint
+    - exptostd
     - forcetypeassert
+    - funcorder
+    - gocheckcompilerdirectives
+    - gocognit
+    - goconst
     - gocritic
-    - gofmt
-    - goimports
     - goprintffuncname
-    - gosimple
+    - gosec
+    - grouper
+    - iface
     - importas
+    - intrange
+    - lll
+    - loggercheck
     - makezero
+    - mirror
     - misspell
+    - musttag
     - nakedret
+    - nestif
     - nilerr
+    - nilnesserr
+    - nilnil
+    - nlreturn
+    - nolintlint
+    - nosprintfhostport
+    - perfsprint
     - prealloc
-    - predeclared
-linters-settings:
-  govet:
-    disable:
-      - loopclosure
-  errorlint:
-    errorf: true
-  staticcheck:
-    checks: ['all', '-SA4006']
-  gosec:
-    excludes:
-      - G204
-  gocritic:
-    enabled-tags:
-      - diagnostic
-      - performance
-      - style
-    disabled-checks:
-      - stringXbytes
-      - ifElseChain
-      - underef
-      - redundantSprint
-      - appendCombine
-      - appendAssign
-      - commentFormatting
-      - commentedOutCode
-      - deferUnlambda
-      - emptyStringTest
-      - importShadow
-      - paramTypeCombine
-      - singleCaseSwitch
-      - typeDefFirst
-      - unnamedResult
-      - whyNoLint
-    settings:
-      hugeParam:
-        sizeThreshold: 1024
-      rangeValCopy:
-        sizeThreshold: 1024
-  misspell:
-    locale: US
+    - reassign
+    - revive
+    - rowserrcheck
+    - sloglint
+    - tagalign
+    - testpackage
+    - thelper
+    - unconvert
+    - unparam
+    - usestdlibvars
+    - usetesting
+    - varnamelen
+    - wastedassign
+    - whitespace
+    - wsl_v5
+  settings:
+    revive:
+      rules:
+        - name: redefines-builtin-id
+          disabled: true # redundant, handled by gocritic
+    gocritic:
+      disabled-checks:
+        - commentedOutCode
+        - whyNoLint
+      enabled-tags:
+        - diagnostic
+        - experimental
+        - opinionated
+        - performance
+        - style
+    misspell:
+      locale: US
+    nolintlint:
+      require-specific: true
+    sloglint:
+      msg-style: lowercased
+      key-naming-case: snake
+    varnamelen:
+      max-distance: 20
+      ignore-decls:
+        - i int
