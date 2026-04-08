@@ -424,6 +424,11 @@ hook"
 				     (parameterNames . t)
 				     (rangeVariableTypes . t)))))))
 
+(defun my--eglot ()
+  "Configure eglot for this buffer"
+  (eglot-ensure)
+  (add-hook 'before-save-hook (lambda () (eglot-format-buffer)) nil t))
+
 
 ;;;; Copilot / GPTel
 
@@ -518,9 +523,8 @@ hook"
 
 (defun my--c-base-mode-hook ()
   "Shared c/c++ mode hook."
-  (copilot-mode)
-  (eglot-ensure)			; clangd
-  (add-hook 'before-save-hook (lambda () (eglot-format-buffer))))
+  (my--eglot)				; clangd
+  (copilot-mode))
 
 (defun my--c-mode-hook ()
   "C mode hook"
@@ -547,12 +551,11 @@ hook"
 
 (defun my--go-mode-hook ()
   "Go mode hook"
+  (my--eglot)			 ; gopls
   (copilot-mode)
-  (eglot-ensure)			 ; gopls
   (setq-local page-delimiter "\/\/\/\/") ; use //// instead of ^L (syntax error in go)
   (setopt tab-width 4
-	  go-ts-mode-indent-offset 4)
-  (add-hook 'before-save-hook (lambda () (eglot-format-buffer))))
+	  go-ts-mode-indent-offset 4))
 
 
 (add-hook 'go-ts-mode-hook 'my--go-mode-hook)
