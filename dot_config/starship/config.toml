@@ -37,6 +37,13 @@ detect_files = [ "go.mod", "go.work" ]
 pyenv_version_name = true
 pyenv_prefix = "v"
 
+[shlvl]
+disabled = false
+format = '[$symbol]($style)'
+repeat = true
+symbol = ''
+repeat_offset = 1
+
 [custom.sqlc]
 symbol = "sqlc "
 style = "bold blue"
