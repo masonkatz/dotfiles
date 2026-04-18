@@ -28,13 +28,24 @@ Host *
 
 {{- if eq .org "endobit" }}
 {{ template "host-alias" (dict "Host" "tdbook.local" "Alias" "tdbook" "User" "mason.katz" )}}
+
+{{- if stat ( joinPath .chezmoi.homeDir ".ssh" "id_ed25519_work" ) }}
+
+Host github-work
+  IdentityFile          ~/.ssh/id_ed25519_work
+  IdentitiesOnly        yes
+  User                  git
+  Hostname              github.com
+{{- end }}
 {{- end }}
 
 {{- if eq .org "teradata" }}
+{{- if stat ( joinPath .chezmoi.homeDir ".ssh" "id_ed25519_personal" ) }}
 
 Host github-personal
-  IdentityFile          ~/.ssh/github
+  IdentityFile          ~/.ssh/id_ed25519_personal
   IdentitiesOnly        yes
   User                  git
   HostName              github.com
+{{- end }}
 {{- end }}
