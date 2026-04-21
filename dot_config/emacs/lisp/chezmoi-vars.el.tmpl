@@ -13,4 +13,7 @@
 (defvar chezmoi-vars-golocal "{{ .golocal }}"
   "Comma delimited list of paths for local Go modules.")
 
+(setopt user-full-name "{{ .fullname }}"
+	user-mail-address "{{ .email }}")
+
 (provide 'chezmoi-vars)
