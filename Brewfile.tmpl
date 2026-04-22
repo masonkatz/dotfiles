@@ -24,7 +24,6 @@ brew "graphql-cli"
 brew "harfbuzz"
 brew "htop"
 brew "httpie"
-brew "hugo"
 brew "icu4c@78"
 brew "imagemagick"
 brew "ispell"
@@ -32,7 +31,6 @@ brew "just"
 brew "kubectx"
 brew "librsvg"
 brew "llvm"
-brew "mage"
 brew "markdown"
 brew "mas"
 brew "microplane"
@@ -60,7 +58,7 @@ brew "the_silver_searcher"
 brew "thefuck"
 brew "tlrc"
 brew "tree-sitter"
-brew "tree-sitter@0.25"
+brew "tree-sitter@0.25" {{/* needed to build xemacs */}}
 brew "unbound", restart_service: :changed
 brew "util-linux"
 brew "virtualenv"
@@ -74,7 +72,6 @@ brew "zsh-syntax-highlighting"
 
 cask "1password"
 cask "1password-cli"
-cask "anaconda"
 cask "brave-browser"
 cask "copilot-cli"
 cask "emacs-app"
@@ -94,37 +91,41 @@ cask "stats"
 cask "vnc-viewer"
 cask "wireshark-app"
 
-mas "Developer", id: 640199958
-mas "Kindle", id: 302584613
 mas "Tailscale", id: 1475387142
 mas "Xcode", id: 497799835
 {{ if eq .org "endobit" }}
+{{ if .desktop }}
 brew "ffmpeg"
-brew "gatsby-cli"
+
+cask "transmission"
+
+mas "iMovie", id: 408981434
+mas "Swift Playground", id: 1496833156
+{{ end  }}
 brew "git-flow-next"
 brew "hugo"
 brew "mage"
 brew "npm"
-brew "swift-format"
+brew "pnpm"
 brew "sqlc"
+brew "swift-format"
+cask "vlc"
 brew "yarn"
 brew "zig"
 
 cask "docker-desktop"
-cask "transmission"
-cask "vlc"
 cask "xquartz"
 
+mas "Developer", id: 640199958
 mas "Evernote", id: 406056744
 mas "GarageBand", id: 682658836
 mas "Keynote", id: 409183694
-mas "Notability", id: 736189492
+mas "Kindle", id: 302584613
+mas "Notability 2", id: 360593530
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Slack", id: 803453959
-mas "Swift Playground", id: 1496833156
-mas "iMovie", id: 408981434
-{{ else }}
+{{ else }}{{/* for non-personal use default to rancher due to docker-desktop license */}}
 brew "rancher-cli"
 
 cask "rancher"

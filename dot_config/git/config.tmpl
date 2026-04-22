@@ -101,6 +101,16 @@
 
 [alias]
 	graph = log --graph --pretty=format:'%Cred%h%Creset - %C(cyan)<%an>%Creset%C(yellow)%d%Creset %s %Cgreen(%cr)' --abbrev-commit --date=relative
+  wta = "!f() { \
+	d=../$(basename \"$PWD\").worktrees/$1; \
+	if git show-ref --verify --quiet refs/heads/$1; then \
+		git worktree add \"$d\" \"$1\"; \
+	else \
+		git worktree add -b \"$1\" \"$d\"; \
+	fi; \
+  }; f"
+	wtl = worktree list
+	wtr = worktree remove
 
 [help]
 	autocorrect = prompt

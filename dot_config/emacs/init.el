@@ -9,19 +9,18 @@
 ;;;; Functions
 
 (defun my--install (package)
-  "Installs package if not already installed"
+  "Install PACKAGE if not already installed."
   (unless (package-installed-p package)
     (package-install package)))
 
 (defun my--font-size ()
   "Return font size to use based on resolution."
-  (let* ((geometry
-          (cdr (assoc 'geometry (car (display-monitor-attributes-list)))))
-         (resolution (cddr geometry)))
+  (let* ((geometry (cdr (assoc 'geometry (car (display-monitor-attributes-list))))))
     (* 10 (cdr (assoc (cddr geometry) my--resolution-font-size-alist)))))
 
 (defun my--find-executable-in-paths (executable paths)
-  "Search for EXECUTABLE in the given list of PATHS. Returns the
+  "Search for EXECUTABLE in the given list of PATHS.
+Returns the
 full path to the executable if found, or nil otherwise."
   (let ((found nil))
     (dolist (path paths found)
@@ -41,6 +40,12 @@ full path to the executable if found, or nil otherwise."
     (git-gutter-mode)
     (display-fill-column-indicator-mode)
     (display-line-numbers-mode)))
+
+;;;; Custom setting into own file
+
+(setopt custom-file (locate-user-emacs-file "custom.el"))
+(load custom-file t)
+;; (customize-save-customized)
 
 ;;;; Startup
 
@@ -64,18 +69,32 @@ full path to the executable if found, or nil otherwise."
   (setq default-directory "~/")
   (exec-path-from-shell-initialize))
 
-;; s-`
-;; s-
-(cond ((eq window-system 'ns)
-       (unbind-key "C-z") ; disable suspending the frame
-       (unbind-key "s-t") ; disable font menu
-       (unbind-key "s-,")) ; disable preferences menu
-      ((eq window-system 'x)
-       (setq x-alt-keysym 'meta ; replicate MacOS behavior
-	     x-meta-keysym 'super)
-       (global-set-key (kbd "s-v") 'yank))
-      ((not window-system)
-       (xterm-mouse-mode 1))) ; mouse click moves cursor
+;; Happy medium between MacOS system bindings and Emacs defaults.
+(if (display-graphic-p)
+    (cond ((eq window-system 'ns)
+	   (dolist (binding  ; unbind some MacOS system bindings (be more emacs)
+		    '("C-z"  ; suspend frame
+		      "s-,"  ; preferences menu
+		      "s-C"  ; color selector
+		      "s-h"  ; hide emacs
+		      "s-k"  ; kill (close) frame
+		      "s-m"  ; minimize frame
+		      "s-n"  ; new frame
+		      "s-o"  ; open file dialog
+		      "s-p"  ; print dialog
+		      "s-q"  ; quit emacs
+		      "s-s"  ; save file dialog
+		      "s-t"  ; font menu
+		      "s-w"))		; close frame
+	     (unbind-key binding)))
+	  ((eq window-system 'x)
+	   ;; swap opt/command, add cut, copy, paste bindings
+	   (when (boundp 'x-alt-keysym) (setq x-alt-keysym 'meta))
+	   (when (boundp 'x-meta-keysym) (setq x-meta-keysym 'super))
+	   (global-set-key (kbd "s-c") #'kill-ring-save)
+	   (global-set-key (kbd "s-x") #'kill-region)
+	   (global-set-key (kbd "s-v") #'yank)))
+  ((xterm-mouse-mode 1))) ; mouse click moves cursor
 
 (let ((ispell
        (my--find-executable-in-paths
@@ -121,7 +140,7 @@ hook"
     (my--install 'nerd-icons) ; (nerd-icons-install-fonts)
     (my--install 'nerd-icons-dired)
     (my--install 'treemacs-nerd-icons)
-    (add-hook 'dired-mode-hook 'nerd-icons-dired-mode)
+    (add-hook 'dired-mode-hook #'nerd-icons-dired-mode)
     (ligature-set-ligatures 'prog-mode
 			    '("++" "--"
 			      ">=" "<="
@@ -150,8 +169,8 @@ hook"
   (setq my--graphic-initialized t))
 
 (if (daemonp)
-    (add-hook 'server-after-make-frame-hook 'my--window-config)
-  (add-hook 'window-setup-hook 'my--window-config))
+    (add-hook 'server-after-make-frame-hook #'my--window-config)
+  (add-hook 'window-setup-hook #'my--window-config))
 
 
 
@@ -189,8 +208,10 @@ hook"
 	'(("America/Los_Angeles" "San Diego")
 	  ("America/Phoenix" "Tucson")
 	  ("America/Denver" "Santa Fe")
+	  ("America/New_York" "New York")
 	  ("Etc/UTC" "UTC")
 	  ("Asia/Jerusalem" "Jerusalem")
+	  ("Asia/Calcutta" "Bangalore")
 	  ("Asia/Tokyo" "Kobe"))
 	world-clock-time-format "%a %b %d%t%I:%M %p%t%Z")
 
@@ -215,8 +236,8 @@ hook"
 (my--install 'ace-window)
 (require 'ace-window) ; so we can modify the faces
 
-(global-set-key [remap other-window] 'ace-window)
-(global-set-key [remap delete-window] 'ace-delete-window)
+(global-set-key [remap other-window] #'ace-window)
+(global-set-key [remap delete-window] #'ace-delete-window)
 
 
 ;;;; Which Key
@@ -227,7 +248,7 @@ hook"
 
 (my--install 'treemacs)
 
-(global-set-key (kbd "C-c t") 'treemacs-select-window)
+(global-set-key (kbd "C-c t") #'treemacs-select-window)
 
 ;;;; Modeline
 
@@ -250,8 +271,9 @@ hook"
 ;;;; Ibuffer
 
 (my--install 'nerd-icons-ibuffer)
+(require 'ibuffer)
 
-(global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "C-x C-b") #'ibuffer)
 
 (setopt ibuffer-show-empty-filter-groups nil
 	ibuffer-saved-filter-groups '(("default"
@@ -272,14 +294,35 @@ hook"
 	    (nerd-icons-ibuffer-mode)
 	    (ibuffer-switch-to-saved-filter-groups "default")))
 
-;;;; Zenburn
+;;;; Themes
 
+(my--install 'auto-dark)
 (my--install 'zenburn-theme)
-(load-theme 'zenburn t)
+(use-package tokyo-night
+  :vc (:url "https://github.com/bbatsov/tokyo-night-emacs" :rev :newest))
+
+
+;; fix tokyo-night faces
+;;
+;; line-number-current-line does not inherit from line-number, so it is not
+;; scaled down by the theme.
+(deftheme my--tokyo-night)
+(custom-theme-set-faces
+ 'my--tokyo-night
+ '(line-number-current-line ((t (:height 0.75)))))
 
 (setq zenburn-scale-org-headlines t
       zenburn-scale-outline-headlines t
       zenburn-use-variable-pitch t)
+
+(load-theme 'zenburn t)
+;;(load-theme 'tokyo-night t)
+
+(setopt auto-dark-themes '((tokyo-night-moon my--tokyo-night) (zenburn)))
+
+(setopt auto-dark-allow-osascript t)	; applescript
+
+(auto-dark-mode)
 
 ;;;; Misc
 
@@ -331,7 +374,7 @@ hook"
 (setopt company-idle-delay 0.5)
 
 (global-company-mode t)
-(add-hook 'company-mode-hook 'company-box-mode)
+(add-hook 'company-mode-hook #'company-box-mode)
 
 ;;;; Yasnippet
 
@@ -397,6 +440,8 @@ hook"
 (require 'eglot)
 (require 'flymake) ; eglot will enable flymake-mode
 
+(setopt eglot-autoshutdown t)
+
 (when (eq system-type 'darwin)
   (add-to-list
    'eglot-server-programs '(swift-mode . ("xcrun" "sourcekit-lsp"))))
@@ -408,9 +453,12 @@ hook"
 (setopt eldoc-box-only-multi-line t
 	eldoc-box-max-pixel-height (* 8 (frame-char-height)))
 
-(define-key eglot-mode-map (kbd "C-c r") 'eglot-rename)
-(define-key eglot-mode-map (kbd "C-c o") 'eglot-code-action-organize-imports)
+(dolist (binding
+	 '(("C-c r" . eglot-rename)
+	   ("C-c o" . eglot-code-action-organize-imports)))
+  (define-key eglot-mode-map (kbd (car binding)) (cdr binding)))
 
+	      
 (setq-default eglot-workspace-configuration
 	      `((:clangd . ((inlayHints . ((parameterName . t)
 					   (defaultArguments . t)))))
@@ -424,6 +472,10 @@ hook"
 				     (parameterNames . t)
 				     (rangeVariableTypes . t)))))))
 
+(defun my--eglot ()
+  "Configure eglot for this buffer."
+  (eglot-ensure)
+  (add-hook 'before-save-hook #'eglot-format-buffer nil t))
 
 ;;;; Copilot / GPTel
 
@@ -446,12 +498,17 @@ hook"
 (my--add-to-list-multiple 'copilot-indentation-alist
                           '((protobuf-ts-mode 2) (sql-mode 8)))
 
-(define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
-(define-key copilot-completion-map (kbd "<backtab>") 'copilot-accept-completion-by-line)
-(define-key copilot-completion-map (kbd "C-RET") 'copilot-accept-completion)
-(define-key copilot-completion-map (kbd "C-g") 'copilot-clear-overlay)
-(define-key copilot-completion-map (kbd "C-n") 'copilot-next-completion)
-(define-key copilot-completion-map (kbd "C-p") 'copilot-previous-completion)
+(dolist (binding
+	 '(("TAB"     . copilot-accept-completion)
+	   ("<tab>"   . copilot-accept-completion)
+	   ("C-RET"   . copilot-accept-completion)
+	   ("C-TAB"   . copilot-accept-completion-by-word)
+           ("C-<tab>" . copilot-accept-completion-by-word)
+	   ("C-g"     . copilot-clear-overlay)
+	   ("C-n"     . copilot-next-completion)
+	   ("C-p"     . copilot-previous-completion)))
+  (define-key copilot-completion-map (kbd (car binding)) (cdr binding)))
+
 
 (my--install 'gptel)
 
@@ -465,7 +522,7 @@ hook"
   (when (display-graphic-p)
     (my--graphic-setup)))
 
-(add-hook 'text-mode-hook 'my--text-mode-hook)
+(add-hook 'text-mode-hook #'my--text-mode-hook)
 
 ;;;;; Markdown
 
@@ -477,7 +534,7 @@ hook"
   (eglot-ensure)		; brew install marksman
   (prettier-js-mode))
 
-(add-hook 'markdown-mode-hook 'my--markdown-mode-hook)
+(add-hook 'markdown-mode-hook #'my--markdown-mode-hook)
 
 ;;;; Programming Modes
 
@@ -487,9 +544,10 @@ hook"
 	compilation-scroll-output t
 	compilation-window-height 12)
 
-
-(define-key prog-mode-map (kbd "C-c n") 'next-error)
-(define-key prog-mode-map (kbd "C-c p") 'previous-error)
+(dolist (binding
+	 '(("C-c n" . next-error)
+	   ("C-c p" . previous-error)))
+  (define-key prog-mode-map (kbd (car binding)) (cdr binding)))
 
 (setopt major-mode-remap-alist '((c++-mode . c++-ts-mode)
 				 (c-mode . c-ts-mode)
@@ -500,6 +558,7 @@ hook"
 
 (defun my--prog-mode-hook ()
   "Common programming mode hook."
+  (add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p nil t)
   (flyspell-prog-mode)
   (winner-mode)
   (electric-pair-mode)
@@ -510,7 +569,7 @@ hook"
   (when (display-graphic-p)
     (my--graphic-setup)))
 
-(add-hook 'prog-mode-hook 'my--prog-mode-hook)
+(add-hook 'prog-mode-hook #'my--prog-mode-hook)
 
 ;;;;; C/C++
 
@@ -518,23 +577,22 @@ hook"
 
 (defun my--c-base-mode-hook ()
   "Shared c/c++ mode hook."
-  (copilot-mode)
-  (eglot-ensure)			; clangd
-  (add-hook 'before-save-hook (lambda () (eglot-format-buffer))))
+  (my--eglot)				; clangd
+  (copilot-mode))
 
 (defun my--c-mode-hook ()
-  "C mode hook"
+  "C mode hook."
   (setq-local c-ts-mode-indent-style 'bsd)
   (c-ts-mode-toggle-comment-style -1)) ; c++ style comments
 
 (defun my--c++-mode-hook ()
-  "C++ mode hook"
+  "C++ mode hook."
   (setq-local c-ts-mode-indent-style 'bsd))
 
 
-(add-hook 'c-ts-base-mode-hook 'my--c-base-mode-hook)
-(add-hook 'c-ts-mode-hook      'my--c-mode-hook)
-(add-hook 'c++-ts-mode-hook    'my--c++-mode-hook)
+(add-hook 'c-ts-base-mode-hook #'my--c-base-mode-hook)
+(add-hook 'c-ts-mode-hook      #'my--c-mode-hook)
+(add-hook 'c++-ts-mode-hook    #'my--c++-mode-hook)
 
 ;;;;; Docker
 
@@ -546,23 +604,22 @@ hook"
 (require 'go-ts-mode)
 
 (defun my--go-mode-hook ()
-  "Go mode hook"
+  "Go mode hook."
+  (my--eglot)			 ; gopls
   (copilot-mode)
-  (eglot-ensure)			 ; gopls
   (setq-local page-delimiter "\/\/\/\/") ; use //// instead of ^L (syntax error in go)
   (setopt tab-width 4
-	  go-ts-mode-indent-offset 4)
-  (add-hook 'before-save-hook (lambda () (eglot-format-buffer))))
+	  go-ts-mode-indent-offset 4))
 
 
-(add-hook 'go-ts-mode-hook 'my--go-mode-hook)
+(add-hook 'go-ts-mode-hook #'my--go-mode-hook)
 
 ;;;;; JSON / YAML
 
 (require 'yaml-ts-mode)
 
-(add-hook 'json-ts-mode-hook (lambda () (prettier-js-mode)))
-(add-hook 'yaml-ts-mode-hook (lambda () (prettier-js-mode)))
+(add-hook 'json-ts-mode-hook #'prettier-js-mode)
+(add-hook 'yaml-ts-mode-hook #'prettier-js-mode)
 
 
 ;;;;; Javascript
@@ -570,12 +627,12 @@ hook"
 ;;;;; Lisp
 
 (defun my--js-mode-hook ()
-  "Javascript mode hook"
+  "Javascript mode hook."
   (copilot-mode)
   (eglot-ensure)
   (prettier-js-mode))
 
-(add-hook 'js-mode-hook 'my--js-mode-hook)
+(add-hook 'js-mode-hook #'my--js-mode-hook)
 
 (add-hook 'emacs-lisp-mode-hook
 	  (lambda ()
@@ -600,11 +657,11 @@ hook"
 (my--install 'pyvenv)
 
 (add-hook 'python-ts-mode-hook
-	  (lambda () 
+	  (lambda ()
 	    (copilot-mode)
-	    (eglot-ensure)	    ; pylsp (needs to be installed in venv)	    
-	    (python-black-on-save-mode) 
-	    (pyvenv-mode) 
+	    (eglot-ensure)	    ; pylsp (needs to be installed in venv)
+	    (python-black-on-save-mode)
+	    (pyvenv-mode)
 	    (pyvenv-tracking-mode)))
 
 
@@ -635,21 +692,6 @@ hook"
 (add-to-list 'auto-mode-alist '("\\.tmpl\\'" . web-mode))
 
 
-;;;; Custom setting into own file
+(provide 'init)
 
-(setopt custom-file (locate-user-emacs-file "custom.el"))
-(load custom-file t)
-;; (customize-save-customized)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-vc-selected-packages
-   '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch "main"))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+;;; init.el ends here

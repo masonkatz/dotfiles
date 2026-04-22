@@ -1,14 +1,19 @@
 [data]
 {{ $td := promptBool "Teradata machine" }}
 {{ if $td }}
-    org   = "teradata"
-    email = "Mason.Katz@Teradata.com"
-	golocal = "github.com/Teradata-"
-{{ else }}
-    org   = "endobit"
-    email = "mjk@endobit.io"
-	golocal = "github.com/masonkatz,endobit.io"
-{{ end }}
-    fullname = "Mason Katz"
+    org       = "teradata"
+    email     = "Mason.Katz@Teradata.com"
+    golocal   = "github.com/Teradata-"
     shortname = "mason"
-
+    fullname  = "Mason Katz"
+{{ else }}
+  {{ $desktop := promptBool "Desktop" }}
+  {{ if $desktop }}
+    desktop = true
+  {{ end }}
+    org       = "endobit"
+    email     = "mjk@endobit.io"
+    golocal   = "github.com/masonkatz,endobit.io"
+    shortname = "mjk"
+    fullname  = "Mason J. Katz"
+{{ end }}
