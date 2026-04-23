@@ -9,7 +9,9 @@
 {{ else }}
   {{ $desktop := promptBool "Desktop" }}
   {{ if $desktop }}
-    desktop = true
+    desktop   = true
+  {{ else }}
+    desktop   = false
   {{ end }}
     org       = "endobit"
     email     = "mjk@endobit.io"
