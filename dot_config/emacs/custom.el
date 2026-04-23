@@ -11,7 +11,13 @@
  '(global-auto-revert-mode t)
  '(make-backup-files nil)
  '(mouse-wheel-progressive-speed nil)
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(ag auto-dark company-box copilot dashboard docker doom-modeline eat eldoc-box
+	exec-path-from-shell forge git-gutter-fringe git-modes gptel hl-todo
+	just-mode ligature nerd-icons-dired nerd-icons-ibuffer org-superstar
+	page-break-lines prettier-js protobuf-ts-mode python-black pyvenv
+	rainbow-mode ssh-config-mode swift-mode tokyo-night treemacs
+	treemacs-nerd-icons web-mode yasnippet-snippets zenburn-theme))
  '(package-vc-selected-packages
    '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch "main")))
  '(project-vc-extra-root-markers '(".project"))
