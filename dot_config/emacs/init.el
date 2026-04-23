@@ -69,6 +69,7 @@ full path to the executable if found, or nil otherwise."
   (setq default-directory "~/")
   (exec-path-from-shell-initialize))
 
+
 ;; Happy medium between MacOS system bindings and Emacs defaults.
 (if (display-graphic-p)
     (cond ((eq window-system 'ns)
@@ -94,7 +95,7 @@ full path to the executable if found, or nil otherwise."
 	   (global-set-key (kbd "s-c") #'kill-ring-save)
 	   (global-set-key (kbd "s-x") #'kill-region)
 	   (global-set-key (kbd "s-v") #'yank)))
-  ((xterm-mouse-mode 1))) ; mouse click moves cursor
+  (xterm-mouse-mode 1))
 
 (let ((ispell
        (my--find-executable-in-paths
