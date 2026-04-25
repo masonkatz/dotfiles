@@ -572,6 +572,17 @@ hook"
 
 (add-hook 'prog-mode-hook #'my--prog-mode-hook)
 
+;;;;; Applescript
+
+(my--install 'applescript-mode)
+
+(defun my--applescript-mode-hook ()
+  "Applescript mode hook"
+  (my--prog-mode-hook)			; not derived from prog-mode
+  (font-lock-mode))
+
+(add-hook 'applescript-mode-hook #'my--applescript-mode-hook)
+
 ;;;;; C/C++
 
 (require 'c-ts-mode)
