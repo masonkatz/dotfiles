@@ -361,6 +361,7 @@ hook"
 
 (my--install 'git-gutter-fringe)
 (my--install 'magit)
+(my--install 'magit-todos)
 (my--install 'forge)			; github/gitlab
 (my--install 'git-modes)		; major modes for git files
 
