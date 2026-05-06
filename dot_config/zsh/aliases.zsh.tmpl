@@ -3,10 +3,11 @@
 case $TERM in
 xterm*|eat-*color|eterm-*color|screen*color)
 {{- if eq .chezmoi.os "darwin" }}
-	alias ls="gls -F --color"
+	ls="gls"
 {{- else }}
-	alias ls="ls -F --color"
+	ls="ls"
 {{- end }}
+	alias ls="$ls -F --color --quoting-style=literal"
 	;;
 esac
 
@@ -18,17 +19,18 @@ alias bup="brew upgrade"
 alias dircolors="gdircolors"
 alias fack="ag -Q"
 alias ldd="otool -L"
-{{- end  }}
+{{- end }}
 
 alias cz=chezmoi
-alias cza="chezmoi apply"
-alias czd="chezmoi diff"
-alias czs="chezmoi status"
+alias cza="cz apply"
+alias czcd="cz cd"
+alias czd="cz diff"
+alias czs="cz status"
 
 alias gd="git diff"
 alias gl="git log"
 alias gst="git status"
-alias yolo="git commit -am checkpoint; git push"
+alias golo="git commit -am checkpoint; git push"
 alias gundo="git reset HEAD~1"
 
 alias l=less
