@@ -1,8 +1,13 @@
 {
 {{- if eq .chezmoi.os "darwin" }}
-	"auths": {},
-	"credsStore": "desktop",
-	"currentContext": "desktop-linux",
+  "auths": {},
+{{- if eq .org "endobit" }}
+  "credsStore": "desktop",
+  "currentContext": "desktop-linux",
+{{- else }}
+  "credsStore": "osxkeychain",
+  "currentContext": "rancher-desktop",
+{{- end }}
 {{- if eq .chezmoi.arch "arm64" }}
 	"cliPluginsExtraDirs": ["/opt/homebrew/lib/docker/cli-plugins"]
 {{- else }}
