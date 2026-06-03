@@ -40,10 +40,10 @@ Host github-work
 {{- end }}
 
 {{- if eq .org "teradata" }}
-{{- if stat ( joinPath .chezmoi.homeDir ".ssh" "id_ed25519_personal" ) }}
+{{- if stat ( joinPath .chezmoi.homeDir ".ssh" "github" ) }}
 
 Host github-personal
-  IdentityFile          ~/.ssh/id_ed25519_personal
+  IdentityFile          ~/.ssh/github
   IdentitiesOnly        yes
   User                  git
   HostName              github.com
