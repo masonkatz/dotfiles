@@ -278,16 +278,17 @@ hook"
 
 (setopt ibuffer-show-empty-filter-groups nil
 	ibuffer-saved-filter-groups '(("default"
-				       ("Lisp" (or (mode . emacs-lisp-mode) (mode . lisp-mode)))
 				       ("Dired" (mode . dired-mode))
 				       ("Org" (mode . org-mode))
-				       ("Python" (mode . python-mode))
-				       ("Go" (mode . go-ts-mode))
-				       ("C/C++" (or (mode . c-ts-mode) (mode . c++-ts-mode)))
-				       ("Shell" (or (mode . sh-mode) (mode . shell-script-mode)))
-				       ("Web" (or (mode . web-mode) (mode . js-ts-mode)))
 				       ("Markdown" (mode . markdown-mode))
 				       ("Text" (mode . text-mode))
+				       ("C/C++" (or (mode . c-ts-mode) (mode . c++-ts-mode)))
+				       ("Go" (mode . go-ts-mode))
+				       ("Java" (mode . java-ts-mode))
+				       ("Lisp" (or (mode . emacs-lisp-mode) (mode . lisp-mode)))
+				       ("Python" (mode . python-mode))
+				       ("Shell" (or (mode . sh-mode) (mode . shell-script-mode)))
+				       ("Web" (or (mode . web-mode) (mode . js-ts-mode)))
 				       ("Other" (name . "^\\*")))))
 
 (add-hook 'ibuffer-mode-hook
@@ -405,18 +406,23 @@ hook"
            '((bash . ("https://github.com/tree-sitter/tree-sitter-bash"))
              (c . ("https://github.com/tree-sitter/tree-sitter-c"))
              (cpp . ("https://github.com/tree-sitter/tree-sitter-cpp"))
+	     (c-sharp . ("https://github.com/tree-sitter/tree-sitter-c-sharp"))
              (css . ("https://github.com/tree-sitter/tree-sitter-css"))
              (dockerfile . ("https://github.com/camdencheek/tree-sitter-dockerfile"))
              (go . ("https://github.com/tree-sitter/tree-sitter-go"))
              (gomod . ("https://github.com/camdencheek/tree-sitter-go-mod"))
              (gowork . ("https://github.com/omertuc/tree-sitter-go-work"))
              (html . ("https://github.com/tree-sitter/tree-sitter-html"))
+	     (java . ("https://github.com/tree-sitter/tree-sitter-java"))
              (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript"))
              (json . ("https://github.com/tree-sitter/tree-sitter-json"))
              (proto . ("https://github.com/mitchellh/tree-sitter-proto"))
              (python . ("https://github.com/tree-sitter/tree-sitter-python"))
+	     (rust . ("https://github.com/tree-sitter/tree-sitter-rust"))
+	     (swift . ("https://github.com/zed-industries/tree-sitter-swift"))
              (toml . ("https://github.com/ikatyang/tree-sitter-toml"))
-             (yaml . ("https://github.com/ikatyang/tree-sitter-yaml"))))
+             (yaml . ("https://github.com/ikatyang/tree-sitter-yaml"))
+	     (zig . ("https://github.com/tree-sitter-grammars/tree-sitter-zig"))))
     (add-to-list 'treesit-language-source-alist grammar)
     (unless (treesit-language-available-p (car grammar))
       (treesit-install-language-grammar (car grammar)))))
@@ -554,6 +560,7 @@ hook"
 (setopt major-mode-remap-alist '((c++-mode . c++-ts-mode)
 				 (c-mode . c-ts-mode)
 				 (c-or-c++-mode . c-or-c++-ts-mode)
+				 (csharp-mode . csharp-ts-mode)
 				 (js-json-mode . json-ts-mode)
 				 (python-mode . python-ts-mode)
 				 (yaml-mode . yaml-ts-mode)))
@@ -583,6 +590,8 @@ hook"
   (font-lock-mode))
 
 (add-hook 'applescript-mode-hook #'my--applescript-mode-hook)
+
+;;;;; C#
 
 ;;;;; C/C++
 
@@ -633,6 +642,16 @@ hook"
 
 (add-hook 'json-ts-mode-hook #'prettier-js-mode)
 (add-hook 'yaml-ts-mode-hook #'prettier-js-mode)
+
+;;;;; Java
+
+(defun my--java-mode-hook ()
+  "Java mode hook."
+  (my-eglot)
+  (copilot-mode)
+  (indent-tabs-mode -1))
+
+(add-hook 'java-ts-mode-hook #'my--java-mode-hook)
 
 
 ;;;;; Javascript
