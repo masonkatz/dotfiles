@@ -153,6 +153,7 @@ hook"
 			      "<<" ">>"
 			      "<<<" ">>>"
 			      "<-" "->"
+			      "==>"
 			      "||" "&&"
 			      "..."))
     (cond ((eq window-system 'ns) ; MacOS
@@ -723,6 +724,18 @@ hook"
 
 (add-to-list 'auto-mode-alist '("\\.tmpl\\'" . web-mode))
 
+;;;;; Zig
+
+(my--install 'zig-mode)
+
+(defun my--zig-mode-hook ()
+  "Zig mode hook."
+  (my--eglot)
+  (copilot-mode))
+
+(add-hook 'zig-mode-hook #'my--zig-mode-hook)
+
+;;; Provide
 
 (provide 'init)
 
