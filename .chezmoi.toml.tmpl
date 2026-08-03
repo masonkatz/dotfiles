@@ -1,9 +1,8 @@
 [data]
-{{ $td := promptBool "Teradata machine" }}
-{{ if $td }}
-    org       = "teradata"
-    email     = "Mason.Katz@Teradata.com"
-    golocal   = "github.com/Teradata-"
+{{ $hyland := promptBool "Hyland machine" }}
+{{ if $hyland }}
+    org       = "Hyland"
+    email     = "Mason.Katz@Hyland.com"
     shortname = "mason"
     fullname  = "Mason Katz"
 {{ else }}
