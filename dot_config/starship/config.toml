@@ -34,7 +34,7 @@ version_format = "v${major}.${minor}"
 detect_files = [ "go.mod", "go.work" ]
 
 [python]
-pyenv_version_name = true
+pyenv_version_name = false
 
 [shlvl]
 disabled = false
