@@ -12,12 +12,11 @@ xterm*|eat-*color|eterm-*color|screen*color)
 esac
 
 {{- if eq .chezmoi.os "darwin" }}
-alias ack="ag"
+alias ack="pt"
 alias bubo="brew update && brew outdated"
 alias bubu="bubo && bup"
 alias bup="brew upgrade"
 alias dircolors="gdircolors"
-alias fack="ag -Q"
 alias ldd="otool -L"
 {{- end }}
 
@@ -32,6 +31,10 @@ alias gl="git log"
 alias gst="git status"
 alias golo="git commit -am checkpoint; git push"
 alias gundo="git reset HEAD~1"
+
+if type -p moor &> /dev/null; then
+alias less=moor
+fi
 
 alias l=less
 
