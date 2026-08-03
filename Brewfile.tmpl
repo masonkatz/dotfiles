@@ -1,5 +1,8 @@
+brew "ansible"
+brew "ansible-language-server"
+brew "autoconf"
 brew "bash-language-server"
-brew "black", restart_service: true
+brew "black", restart_service: :changed
 brew "btop"
 brew "buf"
 brew "calc"
@@ -12,22 +15,19 @@ brew "figlet"
 brew "gdk-pixbuf"
 brew "gh"
 brew "git"
-brew "glab"
-brew "glib"
 brew "gnu-indent"
 brew "gnupg"
 brew "go"
 brew "golangci-lint"
 brew "gopls"
-brew "graphviz"
 brew "graphql-cli"
+brew "graphviz"
 brew "harfbuzz"
 brew "htop"
 brew "httpie"
-brew "icu4c@78"
 brew "imagemagick"
 brew "ispell"
-brew "jdtls"
+brew "just"
 brew "kubectx"
 brew "librsvg"
 brew "llvm"
@@ -39,8 +39,12 @@ brew "ncftp"
 brew "nmap"
 brew "node"
 brew "opencode"
+brew "pandoc"
 brew "pango"
+brew "pdfly"
 brew "pipx"
+brew "pkgconfig"
+brew "pnpm"
 brew "prettier"
 brew "protobuf"
 brew "protoc-gen-go"
@@ -51,15 +55,14 @@ brew "python-lsp-server"
 brew "qemu"
 brew "s3cmd"
 brew "solargraph"
-brew "starship"
 brew "source-highlight"
+brew "starship"
 brew "telnet"
-brew "the_silver_searcher"
+brew "the_platinum_searcher"
 brew "thefuck"
 brew "tlrc"
 brew "tree-sitter"
 brew "tree-sitter@0.25" {{/* needed to build xemacs */}}
-brew "unbound", restart_service: :changed
 brew "util-linux"
 brew "virtualenv"
 brew "watch"
@@ -79,18 +82,22 @@ cask "font-jetbrains-mono"
 cask "font-jetbrains-mono-nerd-font"
 cask "ghostty"
 cask "hhkb-studio"
-cask "knockknock"
 cask "monitorcontrol"
 cask "omnifocus"
 cask "omnigraffle"
 cask "omnioutliner"
 cask "omniplan"
+cask "omnipresence"
 cask "oversight"
-cask "reikey"
 cask "stats"
 cask "vnc-viewer"
 cask "wireshark-app"
 
+mas "Evernote", id: 406056744
+mas "GarageBand", id: 682658836
+mas "Kindle", id: 302584613
+mas "Notability", id: 360593530
+mas "Slack", id: 803453959
 mas "Tailscale", id: 1475387142
 mas "Xcode", id: 497799835
 {{ if eq .org "endobit" }}
@@ -101,30 +108,34 @@ cask "transmission"
 
 mas "iMovie", id: 408981434
 mas "Swift Playground", id: 1496833156
+mas "TestFlight", id: 899247664
 {{ end  }}
+brew "giflib"
 brew "git-flow-next"
+brew "gnutls"
 brew "hugo"
 brew "mage"
 brew "npm"
 brew "pnpm"
 brew "sqlc"
 brew "swift-format"
-cask "vlc"
+brew "telnet"
 brew "yarn"
 brew "zig"
 
+cask "chatgpt"
 cask "docker-desktop"
+cask "google-chrome"
+cask "ollama-app"
+cask "raspberry-pi-imager"
+cask "vlc"
 cask "xquartz"
 
+
 mas "Developer", id: 640199958
-mas "Evernote", id: 406056744
-mas "GarageBand", id: 682658836
 mas "Keynote", id: 409183694
-mas "Kindle", id: 302584613
-mas "Notability 2", id: 360593530
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
-mas "Slack", id: 803453959
 {{ else }}{{/* for non-personal use default to rancher due to docker-desktop license */}}
 brew "rancher-cli"
 
@@ -133,8 +144,5 @@ cask "rancher"
 
 {{ if eq .org "teradata" }}
 brew "angular-cli"
-brew "ansible"
-brew "ansible-language-server"
-brew "just"
 {{ end }}
 
