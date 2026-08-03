@@ -447,7 +447,9 @@ hook"
 ;;;; Eglot
 
 (require 'eglot)
-(require 'flymake) ; eglot will enable flymake-mode
+
+(my--install 'flycheck)
+(global-flycheck-mode +1)
 
 (setopt eglot-autoshutdown t)
 
@@ -586,7 +588,7 @@ hook"
 (my--install 'applescript-mode)
 
 (defun my--applescript-mode-hook ()
-  "Applescript mode hook"
+  "Applescript mode hook."
   (my--prog-mode-hook)			; not derived from prog-mode
   (font-lock-mode))
 
