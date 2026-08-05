@@ -3,6 +3,11 @@
 {{- $desktop := promptBoolOnce . "desktop" "Desktop" -}}
 [data]
     org       = "{{ $domain }}"
+  {{- if $desktop }}
+    desktop   = true
+  {{- else }}
+    desktop   = false
+  {{- end }}
 {{- if eq $domain "Hyland" }}
     email     = "Mason.Katz@Hyland.com"
     golocal   = ""
@@ -11,11 +16,6 @@
 {{- end }}
 
 {{- if eq $domain "Endobit" }}
-  {{- if $desktop }}
-    desktop   = true
-  {{- else }}
-    desktop   = false
-  {{- end }}
     email     = "mjk@endobit.io"
     golocal   = "github.com/masonkatz,endobit.io"
     shortname = "mjk"
