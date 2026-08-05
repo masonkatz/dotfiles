@@ -1,10 +1,11 @@
 {
 {{- if eq .chezmoi.os "darwin" }}
   "auths": {},
-{{- if eq .org "endobit" }}
+{{- if eq .docker "docker" }}
   "credsStore": "desktop",
   "currentContext": "desktop-linux",
-{{- else }}
+{{- end }}
+{{- if eq .docker "rancher" }}
   "credsStore": "osxkeychain",
   "currentContext": "rancher-desktop",
 {{- end }}

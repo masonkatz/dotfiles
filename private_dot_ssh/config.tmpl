@@ -18,7 +18,7 @@ Host *
   ServerAliveInterval   120
   TCPKeepAlive          yes
   ForwardAgent          yes
-{{- if eq .org "endobit" }}
+{{- if eq .org "Endobit" }}
   ForwardX11            yes
 {{- end }}
 
@@ -26,9 +26,8 @@ Host *
 {{ template "local-container" (dict "Name" "bookworm" "Port" "22003") }}
 {{- end }}
 
-{{- if eq .org "endobit" }}
-{{ template "host-alias" (dict "Host" "tdbook.local" "Alias" "tdbook" "User" "mason.katz" )}}
-{{ template "host-alias" (dict "Host" "hbook.local" "Alias" "hbook" "User" "mason.katz" )}}
+{{- if eq .org "Endobit" }}
+{{ template "host-alias" (dict "Host" .hbook  "Alias" "hbook" "User" "mason.katz" )}}
 
 {{- if stat ( joinPath .chezmoi.homeDir ".ssh" "id_ed25519_work" ) }}
 

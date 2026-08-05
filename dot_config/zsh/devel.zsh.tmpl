@@ -14,9 +14,7 @@ gcpsdk=~/src/gcp/google-cloud-sdk
 {{ template "zsh/source.tmpl" "${gcpsdk}/completion.zsh.inc" }}
 {{ end }}
 
-{{ if eq .org "endobit" }}
-export ORGANIZATION=endobit
-{{ end }}
+export ORGANIZATION={{ lower .org }}
 
 
 # python

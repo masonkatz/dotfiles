@@ -62,7 +62,6 @@ brew "the_platinum_searcher"
 brew "thefuck"
 brew "tlrc"
 brew "tree-sitter"
-brew "tree-sitter@0.25" {{/* needed to build xemacs */}}
 brew "util-linux"
 brew "virtualenv"
 brew "watch"
@@ -82,7 +81,6 @@ cask "font-jetbrains-mono"
 cask "font-jetbrains-mono-nerd-font"
 cask "ghostty"
 cask "hhkb-studio"
-cask "monitorcontrol"
 cask "omnifocus"
 cask "omnigraffle"
 cask "omnioutliner"
@@ -90,26 +88,15 @@ cask "omniplan"
 cask "omnipresence"
 cask "oversight"
 cask "stats"
-cask "vnc-viewer"
 cask "wireshark-app"
+cask "docker-desktop"
+cask "xquartz"
 
-mas "Evernote", id: 406056744
 mas "GarageBand", id: 682658836
-mas "Kindle", id: 302584613
-mas "Notability", id: 360593530
-mas "Slack", id: 803453959
-mas "Tailscale", id: 1475387142
 mas "Xcode", id: 497799835
-{{ if eq .org "endobit" }}
-{{ if .desktop }}
-brew "ffmpeg"
 
-cask "transmission"
 
-mas "iMovie", id: 408981434
-mas "Swift Playground", id: 1496833156
-mas "TestFlight", id: 899247664
-{{ end  }}
+{{ if eq .org "Endobit" }}
 brew "giflib"
 brew "git-flow-next"
 brew "gnutls"
@@ -124,25 +111,35 @@ brew "yarn"
 brew "zig"
 
 cask "chatgpt"
-cask "docker-desktop"
 cask "google-chrome"
 cask "ollama-app"
 cask "raspberry-pi-imager"
 cask "vlc"
-cask "xquartz"
-
 
 mas "Developer", id: 640199958
+mas "Evernote", id: 406056744
 mas "Keynote", id: 409183694
+mas "Kindle", id: 302584613
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
-{{ else }}{{/* for non-personal use default to rancher due to docker-desktop license */}}
-brew "rancher-cli"
-
-cask "rancher"
+mas "Slack", id: 803453959
+mas "Tailscale", id: 1475387142
+{{ else }}
+brew "tree-sitter@0.25" {{/* needed to build xemacs */}}
 {{ end }}
 
-{{ if eq .org "teradata" }}
-brew "angular-cli"
-{{ end }}
+
+{{ if .desktop }}
+cask "monitorcontrol"
+{{ if eq .org "Endobit" }}
+brew "ffmpeg"
+
+cask "transmission"
+
+mas "iMovie", id: 408981434
+mas "Swift Playground", id: 1496833156
+mas "TestFlight", id: 899247664
+{{ end  }}
+{{ end  }}
+
 

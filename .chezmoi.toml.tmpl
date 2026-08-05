@@ -1,21 +1,27 @@
+{{- $domain := promptChoiceOnce . "org" "What organization is this" (list "Endobit" "Hyland") "Endobit" }}
+{{- $hylandLaptop := promptStringOnce . "hbook" "Hyland laptop hostname" }}
+{{- $desktop := promptBoolOnce . "desktop" "Desktop" -}}
 [data]
-{{ $hyland := promptBool "Hyland machine" }}
-{{ if $hyland }}
-    org       = "Hyland"
+    org       = "{{ $domain }}"
+{{- if eq $domain "Hyland" }}
     email     = "Mason.Katz@Hyland.com"
     golocal   = ""
-    shortname = "mkatz"
+    shortname = "mason.katz"
     fullname  = "Mason Katz"
-{{ else }}
-  {{ $desktop := promptBool "Desktop" }}
-  {{ if $desktop }}
+{{- end }}
+
+{{- if eq $domain "Endobit" }}
+  {{- if $desktop }}
     desktop   = true
-  {{ else }}
+  {{- else }}
     desktop   = false
-  {{ end }}
-    org       = "endobit"
+  {{- end }}
     email     = "mjk@endobit.io"
     golocal   = "github.com/masonkatz,endobit.io"
     shortname = "mjk"
     fullname  = "Mason J. Katz"
-{{ end }}
+    hbook     = "{{ $hylandLaptop }}"
+{{- end }}
+{{- if eq .chezmoi.os "darwin" }}
+    docker    = "docker"
+{{- end }}

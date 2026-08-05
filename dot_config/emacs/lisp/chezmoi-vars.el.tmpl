@@ -7,7 +7,7 @@
 ;;
 ;;; Code:
 
-(defvar chezmoi-vars-org "{{ .org }}"
+(defvar chezmoi-vars-org "{{ lower .org }}"
   "User's org from chezmoi configuration.")
 
 (defvar chezmoi-vars-golocal "{{ .golocal }}"
