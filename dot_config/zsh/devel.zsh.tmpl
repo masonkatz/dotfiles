@@ -2,18 +2,6 @@
 
 {{ template "zsh/path-prepend.tmpl" "~/go/bin" }}
 
-{{ if eq .org "teradata" }}
-export ORGANIZATION=teradata
-export GOPRIVATE="github.com/Teradata-*,github.td.teradata.com/*"
-
-# gcloud cli
-
-gcpsdk=~/src/gcp/google-cloud-sdk
-
-{{ template "zsh/source.tmpl" "${gcpsdk}/path.zsh.inc" }}
-{{ template "zsh/source.tmpl" "${gcpsdk}/completion.zsh.inc" }}
-{{ end }}
-
 export ORGANIZATION={{ lower .org }}
 
 
