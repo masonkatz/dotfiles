@@ -13,39 +13,18 @@ Host {{ .Alias }}
 Host *
 {{- if eq .chezmoi.os "darwin" }}
   UseKeychain           yes
+  ForwardX11            yes
+  ForwardX11Timeout     0
 {{- end }}
   AddKeysToAgent        yes
-  ServerAliveInterval   120
-  TCPKeepAlive          yes
+  ServerAliveCountMax   30
+  ServerAliveInterval   60
   ForwardAgent          yes
-{{- if eq .org "Endobit" }}
-  ForwardX11            yes
-{{- end }}
 
 {{- if eq .chezmoi.os "darwin" }}
-{{ template "local-container" (dict "Name" "bookworm" "Port" "22003") }}
+{{ template "local-container" (dict "Name" "linux" "Port" "2200") }}
 {{- end }}
 
 {{- if eq .org "Endobit" }}
 {{ template "host-alias" (dict "Host" .hbook  "Alias" "hbook" "User" "mason.katz" )}}
-
-{{- if stat ( joinPath .chezmoi.homeDir ".ssh" "id_ed25519_work" ) }}
-
-Host github-work
-  IdentityFile          ~/.ssh/id_ed25519_work
-  IdentitiesOnly        yes
-  User                  git
-  Hostname              github.com
-{{- end }}
-{{- end }}
-
-{{- if eq .org "teradata" }}
-{{- if stat ( joinPath .chezmoi.homeDir ".ssh" "github" ) }}
-
-Host github-personal
-  IdentityFile          ~/.ssh/github
-  IdentitiesOnly        yes
-  User                  git
-  HostName              github.com
-{{- end }}
 {{- end }}
