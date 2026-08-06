@@ -69,13 +69,9 @@
 	showSignature = true
 {{- end }}
 
-{{ if eq .org "teradata" }}
-[url "ssh://git@github.com"]	# Enterprise Cloud -- not opensource github
+# Always use ssh for github. This helps Go download code from private repositories.
+[url "ssh://git@github.com"]
 	insteadOf = https://github.com
-
-[url "ssh://git@github.td.teradata.com"]
-	insteadOf = https://github.td.teradata.com
-{{- end }}
 
 [commit]
 	template = {{ .chezmoi.homeDir }}/.config/git/commit-template
