@@ -1,14 +1,38 @@
 {
 {{- if eq .chezmoi.os "darwin" }}
-  "auths": {},
+	"auths": {},
 {{- if eq .docker "docker" }}
-  "credsStore": "desktop",
-  "currentContext": "desktop-linux",
+	"credsStore": "desktop",
+	"currentContext": "desktop-linux",
 {{- end }}
 {{- if eq .docker "rancher" }}
-  "credsStore": "osxkeychain",
-  "currentContext": "rancher-desktop",
+	"credsStore": "osxkeychain",
+	"currentContext": "rancher-desktop",
 {{- end }}
-  "cliPluginsExtraDirs": ["/opt/homebrew/lib/docker/cli-plugins"]
-{{- end  }}
+	"cliPluginsExtraDirs": [
+		"/opt/homebrew/lib/docker/cli-plugins"
+	],
+{{- if eq .docker "docker" }}
+	"plugins": {
+		"-x-cli-hints": {
+			"enabled": "true"
+		},
+		"ai": {
+			"hooks": "build,buildx build,run,compose"
+		},
+		"compose": {
+			"hooks": "logs,compose logs,compose attach,compose up"
+		},
+		"debug": {
+			"hooks": "exec"
+		}
+	},
+	"features": {
+		"hooks": "true"
+	}
+{{- end	}}
+{{- if eq .docker "rancher" }}
+	"plugins": { }
+{{- end	}}
+{{- end	}}
 }
