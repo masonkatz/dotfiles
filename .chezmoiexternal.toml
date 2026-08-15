@@ -1,3 +1,0 @@
-[".config/emacs/straight/repos/straight.el"]
-    type = "git-repo"
-    url = "https://github.com/radian-software/straight.el.git"
