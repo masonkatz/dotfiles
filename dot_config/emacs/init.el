@@ -350,10 +350,8 @@ hook"
 
 ;;;; Terminal
 
-(my--install 'eat)
-
-(add-hook 'eshell-load-hook #'eat-eshell-mode)
-(add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
+(my--install 'ghostel)
+(global-set-key (kbd "C-c C-t") #'ghostel)
 
 ;;;; SSH
 
@@ -490,14 +488,7 @@ hook"
 
 ;;;; Copilot / GPTel
 
-(use-package copilot
-  :vc
-  (:url
-   ;; "https://github.com/masonkatz/copilot.el.git"
-   "https://github.com/copilot-emacs/copilot.el"
-   :rev
-   :newest
-   :branch "main"))
+(my--install 'copilot)
 
 ;; debug copilot
 ;; (setopt copilot-log-max 10000
