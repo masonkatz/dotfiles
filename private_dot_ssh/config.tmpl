@@ -25,6 +25,6 @@ Host *
 {{ template "local-container" (dict "Name" "linux" "Port" "2200") }}
 {{- end }}
 
-{{- if eq .org "Endobit" }}
+{{- if and (eq .org "Endobit") (not (eq .hbook "")) }}
 {{ template "host-alias" (dict "Host" .hbook  "Alias" "hbook" "User" "mason.katz" )}}
 {{- end }}
