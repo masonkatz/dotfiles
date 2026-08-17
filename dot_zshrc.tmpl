@@ -5,9 +5,6 @@ log DEBUG "path =" $path
 
 if type brew &>/dev/null; then
 	fpath=($(brew --prefix)/share/zsh-completions $fpath)
-
-    autoload -Uz compinit
-    compinit -u
 fi
 
 {{  template "zsh/include.tmpl" "$HOME/.config/zsh/options.zsh" }}
@@ -16,6 +13,9 @@ fi
 {{- template "zsh/include.tmpl" "$HOME/.config/zsh/emacs.zsh" }}
 {{- template "zsh/include.tmpl" "$HOME/.config/zsh/term.zsh" }}
 {{- template "zsh/include.tmpl" "$HOME/.config/zsh/history.zsh" }}
+
+autoload -Uz compinit
+compinit -u
 
 log INFO "end"
 log DEBUG "path =" $path

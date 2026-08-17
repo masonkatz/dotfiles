@@ -40,7 +40,12 @@ eval "$(pyenv init - zsh)"
 # Setup path for either rancher, or docker desktop. Give priority to rancher.
 
 {{ template "zsh/path-append.tmpl" "~/.rd/bin" }}
+
 {{ template "zsh/path-append.tmpl" "~/.docker/bin" }}
+if [ -d ~/.docker/completions ]; then
+	fpath=(~/.docker/completions $fpath)
+fi
+
 
 # local AI
 
