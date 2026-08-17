@@ -1,4 +1,5 @@
-#!/bin/zsh
+{{- /*-*- mode: sh -*-*/ -}}
+
 
 {{ template "zsh/path-prepend.tmpl" "~/go/bin" }}
 
@@ -33,6 +34,7 @@ eval "$(pyenv init - zsh)"
 {{ template "zsh/source.tmpl" "~/.venv/main/bin/activate" }}
 
 {{- if eq .chezmoi.os "darwin" }}
+
 # rancher desktop
 {{ template "zsh/path-prepend.tmpl" "~/.rd/bin"}}
 
