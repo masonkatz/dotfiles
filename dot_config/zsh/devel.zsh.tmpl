@@ -35,9 +35,15 @@ eval "$(pyenv init - zsh)"
 
 {{- if eq .chezmoi.os "darwin" }}
 
-# rancher desktop
-{{ template "zsh/path-prepend.tmpl" "~/.rd/bin"}}
+# docker
+#
+# Setup path for either rancher, or docker desktop. Give priority to rancher.
 
-{{ template "zsh/path-append.tmpl" "~/.lmstudio/bin"}}
-{{- end}}
+{{ template "zsh/path-append.tmpl" "~/.rd/bin" }}
+{{ template "zsh/path-append.tmpl" "~/.docker/bin" }}
+
+# local AI
+
+{{ template "zsh/path-append.tmpl" "~/.lmstudio/bin" }}
+{{- end -}}
 
