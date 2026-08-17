@@ -38,9 +38,6 @@ eval "$(pyenv init - zsh)"
 # rancher desktop
 {{ template "zsh/path-prepend.tmpl" "~/.rd/bin"}}
 
-export OLLAMA_API_BASE=http://127.0.0.1:11434
-export OLLAMA_CONTEXT_LENGTH=8192
-
 {{ template "zsh/path-append.tmpl" "~/.lmstudio/bin"}}
 {{- end}}
 
