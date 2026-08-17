@@ -84,7 +84,6 @@ cask "claude-code"
 cask "copilot-cli"
 cask "cursor"
 cask "cursor-cli"
-cask "docker-desktop"
 cask "emacs-app"
 cask "font-jetbrains-mono"
 cask "font-jetbrains-mono-nerd-font"
@@ -118,6 +117,7 @@ brew "telnet"
 brew "yarn"
 brew "zig"
 
+cask "docker-desktop"
 cask "google-chrome"
 cask "hhkb-studio"
 cask "monitorcontrol"
@@ -140,6 +140,10 @@ mas "Tailscale", id: 1475387142
 brew "tree-sitter@0.25" {{/* needed to build xemacs */}}
 {{ end }}
 
+{{ if eq .org "Hyland" }}
+cask "rancher"
+{{ end }}
+
 
 {{ if .desktop }}
 cask "monitorcontrol"
@@ -151,5 +155,6 @@ cask "transmission"
 mas "iMovie", id: 408981434
 mas "Swift Playground", id: 1496833156
 mas "TestFlight", id: 899247664
-{{ end  }}
-{{ end  }}
+{{ end }}
+{{- end  -}}
+
