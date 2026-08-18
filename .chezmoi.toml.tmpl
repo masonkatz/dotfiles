@@ -13,6 +13,9 @@
     golocal   = ""
     shortname = "mason.katz"
     fullname  = "Mason Katz"
+{{- if eq .chezmoi.os "darwin" }}
+    docker    = "rancher"
+{{- end }}
 {{- end }}
 
 {{- if eq $domain "Endobit" }}
@@ -21,7 +24,7 @@
     shortname = "mjk"
     fullname  = "Mason J. Katz"
     hbook     = "{{ $hylandLaptop }}"
-{{- end }}
 {{- if eq .chezmoi.os "darwin" }}
     docker    = "docker"
+{{- end }}
 {{- end }}
