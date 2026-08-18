@@ -12,7 +12,6 @@
 	"cliPluginsExtraDirs": [
 		"/opt/homebrew/lib/docker/cli-plugins"
 	],
-{{- if eq .docker "docker" }}
 	"plugins": {
 		"-x-cli-hints": {
 			"enabled": "true"
@@ -30,9 +29,5 @@
 	"features": {
 		"hooks": "true"
 	}
-{{- end	}}
-{{- if eq .docker "rancher" }}
-	"plugins": { }
-{{- end	}}
 {{- end	}}
 }

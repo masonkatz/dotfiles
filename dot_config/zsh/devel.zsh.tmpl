@@ -36,15 +36,17 @@ eval "$(pyenv init - zsh)"
 {{- if eq .chezmoi.os "darwin" }}
 
 # docker
-#
-# Setup path for either rancher, or docker desktop. Give priority to rancher.
 
+{{- if eq .docker "rancher" }}
 {{ template "zsh/path-append.tmpl" "~/.rd/bin" }}
+{{- end }}
 
+{{- if eq .docker "docker" }}
 {{ template "zsh/path-append.tmpl" "~/.docker/bin" }}
 if [ -d ~/.docker/completions ]; then
 	fpath=(~/.docker/completions $fpath)
 fi
+{{- end }}
 
 
 # local AI
